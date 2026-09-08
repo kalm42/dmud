@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>UX Design Validation: dmud</title>
+<style>
+  :root {
+    --bg: #fafaf9; --surface: #ffffff; --border: #e7e5e4;
+    --text: #1c1917; --muted: #78716c; --verdict-strong: #16a34a;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; font-size: 15px; }
+  .container { max-width: 960px; margin: 0 auto; padding: 32px 24px 64px; }
+  .report-header { padding-bottom: 16px; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
+  h1 { margin: 0; font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
+  .subtitle { color: var(--muted); font-size: 12px; font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+  .synthesis { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--verdict-strong); border-radius: 8px; padding: 18px 22px; margin-bottom: 24px; font-size: 15.5px; }
+  .synthesis p { margin: 0; }
+  .dimension-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 24px; }
+  .dim-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; }
+  .dim-name { font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+  .dim-verdict { color: var(--verdict-strong); font-size: 14px; font-weight: 600; }
+  section.dimension { margin-bottom: 14px; }
+  section details { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  section summary { padding: 14px 20px; cursor: pointer; user-select: none; list-style: none; display: flex; align-items: center; gap: 12px; }
+  section summary::-webkit-details-marker { display: none; }
+  section summary::before { content: "▸"; color: var(--muted); }
+  section details[open] summary::before { transform: rotate(90deg); }
+  section summary h2 { display: inline; margin: 0; font-size: 16px; font-weight: 600; flex: 1; }
+  .verdict-pill { background: var(--verdict-strong); color: #fff; font-size: 11px; padding: 3px 10px; border-radius: 999px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+  .dim-body { padding: 4px 20px 18px; font-size: 14.5px; }
+  .mechanical { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; margin-top: 24px; font-size: 14px; }
+  .mechanical h3 { margin: 0 0 10px; font-size: 14px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+  .mechanical ul { margin: 0; padding-left: 20px; }
+  .report-footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--border); font-size: 12px; color: var(--muted); font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+</style>
+</head>
+<body><div class="container">
+  <header class="report-header"><h1>dmud — UX Design Validation Report</h1><div class="subtitle">ux-dmud-2026-09-08/DESIGN.md + EXPERIENCE.md</div></header>
+  <div class="synthesis"><p><strong>Strong.</strong> The P0 spine pair is mechanically complete and ready for clean downstream extraction. It defines an explicit phase boundary, source-faithful E1/E2 flows, 15 paired components, complete surface states, resolved token references, distinct voice ownership, responsive behavior, and a governed visual reference without promoting provisional GDD tuning or conditional P1/P2 work.</p></div>
+  <div class="dimension-summary">
+    <div class="dim-card"><div class="dim-name">Flow coverage</div><div class="dim-verdict">strong</div></div>
+    <div class="dim-card"><div class="dim-name">Token completeness</div><div class="dim-verdict">strong</div></div>
+    <div class="dim-card"><div class="dim-name">Component coverage</div><div class="dim-verdict">strong</div></div>
+    <div class="dim-card"><div class="dim-name">State coverage</div><div class="dim-verdict">strong</div></div>
+    <div class="dim-card"><div class="dim-name">Visual reference coverage</div><div class="dim-verdict">strong</div></div>
+    <div class="dim-card"><div class="dim-name">Bloat &amp; overspecification</div><div class="dim-verdict">strong</div></div>
+    <div class="dim-card"><div class="dim-name">Inheritance discipline</div><div class="dim-verdict">strong</div></div>
+    <div class="dim-card"><div class="dim-name">Shape fit</div><div class="dim-verdict">strong</div></div>
+  </div>
+  <section class="dimension"><details><summary><h2>1. Flow coverage</h2><span class="verdict-pill">strong</span></summary><div class="dim-body">P0 scope maps exact E1/E2 names to complete named-protagonist flows with numbered steps, climax beats, and failure paths. E3–E6 are explicitly deferred.</div></details></section>
+  <section class="dimension"><details><summary><h2>2. Token completeness</h2><span class="verdict-pill">strong</span></summary><div class="dim-body">All color, typography, radius, spacing, component, and prose references resolve; load-bearing contrast targets are stated.</div></details></section>
+  <section class="dimension"><details><summary><h2>3. Component coverage</h2><span class="verdict-pill">strong</span></summary><div class="dim-body">All 15 formal component identifiers have substantive, exact-name visual and behavioral contracts.</div></details></section>
+  <section class="dimension"><details><summary><h2>4. State coverage</h2><span class="verdict-pill">strong</span></summary><div class="dim-body">Every P0 IA surface has applicable load, empty, valid, invalid, pending, success, interruption, failure, and recovery behavior.</div></details></section>
+  <section class="dimension"><details><summary><h2>5. Visual reference coverage</h2><span class="verdict-pill">strong</span></summary><div class="dim-body">The working direction is linked, subordinate to the spines, and no longer contains the premature pending-award conflict.</div></details></section>
+  <section class="dimension"><details><summary><h2>6. Bloat &amp; overspecification</h2><span class="verdict-pill">strong</span></summary><div class="dim-body">The pair remains compact, table-forward, and inherits source mechanics and tuning by reference.</div></details></section>
+  <section class="dimension"><details><summary><h2>7. Inheritance discipline</h2><span class="verdict-pill">strong</span></summary><div class="dim-body">Source paths, peer metadata, epic names, component names, voice owners, token references, P0 fixtures, and provisional-status boundaries align.</div></details></section>
+  <section class="dimension"><details><summary><h2>8. Shape fit</h2><span class="verdict-pill">strong</span></summary><div class="dim-body">DESIGN.md follows canonical order; EXPERIENCE.md contains all defaults and justified product-specific sections.</div></details></section>
+  <div class="mechanical"><h3>Mechanical notes</h3><ul><li>Both source references resolve.</li><li>All token references resolve and every color token has a hex value.</li><li>All 15 component identifiers pair exactly.</li><li>No visual reference is orphaned or conflicting.</li><li>No Mermaid diagrams are present.</li><li>Findings: critical 0 · high 0 · medium 0 · low 0.</li></ul></div>
+  <footer class="report-footer">Rubric: .agents/skills/gds-ux/references/validate.md · Generated: 2026-09-08T21:32:07Z</footer>
+</div></body></html>
