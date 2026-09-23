@@ -1,0 +1,48 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "dmud API",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/api/status": {
+      "get": {
+        "summary": "Get Status",
+        "description": "Report readiness without configuration; for example, GET /api/status.",
+        "operationId": "getStatus",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatusResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "StatusResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "const": "ready",
+            "title": "Status"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "title": "StatusResponse",
+        "description": "Describe the read-only application readiness response; for example, StatusResponse(status='ready')."
+      }
+    }
+  }
+}
