@@ -1669,6 +1669,8 @@ The initial location is Market Square and the clock is 28,800 seconds from day 1
 
 The controlled P0 starting state contains one prepared, known-value pouch with exactly 10,000 gold and no other player gold. It is fixture funding, not an ordinary campaign balance or later-stage progression resource. The 1-gold purchase, full-pouch gift, and no-gift comparisons each load an isolated copy of the same captured state; outcomes never merge. The separate 100-loose-coin handling fixture is not player wealth. Fixture identity and branch origin are recorded so conservation checks cannot accidentally combine these ledgers.
 
+The validated P0 fixture also seeds one branch-owned `PaymentObligation` with a stable ID: Mara owes Oren 20 gold, due at game second 115,200 (day 2 at 08:00). Epic 1 Story 1.24 resolves the controlled payment-extension check against that exact record; success moves its due second to 201,600, failure leaves it at 115,200, and neither outcome changes the balance or reverses an earlier transfer. Epic 2 Story 2.1 adds motives, plans, relationships, and limited knowledge around the existing obligation, preserving its ID and any committed extension. There is no parallel Epic 2 debt representation.
+
 `characters/` owns immutable starting scores, current scores, and allocated/unspent attribute points. `checks/` continues to own check resolution and XP/level progression; character allocation consumes its awarded point balance through the common atomic commit boundary. A pure allocation validator checks positive integer increases and available points; the confirmed allocation command is idempotent, revision-checked, zero-time, and cannot rewrite the starting record. A local preview never changes authoritative scores. Save snapshots include the confirmed origin, current scores, both XP tracks, levels, skill bonuses, allocations, and unspent balance; loading restores these branch-local records together.
 
 G03 and G18 are approved rules, not unresolved tuning: modifier `floor((score - 10) / 2)`, natural 1 failure/natural 20 success, and otherwise the documented d20 threshold. Successful meaningful checks award `floor(100 * (0.95 - p) / 0.90)` XP to player and relevant skill, with `p` obtained by counting successful faces; failures award zero. Tracks start at level 1/0 XP, consume `100 * current level` per level, carry excess, and grant one attribute point or one skill bonus per applicable level. No design cap is added. Presence 14 and Persuasion +1 are controlled-test settings, not mandatory character assignments.
@@ -1700,7 +1702,11 @@ Query keys include draft or branch identity and result identity where applicable
 
 ### Notebook Presentation and Information Boundaries
 
-The one composer routes validated interpretation to a known-information Rowan question, in-world speech/action, or neutral clarification. Known-information questions and clarification persist operation/transcript evidence without advancing world time or fabricating events. Before consequential commitment, show knowable interpretation, stakes, and costs; materially changed intent or rare-resource spending requires clarification. No modes, prefixes, unsolicited suggestions, dialogue chips, or generated tactical replies are added. Session 0 creative help is offered only when explicitly requested.
+Story 1.5 introduces the one labeled composer, Enter submission, Shift+Enter newline, exact submitted-answer display, and truthful, politely announced request status for Rowan's Session 0 questions. Story 1.12 reuses those components in the Main Notebook and adds reference-overlay behavior. The one composer routes validated interpretation to a known-information Rowan question, in-world speech/action, or neutral clarification. Known-information questions and clarification persist operation/transcript evidence without advancing world time or fabricating events. Before consequential commitment, show knowable interpretation, stakes, and costs; materially changed intent or rare-resource spending requires clarification. No modes, prefixes, unsolicited suggestions, dialogue chips, or generated tactical replies are added. Session 0 creative help is offered only when explicitly requested.
+
+Story 1.14 makes the first player world action complete: from the confirmed Market Square state, an ordinary-language walk to Mara's Stall is interpreted against the authored 7 m route, validated, committed once with a five-second clock advance and no-roll result, and presented as an arrival with recovery from interruption or narration failure. Stories 1.15–1.18 extend this already usable path with deeper recovery, clarification, a declared jog cost, and narration replay. Stories 1.19–1.20 extend it to the remaining authored location and travel modes. The common durable operation store remains the one created in Story 1.3.
+
+For the controlled social comparison, each isolated gift and no-gift branch starts from the same day-1 08:00 Market Square capture and completes the same five-second walk to Mara's Stall. Story 2.4 records one branch-local `p0-gift-opportunity` fact at second 28,805 while Mara and Tessa are present, before either branch's gift decision. Story 2.6 schedules Tessa's contact with Ivo 1,800 seconds after that fact, at second 30,605 unless a committed interruption changes their ability to meet. The no-gift branch retains the opportunity fact without inventing a gift or witness observation of one.
 
 `game-session/` renders labeled, selectable transcript entries and the exact submitted intention. `operation-progress/` maps accepted/interpreting/validating/resolving/narrating to truthful pending; needs-clarification to clarification; complete to resolved; and failure/interruption to explicit recovery. Committed-but-narrating states explicitly disclose that world or draft state is already saved. Rejected and unsupported intentions receive factual explanations without time cost. Decorative waiting copy never claims measured progress and never re-announces every rotation.
 
@@ -1708,7 +1714,7 @@ Backend player-view queries enforce knowledge limits before serialization and be
 
 ### Accessibility and Visual Implementation Gates
 
-`frontend/src/app/styles.css` owns the DESIGN token translation, including paper/ink/forest colors, system-safe Georgia story type at the specified 18px baseline, interface type, spacing, focus color, and readable 55–75-character lines. Token use must satisfy rendered contrast; decorative rule colors cannot become essential low-contrast boundaries. No Comic Sans, fixed 1040px minimum width, mandatory portrait pipeline, or accessibility-settings screen is introduced.
+`frontend/src/app/styles.css` owns the DESIGN token translation, including paper/ink/forest colors, system-safe Georgia story type at the specified `1.125rem` token, interface type, spacing, focus color, and readable 55–75-character lines. Browser root sizing remains user-controlled; the token commonly computes to 18px at the default root. Token use must satisfy rendered contrast; decorative rule colors cannot become essential low-contrast boundaries. No Comic Sans, fixed 1040px minimum width, mandatory portrait pipeline, or accessibility-settings screen is introduced.
 
 `ui/Dialog.tsx` owns accessible naming, modal role, contained focus, Escape/close, and return to the invoker (or a stable logical target if it no longer exists). The app permits one reference overlay at a time, including overwrite confirmation within that shell. `StatusMessage` owns polite, deduplicated semantic state announcements without focus theft. Landmarks, headings, speaker/type labels, labels for all inputs, visible unobscured focus, keyboard activation, and hover parity apply to generated content too.
 
@@ -1720,16 +1726,16 @@ These are implementation acceptance gates, not test results from this documentat
 
 | Source | Architecture owner / required evidence |
 | --- | --- |
-| GDD P0 entry; Epic 1, Stories 1.1–1.2; UX Title/Session 0 | Title cold/empty/error/retry; New Game despite failed save index; persisted answers and draft refresh; reused operations without duplicate entries. |
-| G03; Stories 1.3–1.4 | Partial/duplicate/missing stat inputs; stale review invalidation; simultaneous confirmation with same and different request IDs; exactly one campaign at second 28,800; pre/post-commit narration failure. |
-| G18; Story 3.5; character-sheet UX | XP boundary and multi-level progression; no failure XP; allocation preview/cancel/overspend; idempotent allocation; starting record unchanged across save/load. |
-| Epic 2; Notebook and request UX | Zero-time known recall and clarification; synonyms; explicit commit boundary; reconnect and late prior-branch responses; no recommended actions or hidden-state leaks. |
-| G04; Stories 3.1–3.2 | Fixture travel/speech/transfer durations, interrupted completed segments, real-event waits, morning and silence rules; no duplicate time. |
-| Epic 4; UX information boundaries | Real causal contact scenarios and negative player projections for concealed NPCs, private plans, and unsupported knowledge. |
-| Epic 5; save and result-detail UX | Three-slot index, overwrite revision conflict, failed save/load preservation, branch isolation, complete character restore, rolled/no-roll/missing/corrupt details. |
-| DESIGN + EXPERIENCE accessibility floor | Keyboard and screen-reader journeys across all eight surfaces; focus containment/return, state announcements, contrast, zoom, reflow, reduced motion, generated-content semantics. |
+| GDD P0 entry; Epic 1 Stories 1.1–1.6 and 1.31; UX Title/Session 0 | Title cold/empty/error/retry and later occupied-slot load; New Game despite failed save index; common durable draft operation before Rowan answers; validated authored fixture and single obligation before confirmation; shared composer and status from the first Rowan answer; persisted answers and draft refresh without duplicate entries. |
+| G03; Epic 1 Stories 1.7–1.10 and 1.24 | Partial/duplicate/missing stat inputs; stale review invalidation; simultaneous confirmation with same and different request IDs; exactly one campaign at second 28,800; pre/post-commit narration failure. |
+| G18; Epic 1 Stories 1.25–1.26 and 1.28; character-sheet UX | XP boundary and multi-level progression; no failure XP; allocation preview/cancel/overspend; idempotent allocation; starting record unchanged across save/load. |
+| Epic 1 Stories 1.11–1.18 and 1.27–1.29; Notebook and request UX | Complete five-second walk and three-second jog before later action types; zero-time known recall and clarification; synonyms; explicit commit boundary; reconnect and late prior-branch responses; no recommended actions or hidden-state leaks. |
+| G04; Epic 1 Stories 1.14, 1.17, and 1.19–1.23 | Authored walk/jog followed by fixture travel/speech/transfer durations, interrupted completed segments, real-event waits, morning and silence rules; no duplicate time. |
+| Epic 2 Stories 2.1–2.9; UX information boundaries | Existing obligation retained when NPC state is enriched; branch-local opportunity fact at 28,805 and scheduled meeting at 30,605 in gift and no-gift branches; typed fact and witness capture before gift, real causal contact scenarios, and negative player projections for concealed NPCs, private plans, and unsupported knowledge. |
+| Epic 1 Stories 1.29–1.32; save and result-detail UX | Three-slot index, overwrite revision conflict, failed save/load preservation, branch isolation, complete character restore, rolled/no-roll/missing/corrupt details. |
+| DESIGN + EXPERIENCE accessibility floor; Epic 1 Stories 1.2–1.3, 1.6, 1.8, 1.10–1.15, 1.27–1.32 | Keyboard and screen-reader journeys across all eight surfaces; focus containment/return, state announcements, contrast, zoom, reflow, reduced motion, generated-content semantics. |
 
-Historical implementation mapping: the earlier five-epic P0 plan mapped title/session-zero, actions, world/checks, knowledge/NPC planning, and saves/diagnostics. The current implementation-epics artifact is being revised against GDD 0.8 and must establish its own final mapping before readiness review; this architecture does not treat its legacy stories as approved.
+The current P0 implementation mapping is the 11-epic backlog revised against the focused September 23 P0 readiness report. Epic 1 Story 1.3 owns the common durable Session 0 operation contract, Story 1.4 owns authored-content validation and the minimal obligation, Story 1.5 owns the initial shared composer and status, and Story 1.14 owns the first completed world intention. Stories 1.33–1.34 own read-only diagnostics, and Story 1.35 owns packaged serving. Epic 2 Story 2.3 owns fact and witness capture before the gift, while Story 2.4 records the shared opportunity marker in each branch. The [P0 Verification and Exit Plan](planning-artifacts/p0-verification-and-exit-plan.md) owns foundation and social-causality gate evidence. Epic 1 completion alone does not authorize P1. Epics 3–11 remain conditional design backlog until each preceding evidence gate and phase-specific UX update is approved.
 
 ## GDD 0.8 Staged Systems Contracts
 
@@ -1867,7 +1873,7 @@ These gates are required test and play evidence, not claims that implementation 
 
 ### Validation Summary
 
-The assessments below are document-level architecture checks, not executable test results. GDD system and design-epic coverage include this revision; implementation-epic alignment is pending completion of the separate planning revision. Technology compatibility remains the historical September 8 assessment.
+The assessments below are document-level architecture checks, not executable test results. GDD system and design-epic coverage include this revision; P0 implementation-epic references were reviewed against the September 22 backlog revision. Technology compatibility remains the historical September 8 assessment.
 
 | Check | Result | Notes |
 | --- | --- | --- |
@@ -1875,7 +1881,7 @@ The assessments below are document-level architecture checks, not executable tes
 | GDD Coverage | PASS | All 21 P0 and conditional system families have documented architectural support |
 | Pattern Completeness | PASS | Seven original patterns plus staged-system contracts cover authority, knowledge, time, effects, access, needs, content, rewards, and combat |
 | Design Epic Mapping | PASS | GDD companion E1–E11 map to P0 and conditional P1–P9 boundaries |
-| Implementation Epic Mapping | PENDING | The separate P0 implementation-epics artifact is mid-revision and must be rechecked against Architecture 1.2 |
+| Implementation Epic Mapping | PASS | Current Epic 1–2 story identifiers and P0 exit evidence map to Architecture 1.2; Epics 3–11 remain conditional on stage UX and evidence gates |
 | Document Completeness | PASS | Mandatory sections, Session 0/UX contracts, and GDD 0.8 staged contracts are documented; executable verification is pending |
 | Technology Compatibility | NOT REVALIDATED | The documented stack remains coherent, but dependency currency is still the historical 2026-09-08 check and must be refreshed when scaffolding |
 | Security Boundary | PASS | Loopback-only P0, backend-only secrets, strict validation, and safe errors are defined |
@@ -1886,7 +1892,7 @@ The assessments below are document-level architecture checks, not executable tes
 **P0 Systems Covered:** 12/12
 **Conditional Systems Mapped:** 9/9
 **GDD Design Epics Mapped:** 11/11
-**Current Implementation Epics:** revision pending
+**Current Implementation Epics:** P0 mapping reviewed; P1–P9 conditional
 **Patterns Defined:** 7 original plus 6 staged-system contracts
 **Decision Summary Entries:** 14; **ADRs:** 13
 **Mandatory Sections Present:** 7/7
@@ -1896,7 +1902,7 @@ The assessments below are document-level architecture checks, not executable tes
 - **Architecture completeness:** Complete for GDD 0.8 at the decision and boundary level
 - **Version specificity:** Explicit but historically verified; refresh before scaffolding
 - **Pattern clarity:** Clear, with deterministic ownership and cross-stage dependency rules
-- **AI agent readiness:** Ready for implementation-epic revision; implementation itself remains gated by epic alignment and dependency verification
+- **AI agent readiness:** P0 epic mapping reviewed; rerun backlog readiness before implementation, and use the P0 verification gates to decide stage completion
 
 ### Issues Resolved
 
@@ -1924,7 +1930,7 @@ The assessments below are document-level architecture checks, not executable tes
 
 ### Readiness Boundary
 
-GDD 0.8 is the approved staged-design baseline. P0 remains the only authorized initial implementation; P1–P9 are architecturally mapped but remain conditional on sequential evidence gates. Architecture 1.2 supplies the missing later-stage contracts and preserves the Session 0/P0 UX decisions from 1.1. The 2026-09-12 and 2026-09-15 readiness reports predate this finalized reconciliation or assess changing planning artifacts; they are not proof of current alignment. Complete the implementation-epics revision, update its Architecture 1.1 references, then rerun source/story readiness before implementation. Historical technology checks were not repeated; validate dependency availability and compatibility when scaffolding.
+GDD 0.8 is the approved staged-design baseline. P0 remains the only authorized initial implementation; P1–P9 are architecturally mapped but remain conditional on sequential evidence gates. Architecture 1.2 supplies the later-stage contracts and preserves the Session 0/P0 UX decisions from 1.1. The 2026-09-12 and 2026-09-15 readiness reports predate the current backlog and are not proof of alignment. The September 22 report drove the P0 story decomposition and the current mapping above; rerun readiness against these revisions before production implementation. Historical technology checks were not repeated; validate dependency availability and compatibility when scaffolding.
 
 A separate implementation-readiness review should validate GDD, architecture, and story alignment before production work begins.
 

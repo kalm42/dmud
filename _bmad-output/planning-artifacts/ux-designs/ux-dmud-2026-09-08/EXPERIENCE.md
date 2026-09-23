@@ -6,14 +6,14 @@ implementation_scope: P0
 sources:
   - ../../briefs/brief-dmud-2026-09-05/brief.md
   - ../../gdds/gdd-dmud-2026-09-07/gdd.md
-updated: 2026-09-15
+updated: 2026-09-23
 ---
 
 # dmud — Experience Spine
 
 ## Foundation
 
-Initial form factor is a locally run desktop browser for solo, 20–60-minute sessions. Keyboard and mouse are baseline; screen-reader operation is equally required. No engine, UI framework, LLM provider, storage technology, public deployment model, or audio system has been selected. [DESIGN.md](./DESIGN.md) owns visual identity; this file owns behavior.
+Initial form factor is a locally run desktop browser for solo, 20–60-minute sessions. Keyboard and mouse are baseline; screen-reader operation is equally required. Architecture 1.2 selects a React UI, FastAPI backend, SQLite storage, and loopback-only packaging for P0; this UX document does not own those technology choices. The LLM provider, public deployment model, and audio system remain unselected. [DESIGN.md](./DESIGN.md) owns visual identity; this file owns behavior.
 
 The experience promise is tabletop agency: the player writes an ordinary or outrageous intention in their own words, and Rowan answers like a Dungeon Master adjudicating a persistent world—not like a verb parser. The rules own authoritative state and mechanics; presentation never claims success before a result is committed.
 

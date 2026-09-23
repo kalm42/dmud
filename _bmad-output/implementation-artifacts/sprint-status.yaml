@@ -1,0 +1,193 @@
+# generated: 2026-09-23T09:28:43-07:00
+# last_updated: 2026-09-23T09:28:43-07:00
+# project: dmud
+# project_key: NOKEY
+# tracking_system: file-system
+# story_location: /Users/kyle/Documents/Work/dmud/_bmad-output/implementation-artifacts
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+#
+# Epic Status Transitions:
+#   - backlog → in-progress: Automatically when first story is created (via create-story)
+#   - in-progress → done: Manually when all stories reach done status
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created in stories folder
+#   - in-progress: Developer actively working on implementation
+#   - review: Ready for code review
+#   - done: Story completed
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+#
+# WORKFLOW NOTES:
+# ===============
+# - Epic transitions to in-progress automatically when first story is created
+# - Stories can be worked in parallel if team capacity allows
+# - Developer typically creates next story after previous one is done to incorporate learnings
+# - Dev moves story to review, then runs code-review (fresh context, different LLM recommended)
+
+generated: 2026-09-23T09:28:43-07:00
+last_updated: 2026-09-23T09:28:43-07:00
+project: dmud
+project_key: NOKEY
+tracking_system: file-system
+story_location: /Users/kyle/Documents/Work/dmud/_bmad-output/implementation-artifacts
+
+development_status:
+  epic-1: backlog
+  1-1-run-the-local-dmud-application-foundation: backlog
+  1-2-open-the-title-and-start-a-new-game: backlog
+  1-3-track-a-recoverable-session-0-operation: backlog
+  1-4-validate-the-authored-p0-starting-world: backlog
+  1-5-create-a-correctable-session-0-draft: backlog
+  1-6-resume-a-durable-session-0-draft: backlog
+  1-7-assign-the-fixed-starting-attributes: backlog
+  1-8-review-and-correct-rowans-reflection: backlog
+  1-9-confirm-a-character-into-the-authored-starting-world: backlog
+  1-10-recover-character-confirmation-safely: backlog
+  1-11-read-the-main-notebook-transcript: backlog
+  1-12-use-notebook-controls-and-request-states: backlog
+  1-13-read-the-notebook-accessibly-at-different-sizes: backlog
+  1-14-walk-to-maras-stall-through-a-complete-action: backlog
+  1-15-recover-an-interrupted-walk: backlog
+  1-16-clarify-and-reject-ambiguous-world-intentions: backlog
+  1-17-choose-a-faster-route-with-declared-cost: backlog
+  1-18-revisit-a-committed-arrival-safely: backlog
+  1-19-explore-the-three-authored-p0-locations: backlog
+  1-20-travel-on-the-shared-world-clock: backlog
+  1-21-converse-and-purchase-with-actual-handling-time: backlog
+  1-22-transfer-a-prepared-pouch-without-duplicate-ownership: backlog
+  1-23-wait-for-time-or-real-events: backlog
+  1-24-resolve-an-uncertain-check-with-declared-odds: backlog
+  1-25-earn-player-and-skill-progression: backlog
+  1-26-allocate-earned-attributes: backlog
+  1-27-recall-known-facts-in-rowan-and-journal: backlog
+  1-28-inspect-inventory-and-character-state: backlog
+  1-29-inspect-mechanical-results: backlog
+  1-30-save-a-complete-branch-in-a-manual-slot: backlog
+  1-31-load-a-compatible-branch-without-state-leakage: backlog
+  1-32-replay-and-revisit-a-saved-choice: backlog
+  1-33-inspect-read-only-causal-diagnostics: backlog
+  1-34-export-redacted-operation-diagnostics: backlog
+  1-35-run-a-packaged-local-campaign: backlog
+  epic-1-retrospective: optional
+  epic-2: backlog
+  2-1-give-the-four-p0-npcs-grounded-state: backlog
+  2-2-let-npcs-choose-feasible-plans: backlog
+  2-3-record-facts-and-actual-witness-observations: backlog
+  2-4-complete-a-witnessed-full-pouch-gift: backlog
+  2-5-compare-maras-gift-and-no-gift-opportunities: backlog
+  2-6-schedule-contact-and-record-a-spoken-claim: backlog
+  2-7-let-ivo-form-a-belief-from-tessas-claim: backlog
+  2-8-let-fallible-beliefs-shape-choices: backlog
+  2-9-correct-and-inspect-a-belief-driven-choice: backlog
+  epic-2-retrospective: optional
+  epic-3: backlog
+  3-1-upgrade-a-p0-campaign-to-the-p1-ruleset: backlog
+  3-2-spend-recover-and-recalculate-character-resources: backlog
+  3-3-create-stable-source-bounded-effects: backlog
+  3-4-stack-replace-refresh-and-remove-effects: backlog
+  3-5-resolve-effect-ticks-and-same-second-outcomes: backlog
+  3-6-inspect-persist-and-verify-the-p1-effect-system: backlog
+  epic-3-retrospective: optional
+  epic-4: backlog
+  4-1-upgrade-the-world-to-authored-physical-places: backlog
+  4-2-enter-through-permission-keys-and-door-state: backlog
+  4-3-pick-locks-or-force-entry-at-a-real-cost: backlog
+  4-4-distinguish-possession-ownership-and-item-identity: backlog
+  4-5-create-theft-evidence-without-omniscience: backlog
+  4-6-inspect-persist-and-verify-physical-access: backlog
+  epic-4-retrospective: optional
+  epic-5: backlog
+  5-1-upgrade-characters-with-need-clocks-and-food-fixtures: backlog
+  5-2-become-starved-and-recover-by-eating: backlog
+  5-3-become-exhausted-and-complete-adequate-sleep: backlog
+  5-4-prepare-and-persist-authored-food-batches: backlog
+  5-5-eat-expired-food-and-resolve-poisoning: backlog
+  5-6-inspect-persist-and-verify-survival-state: backlog
+  epic-5-retrospective: optional
+  epic-6: backlog
+  6-1-upgrade-npc-needs-into-executable-plans: backlog
+  6-2-choose-feasible-hunger-and-shelter-goals: backlog
+  6-3-work-for-a-finite-wage-and-buy-food: backlog
+  6-4-cook-eat-sleep-and-replan-after-failure: backlog
+  6-5-consider-risky-options-under-severe-need: backlog
+  6-6-persist-and-verify-observed-and-off-screen-livelihoods: backlog
+  epic-6-retrospective: optional
+  epic-7: backlog
+  7-1-upgrade-to-four-households-and-the-p5-starting-state: backlog
+  7-2-track-three-days-of-lived-stability: backlog
+  7-3-repair-the-ward-or-arrange-protection: backlog
+  7-4-relocate-households-and-support-mixed-solutions: backlog
+  7-5-record-concerns-and-explicit-commitments: backlog
+  7-6-buy-ingredients-from-a-finite-supplier: backlog
+  7-7-craft-known-base-recipes: backlog
+  7-8-attempt-an-uncertain-crafting-substitution: backlog
+  7-9-use-crafted-restoratives-and-brewed-drinks: backlog
+  7-10-apply-and-trigger-crafted-poison: backlog
+  7-11-earn-mana-restoration-recipes: backlog
+  7-12-learn-and-use-restorative-elixir: backlog
+  7-13-earn-and-use-a-draught-of-revival: backlog
+  7-14-learn-and-use-potent-venom: backlog
+  7-15-learn-and-use-lingering-bane: backlog
+  7-16-learn-and-use-quality-ale: backlog
+  7-17-learn-and-use-artisan-brew: backlog
+  7-18-sell-to-finite-need-driven-buyers: backlog
+  7-19-verify-the-p5-community-and-alchemy-gate: backlog
+  epic-7-retrospective: optional
+  epic-8: backlog
+  8-1-choose-an-affinity-package: backlog
+  8-2-use-a-starting-spell: backlog
+  8-3-acquire-and-inspect-the-rest-stone: backlog
+  8-4-awaken-and-use-an-ember-rest-spell: backlog
+  8-5-awaken-and-use-a-vessel-rest-spell: backlog
+  8-6-give-the-awakened-spell-a-history-shaped-identity: backlog
+  8-7-earn-the-brackenfords-anchor-title: backlog
+  8-8-record-consequential-rest-spell-practice: backlog
+  8-9-earn-the-rest-achievement-and-copper-sandglass: backlog
+  8-10-choose-and-use-an-ember-deepened-spell: backlog
+  8-11-choose-and-use-a-vessel-deepened-spell: backlog
+  8-12-verify-the-p6-spells-and-recognition-gate: backlog
+  epic-8-retrospective: optional
+  epic-9: backlog
+  9-1-receive-three-daily-system-quests: backlog
+  9-2-complete-a-crafting-daily-quest: backlog
+  9-3-complete-a-social-daily-quest: backlog
+  9-4-complete-an-observation-daily-quest: backlog
+  9-5-expire-and-refresh-the-daily-quest-set: backlog
+  9-6-draw-from-the-visible-gacha-pool: backlog
+  9-7-craft-with-a-perfect-catalyst: backlog
+  9-8-reroll-a-future-draw-with-a-system-token: backlog
+  9-9-distinguish-system-and-award-presentation: backlog
+  9-10-verify-the-p7-daily-quest-and-gacha-gate: backlog
+  epic-9-retrospective: optional
+  epic-10: backlog
+  10-1-attach-one-private-bonus-condition: backlog
+  10-2-earn-a-hidden-xp-bonus: backlog
+  10-3-earn-a-hidden-extra-draw: backlog
+  10-4-earn-a-hidden-common-item: backlog
+  10-5-keep-the-hidden-trigger-secret: backlog
+  10-6-complete-a-quest-without-a-hidden-bonus: backlog
+  10-7-verify-the-p8-hidden-bonus-gate: backlog
+  epic-10-retrospective: optional
+  epic-11: backlog
+  11-1-enter-and-read-the-road-robber-encounter: backlog
+  11-2-move-sprint-and-defend-in-combat: backlog
+  11-3-make-mundane-combat-attacks: backlog
+  11-4-cast-cinder-lance-and-utility-magic: backlog
+  11-5-use-items-and-resolve-combat-effects-death-and-revival: backlog
+  11-6-escape-the-road-robber-encounter: backlog
+  11-7-surrender-to-the-road-robber: backlog
+  11-8-resolve-the-road-robbers-surrender: backlog
+  11-9-defeat-the-road-robber: backlog
+  11-10-save-and-resume-mid-combat: backlog
+  11-11-verify-the-p9-combat-gate: backlog
+  epic-11-retrospective: optional

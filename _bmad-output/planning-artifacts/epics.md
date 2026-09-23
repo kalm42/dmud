@@ -14,14 +14,34 @@ inputDocuments:
   - _bmad-output/planning-artifacts/ux-designs/ux-dmud-2026-09-08/review-rubric.md
   - _bmad-output/planning-artifacts/ux-designs/ux-dmud-2026-09-08/review-accessibility-text-resizing.md
   - _bmad-output/planning-artifacts/ux-designs/ux-dmud-2026-09-08/validation-report.md
-  - _bmad-output/planning-artifacts/implementation-readiness-report-2026-09-15.md
+reviewEvidence:
+  - _bmad-output/planning-artifacts/implementation-readiness-report-2026-09-22.md
+  - _bmad-output/planning-artifacts/implementation-readiness-report-2026-09-23.md
+  - _bmad-output/planning-artifacts/implementation-readiness-report-2026-09-23-p0.md
+  - _bmad-output/planning-artifacts/p0-story-dependency-review-2026-09-23.md
 ---
 
 # dmud - Epic Breakdown
 
 ## Overview
 
-This document provides the complete epic and story breakdown for dmud, decomposing the requirements from the GDD, UX Design, and Architecture into implementable stories.
+The September 22 readiness review prompted a P0 story-scope revision; the [September 23 readiness report](./implementation-readiness-report-2026-09-23.md) identified sequencing and sizing defects in that revision. The [focused P0 readiness report](./implementation-readiness-report-2026-09-23-p0.md) then found an incomplete early action path and two ownership gaps. Epics 1–2 below put a completed authored walk before action extensions, assign the shared Session 0 input when answers first need it, and give the payment obligation and gift opportunity explicit fixture ownership. Their stage-wide evidence lives in [P0 Verification and Exit Plan](./p0-verification-and-exit-plan.md). Epics 3–11 remain conditional design backlog and require their phase-specific UX contract, prior evidence gate, and another story-scope review before implementation. The reports are review evidence, not governing requirement sources. The architecture's canonical file remains `_bmad-output/game-architecture.md`; `planning-artifacts/game-architecture.md` is a discovery symlink to that same file.
+
+This document tracks the GDD, UX Design, and Architecture requirements through P0 implementation stories and conditional later-stage design stories.
+
+The September 23 findings are addressed at these story boundaries:
+
+| Finding | Revised location |
+| --- | --- |
+| Q1 — Session 0 operation dependency | 1.3 precedes 1.5–1.10; 1.14–1.18 extend the same operation contract for world actions. |
+| Q2 — starting-world content dependency | 1.4 validates the authored fixture before 1.9 confirms it; 1.19 adds exploration. |
+| Q3 — gift observation dependency | 2.3 owns fact and witness capture before gift Story 2.4; 2.6–2.9 add contact, claims, beliefs, and downstream choices. |
+| Q4 — Title load dependency | 1.2 owns Title/New Game and empty/error states; 1.31 adds occupied-slot selection and load. |
+| Q5 — action lifecycle dependency | 1.14 completes an authored walk end to end; 1.15–1.18 extend that working action with interruption, clarification, declared costs, and narration replay. |
+| Q6 — foundation and recovery size | 1.1 is the runnable shell, 1.35 owns production packaging and full quality gates; 1.3, 1.15, 1.18, and 1.31 split recovery by subject and commit boundary. |
+| P0 Q2 — early input ownership | 1.5 owns the one shared composer, submission keys, and truthful Session 0 status; 1.12 carries it into the Main Notebook and adds overlays. |
+| P0 Q3 — payment obligation | 1.4 seeds the minimal Mara-to-Oren debt and deadline; 1.24 changes that same record; 2.1 enriches the people around it. |
+| P0 minor — gift-opportunity clock | 2.4 records the same authored opportunity marker after the shared route in both branches; 2.6 schedules contact from that marker. |
 
 ## Requirements Inventory
 
@@ -464,6 +484,45 @@ FR82: Epic 1 - Sequential stage and implementation gates
 FR83: Epic 1 - Authored, nonprocedural geography
 FR84: Epic 1 - Approved content and scope budgets
 
+## Shared Delivery Definition of Done
+
+Every implementation story inherits the applicable NFR and architecture contracts in this document. Feature-local criteria state the observable behavior and any exceptional boundary. Verification records must use real FastAPI and isolated SQLite for first-party integration, accessible browser/component interaction for UI, strict type/lint/format/contract gates, and deterministic fixtures only at the external LLM boundary. Each mutation is atomic, revision-checked, idempotent, and safe across retry and failure. Once save/load is introduced, every owned state change must survive restoration without branch leakage. Player-facing projections respect legitimate knowledge. All applicable P0 UI states meet DESIGN/EXPERIENCE accessibility, zoom, reflow, focus, status, and reduced-motion requirements. Evidence includes reproducible commands and failures; a skipped, flaky, or failing required check does not pass a stage gate.
+
+For P0, [P0 Verification and Exit Plan](./p0-verification-and-exit-plan.md) owns stage-wide fixture matrices, endurance, accessibility, contradiction review, and P0 promotion evidence. Completion of Epic 1 is foundation evidence only; P0 passes only after Epic 2 and that plan pass. The shared contract does not replace feature-specific ACs such as a stale save-slot conflict or a particular knowledge leak.
+
+### P0 Story-Level FR Traceability
+
+| Native FR | Current story or exit evidence |
+| --- | --- |
+| FR1 | 1.2, 1.31 |
+| FR2–FR3 | 1.3, 1.5–1.6, 1.8 |
+| FR4–FR5 | 1.7–1.8 |
+| FR6 | 1.4, 1.9–1.10 |
+| FR7–FR9 | 1.14–1.18, 1.21 |
+| FR10–FR12 | 1.14, 1.16–1.17, 1.24 |
+| FR13–FR14 | 1.25 |
+| FR15 | 1.26 |
+| FR16–FR18 | 1.14, 1.17, 1.20–1.23 |
+| FR19 | 1.4, 1.14, 1.19–1.20 |
+| FR20 | 1.21 |
+| FR21 | 1.4, 1.22, 2.4 |
+| FR22 | 1.4, 2.1–2.2 |
+| FR23 | 2.4–2.5 |
+| FR24–FR26 | 2.2–2.3, 2.5–2.9 |
+| FR27 | 1.5, 1.11–1.13 |
+| FR28 | 1.27–1.29 |
+| FR29–FR30 | 1.30–1.32 |
+| FR31–FR33 | 1.3, 1.14–1.18 |
+| FR34 | 1.33–1.34 |
+| FR35 | P0 Verification and Exit Plan |
+| FR82 | 1.1, 1.35 and P0 Verification and Exit Plan |
+| FR83 | 1.4, 1.19 |
+| FR84 | 1.4, 1.19 and P0 Verification and Exit Plan |
+
+## Conditional Stage Backlog Status
+
+Epics 3–11 describe approved design intent and requirement coverage, not currently executable sprint stories. Each must first receive its phase-specific UX update and preceding stage evidence. The September 22 report identified Stories 3.2, 3.4, 5.3, 5.4, and 11.5 as multi-capability work packages and Stories 3.6, 4.6, 5.6, 6.6, 7.19, 8.12, 9.10, 10.7, and 11.11 as mixed feature/gate work. Those and the other ten-plus-scenario stories require decomposition at the corresponding stage planning gate. Their present criteria retain design coverage but are not sprint-sized commitments. Stage-wide evidence will move to exit plans, while player-visible inspection remains in feature stories. The revised P0 order has a [focused dependency review](./p0-story-dependency-review-2026-09-23.md); executable P0 gate evidence remains outstanding until implementation.
+
 ## Epic List
 
 ### Epic 1: Enter and Act in a Small Persistent World
@@ -543,6 +602,7 @@ Players can fight, flee, surrender, or accept surrender in one readable authored
 
 **Implementation notes:** Conditional P9. Combat is an encounter coordinator over proven lower-stage rules, not a second engine. It requires four outcome paths, mid-combat save/load, and idempotent XP/loot evidence. A phase-specific UX update is required.
 
+
 ## Epic 1: Enter and Act in a Small Persistent World
 
 Players can create a character, enter Brackenford, express intentions in ordinary language, resolve actions and uncertainty, develop competence, inspect known information, and safely save and resume a complete persistent branch.
@@ -550,35 +610,20 @@ Players can create a character, enter Brackenford, express intentions in ordinar
 ### Story 1.1: Run the Local dmud Application Foundation
 
 As a player,
-I want dmud to start reliably as a local browser application,
-So that I can play without depending on remote hosting or fragile development setup.
+I want to start the local application with a validated foundation,
+So that I can begin a campaign on a stable local system.
 
 **Acceptance Criteria:**
 
 **Given** the documented Node, Python, uv, and SQLite prerequisites are available
 **When** dependencies are installed from the committed lockfiles
-**Then** the minimal React/TypeScript frontend and FastAPI backend build successfully
+**Then** the create-vite 9.2.0 React/TypeScript starter and the uv-managed FastAPI backend initialized from scratch build successfully
 **And** dependency availability has been revalidated against the versions selected by Architecture 1.2.
 
 **Given** the development environment is started
 **When** the player opens the frontend
 **Then** the browser receives a working application shell
 **And** frontend `/api` requests are proxied to the loopback FastAPI server without development CORS configuration.
-
-**Given** a packaged production build
-**When** the application starts
-**Then** FastAPI serves the SPA and API from one loopback-only origin
-**And** no remote binding, account system, cloud service, or external broker is required.
-
-**Given** the backend starts with a supported SQLite runtime
-**When** application storage is initialized
-**Then** the first ordered migration runs against SQLite `STRICT` tables
-**And** application code accesses SQLite only through typed infrastructure adapters.
-
-**Given** the SQLite runtime is older than 3.37.0 or required configuration is invalid
-**When** the backend starts
-**Then** startup fails before opening or mutating application data
-**And** the failure identifies the incompatible requirement without exposing secrets.
 
 **Given** backend configuration includes an LLM credential or other secret
 **When** the frontend, logs, authored content, generated API client, or browser storage is inspected
@@ -590,16 +635,16 @@ So that I can play without depending on remote hosting or fragile development se
 **Then** it follows the approved feature-oriented monorepo and inward dependency direction
 **And** it contains no speculative P1–P9 modules, distributed infrastructure, audio pipeline, or unused asset directories.
 
-**Given** the repository is checked in
-**When** the baseline quality commands run
-**Then** formatting, linting, strict type checking, backend integration tests, frontend tests, OpenAPI drift checks, and a real-browser startup journey pass independently
-**And** only the external LLM boundary is eligible for a deterministic test substitute.
+**Given** the runnable shell is checked in
+**When** its baseline checks run
+**Then** formatting, linting, strict type checking, and an isolated real-browser startup journey pass
+**And** the checks exercise the frontend and backend through their real local boundary.
 
-### Story 1.2: Choose New Game or a Saved Campaign
+### Story 1.2: Open the Title and Start a New Game
 
 As a player,
-I want a clear and reliable campaign entry screen,
-So that I can begin a new character or safely identify a campaign to continue.
+I want to start a new campaign from a clear Title surface,
+So that I can enter Session 0 even if save discovery fails.
 
 **Acceptance Criteria:**
 
@@ -613,16 +658,6 @@ So that I can begin a new character or safely identify a campaign to continue.
 **Then** Continue remains visible but unavailable
 **And** its accessible explanation states that no saved campaign exists.
 
-**Given** at least one compatible occupied save slot exists
-**When** the save-index request succeeds and the player activates Continue
-**Then** one accessible save-selection overlay opens
-**And** the application does not silently select or load a slot.
-
-**Given** the save-selection overlay contains empty, occupied, or unavailable slots
-**When** the player reviews them
-**Then** each row identifies its slot and state in text
-**And** each occupied row shows campaign identity, known place, in-world time, saved-at time, compatibility, and selection state without relying on color.
-
 **Given** the save index cannot be read or fails runtime validation
 **When** the Title surface reports the failure
 **Then** it offers a safe retry and keeps New Game available
@@ -633,38 +668,99 @@ So that I can begin a new character or safely identify a campaign to continue.
 **Then** the application enters the Session 0 route/surface without deleting saves or selecting an occupied slot
 **And** the transition advances no fictional time.
 
-**Given** the player selects a compatible occupied slot
-**When** the selection is confirmed
-**Then** the selected slot identity and revision are passed to the typed load boundary
-**And** the UI shows explicit loading, success, or failure without changing the active campaign before a successful load.
-
-**Given** save selection is open
-**When** the player presses Escape, activates Close, or completes a successful selection
-**Then** focus is contained while open and returns predictably afterward
-**And** no second overlay is stacked.
-
-**Given** the Title and save-selection surfaces are used with keyboard navigation, a screen reader, enlarged browser text, 200% zoom, reduced motion, or the 320 CSS px-equivalent layout
+**Given** the Title surface is used with keyboard navigation, a screen reader, enlarged browser text, 200% zoom, reduced motion, or the 320 CSS px-equivalent layout
 **When** the player operates every control
 **Then** labels, focus, status, target size, reading order, and functionality remain available
 **And** the layout reflows without horizontal page scrolling.
 
-### Story 1.3: Create and Resume a Session 0 Draft
+### Story 1.3: Track a Recoverable Session 0 Operation
 
 As a player,
-I want Rowan to preserve my character concept while we develop it together,
-So that interruption or correction does not erase what I authored.
+I want the start of Session 0 to have a durable request and status,
+So that refresh or interruption cannot leave me unsure whether it started.
+
+**Acceptance Criteria:**
+
+**Given** the first durable Session 0 operation needs local storage
+**When** the backend initializes application data
+**Then** its first ordered migration creates only the draft and operation records needed by this story in SQLite `STRICT` tables through typed infrastructure adapters
+**And** a SQLite runtime older than 3.37.0 fails before application data opens or mutates with a clear, secret-free error.
+
+**Given** New Game starts a Session 0 draft subject
+**When** the first zero-time operation is accepted
+**Then** the server creates one idempotent, revisioned `SessionZeroDraft` and durably records its subject, request ID, payload digest, revision, and ordered status events before returning its operation ID
+**And** duplicate IDs with identical payloads return the same operation while changed payloads receive a typed conflict.
+
+**Given** a draft-subject operation is accepted, running, complete, failed, or interrupted
+**When** its status is queried
+**Then** the typed response reports the authoritative state and last event ID
+**And** the Session 0 surface never treats an unacknowledged request as committed.
+
+**Given** the event connection drops or the browser refreshes
+**When** the client reconnects with its last event ID or polls the status endpoint
+**Then** it recovers the same ordered operation and draft subject without rerunning the request
+**And** the pending or terminal state remains visible and accessible.
+
+**Given** the backend restarts with a nonterminal draft operation
+**When** startup reconciliation reads its durable operation record
+**Then** an uncommitted request becomes explicitly interrupted and a committed draft result remains available
+**And** recovery never fabricates a campaign or advances fictional time.
+
+**Given** a failed or interrupted draft operation is retried
+**When** its recovery action runs
+**Then** only the supported uncommitted work is retried under the same draft subject
+**And** later answer, reflection, and confirmation operations can use this same contract without a second operation store.
+
+### Story 1.4: Validate the Authored P0 Starting World
+
+As a player,
+I want character confirmation to use a validated starting world,
+So that I enter the same coherent Brackenford fixture every time.
+
+**Acceptance Criteria:**
+
+**Given** the application starts with the P0 content package
+**When** authored YAML is loaded
+**Then** strict validation accepts exactly the approved three locations, four named NPCs, social conflict, five one-gold drinks, routes, movement rules, and controlled check content
+**And** duplicate IDs, invalid references, unknown fields, or incompatible content versions fail before campaign mutation.
+
+**Given** the validated starting package
+**When** its deterministic fixture factory produces a pre-confirmation seed
+**Then** the seed provides Market Square, Mara's Stall, the Common Room, Mara, Oren, Tessa, Ivo, Mara's initial drink stock and transaction funds, and one prepared 10,000-gold pouch with no other player gold
+**And** Mara and Tessa have authored starting positions that make the handover at Mara's Stall perceptible to Tessa but not to Oren or Ivo; the seed has a stable content version and immutable fixture origin suitable for later isolated branch creation without itself creating a campaign.
+
+**Given** the authored payment-extension situation
+**When** the P0 seed is validated and instantiated
+**Then** it contains one authoritative obligation record linking debtor Mara and creditor Oren, with 20 gold outstanding and an authored due second of 115,200 (day 2 at 08:00)
+**And** that stable record ID, balance, and deadline are part of the same branch state later extended by Story 1.24 and enriched with NPC motives by Story 2.1; neither story creates a replacement debt model.
+
+**Given** authored content fails validation
+**When** New Game or confirmation needs that content
+**Then** the player receives a recoverable, factual content-unavailable state
+**And** no partial campaign, fixture funding, or world clock is created.
+
+### Story 1.5: Create a Correctable Session 0 Draft
+
+As a player,
+I want to answer Rowan and correct my draft,
+So that my authored character and hopes stay accurate.
 
 **Acceptance Criteria:**
 
 **Given** the player enters Session 0 through New Game
-**When** draft creation succeeds
-**Then** the server creates one idempotent, revisioned `SessionZeroDraft` without creating a campaign branch
+**When** the common draft-start operation completes
+**Then** the existing idempotent, revisioned `SessionZeroDraft` is available without a campaign branch
 **And** Rowan's first question asks for the character's name.
 
 **Given** an active Session 0 draft
 **When** Rowan collects the character's name, origin, cares, hates, especially cool ideas, and campaign hopes
 **Then** each exact submitted answer is durably associated with its source question
 **And** an explicit “none” is accepted where applicable while an unanswered field remains incomplete.
+
+**Given** Rowan asks a Session 0 question
+**When** the player uses the shared `message-composer`
+**Then** it has a visible programmatic label, Enter submits the exact answer, and Shift+Enter inserts a newline
+**And** the same component and submission semantics are reused for later speech and actions, without modes, prefixes, suggested replies, action chips, or unsolicited ideas.
 
 **Given** the player authors a character concept
 **When** Rowan responds
@@ -679,7 +775,15 @@ So that interruption or correction does not erase what I authored.
 **Given** a valid answer submission
 **When** the durable Rowan operation is pending, succeeds, fails, or is interrupted
 **Then** the Session 0 surface shows the truthful operation state without presenting unacknowledged input as saved
-**And** acknowledged answers remain available after failure or interruption.
+**And** the shared `response-status` presents text and polite, deduplicated announcements without stealing focus; acknowledged answers remain available after failure or interruption.
+
+### Story 1.6: Resume a Durable Session 0 Draft
+
+As a player,
+I want to return to an unfinished draft safely,
+So that refreshes and retries do not lose or duplicate my answers.
+
+**Acceptance Criteria:**
 
 **Given** the same answer request is submitted again with the same request ID and payload
 **When** the backend processes it
@@ -711,11 +815,11 @@ So that interruption or correction does not erase what I authored.
 **Then** labels, focus order, exact submitted text, response status, and errors remain perceivable and operable
 **And** typing, reading, Rowan processing, and draft correction advance zero fictional seconds.
 
-### Story 1.4: Assign Attributes and Review the Character
+### Story 1.7: Assign the Fixed Starting Attributes
 
 As a player,
-I want to assign my starting attributes and correct Rowan's understanding,
-So that the confirmed character accurately represents the life I chose to play.
+I want to assign the five starting scores,
+So that invalid or conflicting assignments cannot become my character.
 
 **Acceptance Criteria:**
 
@@ -743,6 +847,14 @@ So that the confirmed character accurately represents the life I chose to play.
 **When** the player requests Rowan's review
 **Then** review readiness is rejected with the missing requirements identified
 **And** no reflection is generated from an incomplete character.
+
+### Story 1.8: Review and Correct Rowan’s Reflection
+
+As a player,
+I want to review and correct Rowan’s reflection,
+So that confirmation uses the latest agreed draft.
+
+**Acceptance Criteria:**
 
 **Given** all required answers and the full assignment are valid
 **When** Rowan's reflection completes
@@ -774,11 +886,11 @@ So that the confirmed character accurately represents the life I chose to play.
 **Then** available, assigned, invalid, complete, pending, and ready states are conveyed in text and semantics rather than color alone
 **And** focus and status announcements remain predictable.
 
-### Story 1.5: Confirm the Character and Enter Brackenford
+### Story 1.9: Confirm a Character Into the Authored Starting World
 
 As a player,
-I want explicit confirmation to create my character and world exactly once,
-So that I can enter a personalized campaign whose initial state is trustworthy.
+I want to confirm my reviewed character,
+So that one character enters the authored world with the agreed origin.
 
 **Acceptance Criteria:**
 
@@ -812,6 +924,14 @@ So that I can enter a personalized campaign whose initial state is trustworthy.
 **Then** it receives only committed player-perceptible facts plus separately labeled personalization context
 **And** it may make the opening tension relevant without promising a hoped-for outcome or predetermining an NPC decision.
 
+### Story 1.10: Recover Character Confirmation Safely
+
+As a player,
+I want to recover a failed or interrupted confirmation,
+So that the campaign is created once and its state stays truthful.
+
+**Acceptance Criteria:**
+
 **Given** confirmation fails before the authoritative transaction commits
 **When** the player recovers
 **Then** no campaign, branch, origin, fixture funding, or fictional time exists
@@ -838,19 +958,19 @@ So that I can enter a personalized campaign whose initial state is trustworthy.
 **And** the player must review the current draft again.
 
 **Given** confirmation and opening narration complete
-**When** the Main Notebook opens
-**Then** the confirmed starting values are read-only in ordinary character-sheet use
+**When** the campaign route becomes active
+**Then** the confirmed starting values remain immutable in authoritative state
 **And** the player enters the campaign with no predetermined route, success, or ending.
 
-### Story 1.6: Read and Navigate the Accessible Main Notebook
+### Story 1.11: Read the Main Notebook Transcript
 
 As a player,
-I want the campaign presented as a readable and accessible shared notebook,
-So that I can understand the scene, my intentions, and Rowan's responses during long play sessions.
+I want to read the current scene and transcript,
+So that I can follow what happened and what I submitted.
 
 **Acceptance Criteria:**
 
-**Given** a confirmed or loaded campaign
+**Given** a confirmed campaign
 **When** the Main Notebook renders
 **Then** the current transcript and scene are the dominant visual surface, followed by the composer/status, current-character reference, and factual navigation
 **And** the presentation uses the authoritative DESIGN color, typography, spacing, shape, and component tokens.
@@ -870,25 +990,46 @@ So that I can understand the scene, my intentions, and Rowan's responses during 
 **Then** it shows only the current player character using text identity or a monogram
 **And** it does not expose a nearby-character roster, concealed actor, or required portrait.
 
-**Given** the player opens Inventory, Character Sheet, Roll Details, or Save/Load
+**Given** a newly confirmed campaign opens in the Main Notebook
+**When** the character reference and opening scene render
+**Then** the confirmed starting values are read-only in ordinary character-sheet use
+**And** the opening uses the committed world state rather than a predetermined route or outcome.
+
+### Story 1.12: Use Notebook Controls and Request States
+
+As a player,
+I want to use the notebook controls and see truthful request states,
+So that I can navigate and understand pending work.
+
+**Acceptance Criteria:**
+
+**Given** the player opens a reference view available in the current story slice, such as the confirmed Character Sheet
 **When** reference content is displayed
 **Then** it uses the shared, accessible `reference-overlay` shell
-**And** only one overlay can be open at a time.
+**And** only one overlay can be open at a time; later Inventory, Roll Details, and Save/Load views reuse this shell when their content is introduced.
 
 **Given** a reference overlay is open
 **When** the player uses Tab, Shift+Tab, Escape, Close, or completes the overlay task
 **Then** focus remains contained while open and returns to the invoker or stable logical target afterward
 **And** opening or closing the overlay advances no fictional time.
 
-**Given** the player reaches the message composer
+**Given** the player reaches the Main Notebook composer after Session 0
 **When** it is inspected or operated
-**Then** it has a visible programmatic label, supports Enter to submit and Shift+Enter for a new line, and remains the single input for Rowan questions, speech, and actions
-**And** it provides no modes, prefixes, action suggestions, dialogue replies, recommendation chips, or generated tactical choices.
+**Then** the existing `message-composer` keeps its label, Enter/Shift+Enter semantics, exact submitted text, and accessible status treatment while routing speech and actions
+**And** it adds no modes, prefixes, action suggestions, dialogue replies, recommendation chips, or generated tactical choices.
 
 **Given** a request state is shown
 **When** `response-status` updates
-**Then** the state is expressed truthfully in text and announced politely without moving focus
+**Then** the Session 0 status component is reused to express the state truthfully in text and announce it politely without moving focus
 **And** decorative waiting copy never claims measured progress or committed success.
+
+### Story 1.13: Read the Notebook Accessibly at Different Sizes
+
+As a player,
+I want to read and operate the notebook with my input and display settings,
+So that the same information stays available to me.
+
+**Acceptance Criteria:**
 
 **Given** the player uses the notebook with keyboard, pointer, or screen reader
 **When** they traverse navigation, composer, transcript controls, character card, or overlays
@@ -915,91 +1056,89 @@ So that I can understand the scene, my intentions, and Rowan's responses during 
 **Then** no text-size setting, System notice, award notice, global roll-log tab, audio dependency, illustration pipeline, or stacked modal flow is present
 **And** browser text sizing, zoom, text selection, and OS motion preferences remain authoritative.
 
-### Story 1.7: Submit and Recover a Durable Free-Text Request
+### Story 1.14: Walk to Mara's Stall Through a Complete Action
 
 As a player,
-I want every submitted intention acknowledged and recoverable,
-So that model latency, refreshes, cancellation, or process interruption cannot hide or duplicate what happened.
+I want to tell Rowan I walk to Mara's Stall and arrive there,
+So that my first in-world intention produces a truthful, persistent result.
 
 **Acceptance Criteria:**
 
-**Given** a ready Main Notebook and current world revision
-**When** the player submits nonempty text
-**Then** the browser immediately appends a `player-intention` containing the exact submitted text and creates a unique request ID
-**And** visible acknowledgement appears within the approved 100 ms target without claiming the action succeeded.
+**Given** a confirmed branch at Market Square and a ready Main Notebook
+**When** the player submits “I walk to Mara's Stall” or an ordinary equivalent through the established composer
+**Then** the browser appends the exact `player-intention`, creates one unique request ID, and visibly acknowledges submission within the 100 ms target without claiming arrival
+**And** the existing durable operation contract records the branch, expected world revision, payload digest, and truthful status.
 
-**Given** a valid action submission
-**When** `POST /api/branches/{branchId}/actions` accepts it
-**Then** the server returns `202 Accepted` with operation, status, and event URLs
-**And** the operation records the request ID, branch subject, expected world revision, and validated input contract.
+**Given** that submitted walk
+**When** `POST /api/branches/{branchId}/actions` accepts and interprets it
+**Then** acceptance returns `202 Accepted` with operation, status, and event URLs, and the provider-neutral proposal identifies the player, Mara's Stall, the authored 7 m route, and walking mode without treating the player's words as a direct state edit
+**And** invalid proposal data, an unknown route, or a stale revision yields a typed factual failure with no travel or elapsed time.
 
-**Given** an operation is running
-**When** lifecycle events arrive
-**Then** accepted, interpreting, needs-clarification, validating, resolving, committed, narrating, complete, failed, and interrupted states are versioned and displayed truthfully
-**And** committed-but-narrating explicitly says that world state is already saved.
+**Given** the proposed walk passes route and current-location validation
+**When** its known destination and five-second cost are shown and the action resolves
+**Then** one atomic world commit moves the player to Mara's Stall, advances the shared clock from 28,800 to 28,805, and records a no-roll result, action evidence, operation result, new revision, and state hash
+**And** no die, resource charge, or second movement is introduced.
+
+**Given** the walk has committed
+**When** the operation completes or the browser refreshes
+**Then** the player can read a factual arrival result and the current location and clock from authoritative state
+**And** any failed generated prose is replaced with a truthful committed-result fallback without rerunning the walk.
+
+**Given** the walk request is repeated with the same ID and payload or the connection drops before the result is seen
+**When** its durable status or result is recovered through event replay or polling
+**Then** the original committed arrival or explicit pre-commit failure is shown with its commit boundary
+**And** time, location, action record, and narration fallback are not duplicated; a changed payload under that ID is a conflict.
 
 **Given** one mutating operation is unresolved on a branch
 **When** another mutation is submitted
 **Then** the second request receives a typed busy conflict or waits only through an explicitly defined recovery path
 **And** read-only game queries remain available.
 
-**Given** the event stream disconnects
+### Story 1.15: Recover an Interrupted Walk
+
+As a player,
+I want to recover my walk after a connection loss or interruption,
+So that I can tell whether I arrived without moving twice.
+
+**Acceptance Criteria:**
+
+**Given** the player has submitted the supported walk and the event stream disconnects
 **When** the browser reconnects with the last received event ID
 **Then** monotonically identified events resume without duplication
-**And** status polling recovers the current state if streaming remains unavailable.
+**And** status polling recovers the committed arrival or the explicit uncommitted state if streaming remains unavailable.
 
-**Given** the browser refreshes while an operation is active
+**Given** the browser refreshes while that walk is active
 **When** the operation status is fetched
 **Then** the existing operation and exact submitted intention are restored
-**And** the action is not resubmitted or rerun.
+**And** the player can continue to the same completed arrival or safely retry only uncommitted work without creating a second walk.
 
-**Given** the player requests cancellation before authoritative commit
-**When** cooperative cancellation succeeds
-**Then** provider work stops and no game state, time, roll, cost, or result is committed
-**And** the operation reports a recoverable terminal state.
+**Given** the player cancels an accepted but unresolved walk
+**When** cancellation succeeds before interpretation or action work begins
+**Then** queued work stops and the operation becomes recoverably interrupted
+**And** no world state, time, roll, cost, or result is committed.
 
-**Given** cancellation is requested after authoritative commit
-**When** the operation is already committed or narrating
-**Then** committed mechanics remain authoritative
-**And** cancellation may stop or defer only narration and presentation delivery.
-
-**Given** the backend restarts with a nonterminal operation
-**When** startup reconciliation checks the atomic request-result record
-**Then** a committed result resumes only narration/delivery, while an uncommitted operation becomes explicitly interrupted
-**And** a clarification operation remains paused with its validated clarification contract.
-
-**Given** a request is retried with the same request ID and identical payload
+**Given** the walk is retried with the same request ID and identical payload
 **When** the operation endpoint receives it
 **Then** the existing operation or final result is returned
 **And** a different payload under that request ID is rejected as a conflict.
 
-**Given** an operation completes
-**When** its result is returned
-**Then** it identifies the subject, commit boundary (`none`, `draft`, or `world`), committed revision when present, and safe recovery capability
-**And** success and RFC 9457 problem responses pass generated Zod validation before use.
+**Given** the walk returns an accepted operation, completed arrival, or typed rejection
+**When** the browser reads the response
+**Then** success and RFC 9457 problem payloads pass generated Zod validation before use
+**And** malformed transport data cannot be mistaken for an accepted action.
 
-**Given** the active branch changes after a successful load
-**When** a late event or query response arrives for the prior branch
-**Then** it cannot append to or replace the new branch's transcript or state
-**And** its operation remains recoverable only under its original subject identity.
-
-**Given** an LLM-mediated operation has not completed by 30 seconds
-**When** the interruption target is reached
-**Then** the player receives a recoverable interruption state
-**And** the interface distinguishes unknown, uncommitted, and already-committed work.
-
-### Story 1.8: Resolve Supported Intentions Safely
+### Story 1.16: Clarify and Reject Ambiguous World Intentions
 
 As a player,
-I want Rowan to interpret my ordinary language while the rules protect world truth,
-So that creative intentions receive consistent consequences without narration inventing success.
+I want Rowan to clarify an unclear destination or explain an unsupported request,
+So that I can complete or abandon the intention without a false world change.
 
 **Acceptance Criteria:**
 
-**Given** the player submits a supported natural-language intention or ordinary synonym
+**Given** the player submits an ordinary synonym for walking to Mara's Stall
 **When** the provider-neutral interpreter processes it
 **Then** strict versioned contracts separate proposed action, actor, targets, player speech, asserted claims, duration, clarification needs, stakes, and candidate consequences
-**And** provider-specific data remains confined to the LLM adapter.
+**And** provider-specific data remains confined to the LLM adapter while a valid synonym completes the same five-second arrival from Story 1.14.
 
 **Given** model output is malformed, contains unknown fields, or violates its contract
 **When** boundary validation runs
@@ -1011,90 +1150,139 @@ So that creative intentions receive consistent consequences without narration in
 **Then** the assertion is treated as speech or intent rather than direct state mutation
 **And** ownership changes only through a supported validated action.
 
-**Given** an intention is routine and feasible
-**When** rules validate its actor, target, prerequisites, ownership or access, costs, and duration
-**Then** it resolves without a roll through one atomic change set
-**And** its result is recorded as an inspectable no-roll resolution.
-
 **Given** an intention is impossible or unsupported in P0
 **When** validation rejects it
 **Then** the player receives a factual explanation with no mutation or fictional-time cost
-**And** no unsolicited alternative action or strategy is presented.
+**And** the request reaches a visible terminal result without an unsolicited alternative action or strategy.
 
 **Given** an intention is materially ambiguous
 **When** required actor, target, meaning, order, or commitment information is missing
 **Then** the operation enters `needs_clarification` with a neutral, intent-preserving question
-**And** clarification commits no fictional time, world change, or recommended tactic.
+**And** clarification commits no fictional time, world change, or recommended tactic; answering with Mara's Stall resumes the same request and completes the authored walk once.
+
+**Given** a clarification operation is interrupted or the backend restarts
+**When** its status is recovered
+**Then** the validated question and draft proposal remain paused under the same operation identity
+**And** the player can answer to complete the walk or abandon it with a terminal no-change result without creating a second world action.
+
+**Given** an LLM-mediated interpretation has not completed by 30 seconds
+**When** the interruption target is reached
+**Then** the player receives a recoverable pending or interrupted state based on the durable status query
+**And** recovery resolves to the same arrival or an explicit uncommitted outcome without claiming a world commitment before that boundary exists.
+
+### Story 1.17: Choose a Faster Route With Declared Cost
+
+As a player,
+I want to choose to jog to Mara's Stall after seeing the time cost,
+So that the committed movement matches the route and mode I intended.
+
+**Acceptance Criteria:**
+
+**Given** the player is at Market Square and asks to jog to Mara's Stall
+**When** rules validate the actor, current place, authored route, mode, and duration
+**Then** the player sees the destination and three-second cost before commitment and may confirm or decline
+**And** confirmation completes one no-roll move to Mara's Stall, advances the clock by exactly three seconds, and presents an inspectable result; declining changes nothing.
 
 **Given** a consequential action has reasonably knowable stakes, costs, or interpretation
 **When** it is ready for commitment
 **Then** those details are exposed before resolution
-**And** rare-resource spending or a materially changed interpretation requires explicit clarification.
+**And** the same pre-commit contract is reused by later purchase, pouch gift, and uncertain-check stories; rare-resource spending or a materially changed interpretation requires explicit clarification when those actions are introduced.
 
 **Given** a request contains multiple consequential actions
 **When** order or stopping conditions affect the outcome
 **Then** the proposed order, stakes, and stopping conditions are exposed before commitment
-**And** P0 may require the player to submit the actions individually rather than pretending to support an unsafe composite action.
+**And** the player receives a complete no-change result asking for separate submissions if a safe composite cannot be supported.
 
-**Given** a proposal passes validation
+**Given** the jog proposal passes validation and the player confirms
 **When** it resolves
-**Then** random inputs are sampled once if required, completed action phases are accumulated, and one complete change set is built
+**Then** no random input is sampled, the completed three-second segment is accumulated, and one complete change set is built
 **And** expected world revision is checked again inside the write transaction.
 
 **Given** the authoritative transaction succeeds
 **When** the action commits
 **Then** subject state, immutable action record, request result, committed operation status, new world revision, state hash, and domain-event evidence are written atomically
-**And** external side effects occur only after commit.
+**And** the player sees the committed jog result; external side effects occur only after commit.
 
-**Given** narration is requested after commit
-**When** Rowan describes the result
+**Given** an operation moves from interpretation through validation and resolution
+**When** its durable status is read
+**Then** only the transitions reached by completed work are shown as interpreting, needs-clarification, validating, resolving, or committed
+**And** committed status identifies the authoritative world revision and `world` commit boundary.
+
+### Story 1.18: Revisit a Committed Arrival Safely
+
+As a player,
+I want to revisit a completed walk or jog and hear what happened,
+So that presentation failures and retries cannot rewrite my arrival.
+
+**Acceptance Criteria:**
+
+**Given** the walk or jog to Mara's Stall has committed
+**When** Rowan describes or re-describes the arrival
 **Then** narration receives committed player-perceptible facts and presentation context only
-**And** it cannot request a mutation, reorder committed events, reveal hidden facts, or contradict the mechanical outcome.
+**And** the player sees the arrival and elapsed time even if generated prose fails; narration cannot request a mutation, reorder committed events, reveal hidden facts, or contradict the mechanical outcome.
 
-**Given** narration fails after mechanics commit
+**Given** arrival narration fails after movement commits
 **When** the operation is recovered
 **Then** committed mechanics remain unchanged
-**And** narration can be retried independently without repeating interpretation, resolution, random sampling, time, or costs.
+**And** narration can be retried independently while the player can still inspect the committed location and clock, without repeating interpretation, resolution, random sampling, time, or costs.
 
-**Given** a reusable ruling or generated definition is accepted
+**Given** a reusable route or movement ruling is accepted
 **When** it is referenced later or after save/load
 **Then** it retains a stable identity and recorded version
 **And** regenerated prose cannot silently change its mechanics.
 
-**Given** a stale expected world revision or duplicate logical request reaches resolution
+**Given** a stale expected world revision or duplicate walk or jog request reaches resolution
 **When** the commit coordinator checks it
 **Then** stale work returns a typed conflict and duplicate work returns the prior result
 **And** neither path creates a second mutation.
 
-### Story 1.9: Move, Converse, Wait, and Transact on the Shared Clock
+**Given** narration is pending after authoritative commit
+**When** the operation is queried, cancelled, or recovered after a restart
+**Then** it reports committed-but-narrating truthfully and may stop or retry only narration delivery
+**And** the atomic request result prevents any repeated mechanics, time, roll, cost, or XP award.
+
+**Given** an operation completes or fails after action resolution
+**When** its typed result is returned
+**Then** it identifies the subject, commit boundary (`none`, `draft`, or `world`), committed revision when present, and safe recovery capability
+**And** unknown, uncommitted, and already-committed work remain distinguishable after interruption.
+
+### Story 1.19: Explore the Three Authored P0 Locations
 
 As a player,
-I want ordinary actions to consume believable time and resources,
-So that Brackenford behaves like one persistent place rather than disconnected narration.
+I want to explore the stable authored P0 places,
+So that exits and descriptions reflect the world.
 
 **Acceptance Criteria:**
-
-**Given** the application starts with the P0 content package
-**When** authored YAML is loaded
-**Then** strict validation accepts exactly the approved three locations, four named NPCs, social conflict, drink item, movement rules, and controlled check content
-**And** duplicate IDs, invalid references, unknown fields, or incompatible content versions fail before campaign mutation.
 
 **Given** authored P0 geography
 **When** the player inspects navigation
 **Then** Market Square connects to Mara's Stall and the Common Room using stable authored routes
 **And** no location or connection is procedurally generated.
 
+**Given** the player follows a factual linked exit or states a supported walking intention toward the Common Room
+**When** the authored 140 m segment completes from Market Square
+**Then** the player arrives at the Common Room through the same validated, committed, recoverable action path as Story 1.14 and the clock advances 100 seconds
+**And** returning through an authored exit also completes with a truthful location and clock result.
+
 **Given** the player enters a location for the first time or revisits it
 **When** its description is rendered
 **Then** first introductions use 60–120 words and repeat descriptions use 20–60 words emphasizing actual changes
 **And** exits, perceptible people, and examinable context remain factual controls rather than action recommendations.
+
+### Story 1.20: Travel on the Shared World Clock
+
+As a player,
+I want to move through authored routes at a chosen supported speed,
+So that completed travel consumes the correct game time.
+
+**Acceptance Criteria:**
 
 **Given** an action is reading, typing, opening a menu, inspecting known information, viewing inventory or journal, or saving
 **When** it completes
 **Then** zero fictional seconds advance
 **And** closing the game or waiting for a model also leaves the game clock paused.
 
-**Given** the player moves along the 7 m Market Square–Mara's Stall route or 140 m Market Square–Common Room route
+**Given** the player moves along the established 7 m Market Square–Mara's Stall route or 140 m Market Square–Common Room route
 **When** walking at 1.4 m/s
 **Then** the completed segment advances 5 seconds or 100 seconds respectively
 **And** travel uses `distance / speed`, rounds each segment up to a whole second, and records the chosen movement mode.
@@ -1103,6 +1291,14 @@ So that Brackenford behaves like one persistent place rather than disconnected n
 **When** travel is calculated
 **Then** walk 1.4, jog 2.8, sprint 5.6, and crawl 0.5 m/s are applied
 **And** an unknown route or mode requires a supported distance/speed ruling before time advances.
+
+### Story 1.21: Converse and Purchase With Actual Handling Time
+
+As a player,
+I want to speak and purchase goods with actual time and stock,
+So that ordinary transactions reconcile with the shared clock.
+
+**Acceptance Criteria:**
 
 **Given** a completed dialogue exchange contains rendered spoken words
 **When** its duration is committed
@@ -1114,6 +1310,14 @@ So that Brackenford behaves like one persistent place rather than disconnected n
 **Then** the actual speech and handling durations, player funds, Mara's funds/stock, possession, and ownership reconcile atomically
 **And** a retry cannot charge time or gold or transfer stock twice.
 
+### Story 1.22: Transfer a Prepared Pouch Without Duplicate Ownership
+
+As a player,
+I want to transfer counted containers or loose coins,
+So that handling and handover reflect what physically completed.
+
+**Acceptance Criteria:**
+
 **Given** the controlled handling fixtures
 **When** the prepared 10,000-gold pouch is transferred or 100 loose coins are individually counted
 **Then** the pouch handover uses the approved 5 seconds while loose counting takes at least 100 seconds
@@ -1124,10 +1328,18 @@ So that Brackenford behaves like one persistent place rather than disconnected n
 **Then** completed elapsed time and the interrupting event may persist
 **And** funds, possession, and ownership remain unchanged until the handover completes.
 
-**Given** purchase, gift, and no-gift evidence runs
-**When** each begins
-**Then** each loads an isolated copy of the same captured P0 starting state
-**And** spending 1 gold in the purchase branch cannot reduce or otherwise alter the pouch in either gift comparison branch.
+**Given** the captured P0 starting state
+**When** independent purchase, gift-test, and no-gift-test fixture copies are created
+**Then** each copy begins with the same untouched prepared pouch and distinct branch identity
+**And** spending 1 gold in the purchase copy cannot reduce or otherwise alter either comparison copy.
+
+### Story 1.23: Wait for Time or Real Events
+
+As a player,
+I want to wait for a clock target or an actual event,
+So that silence and scheduled events advance without invented outcomes.
+
+**Acceptance Criteria:**
 
 **Given** the player waits until the next morning from 22:00
 **When** “morning” resolves to the next 06:00
@@ -1149,11 +1361,11 @@ So that Brackenford behaves like one persistent place rather than disconnected n
 **Then** events are processed by due game second, priority, and stable insertion sequence within a bounded work budget
 **And** identical recorded state and random inputs reproduce the same mechanical timing and outcome.
 
-### Story 1.10: Resolve Uncertainty and Develop the Character
+### Story 1.24: Resolve an Uncertain Check With Declared Odds
 
 As a player,
-I want uncertain actions and earned growth resolved transparently,
-So that increased competence feels persistent, understandable, and meaningful.
+I want to understand and resolve an uncertain action,
+So that the die, difficulty, and admitted consequence remain fair.
 
 **Acceptance Criteria:**
 
@@ -1175,12 +1387,25 @@ So that increased competence feels persistent, understandable, and meaningful.
 **Given** the controlled payment-extension fixture uses Presence 14, Persuasion +1, and difficulty 12
 **When** the probability is calculated
 **Then** the total bonus is +3 and the pre-roll success probability is 60%
-**And** success grants a one-day extension while failure leaves the deadline unchanged and reverses no prior gift.
+**And** the target is the existing Story 1.4 Mara-to-Oren obligation record, whose original due second is 115,200; success sets that record's due second to 201,600, while failure leaves it at 115,200 without reversing any earlier committed transaction or creating a second obligation.
 
 **Given** an uncertain social action succeeds
 **When** its consequence is committed
-**Then** the NPC may accept the admitted stakes
-**And** success cannot force abandonment of binding obligations, obedience, or an unsupported outcome.
+**Then** only the admitted and validated check outcome is committed
+**And** success cannot imply obedience, remove an obligation, or impose an unsupported NPC plan.
+
+**Given** the same unchanged task is attempted after competence increases
+**When** contextual difficulty is chosen
+**Then** the difficulty is not raised merely to cancel the earned bonus
+**And** genuinely harder chosen feats may still receive appropriately higher declared targets.
+
+### Story 1.25: Earn Player and Skill Progression
+
+As a player,
+I want to earn persistent growth from meaningful success,
+So that competence improves without duplicate or artificial caps.
+
+**Acceptance Criteria:**
 
 **Given** a meaningful check succeeds with pre-roll probability `p`
 **When** XP is awarded
@@ -1197,6 +1422,19 @@ So that increased competence feels persistent, understandable, and meaningful.
 **Then** that threshold is consumed, excess carries forward, and additional crossed levels resolve in the same commit
 **And** a player level grants one attribute point while a skill level grants +1 to that skill bonus.
 
+**Given** a controlled high-bonus fixture exceeds earlier proposed attribute or skill limits
+**When** progression and checks resolve
+**Then** no maximum level, attribute, or skill bonus clamps the character
+**And** the resulting actual probability still remains bounded by natural 1 and 20.
+
+### Story 1.26: Allocate Earned Attributes
+
+As a player,
+I want to allocate earned points,
+So that my current scores change only after valid confirmation.
+
+**Acceptance Criteria:**
+
 **Given** progression produces an unspent attribute point
 **When** the player opens `attribute-allocation`
 **Then** earned, spent, and unspent counts plus current and immutable starting scores are shown
@@ -1212,26 +1450,11 @@ So that increased competence feels persistent, understandable, and meaningful.
 **Then** precise field or conflict errors are returned without mutation
 **And** the last persisted scores and point balance remain authoritative.
 
-**Given** the same unchanged task is attempted after competence increases
-**When** contextual difficulty is chosen
-**Then** the difficulty is not raised merely to cancel the earned bonus
-**And** genuinely harder chosen feats may still receive appropriately higher declared targets.
-
-**Given** a controlled high-bonus fixture exceeds earlier proposed attribute or skill limits
-**When** progression and checks resolve
-**Then** no maximum level, attribute, or skill bonus clamps the character
-**And** the resulting actual probability still remains bounded by natural 1 and 20.
-
-**Given** a check result is displayed
-**When** the player inspects its inline mechanical summary
-**Then** it identifies the skill, rolled or no-roll status, result, and whether XP was awarded
-**And** narration agrees with the committed die, total, consequence, and progression.
-
-### Story 1.11: Inspect Known Information and Mechanical Results
+### Story 1.27: Recall Known Facts in Rowan and Journal
 
 As a player,
-I want to review what my character knows, owns, and mechanically experienced,
-So that I can understand the campaign without receiving hidden information or strategic hints.
+I want to inspect only what my character knows,
+So that the journal and Rowan do not reveal hidden state.
 
 **Acceptance Criteria:**
 
@@ -1255,6 +1478,14 @@ So that I can understand the campaign without receiving hidden information or st
 **Then** entries restate only that known information in text-first rows with worded statuses
 **And** uncertainty, source, and commitment state are shown when legitimately known.
 
+### Story 1.28: Inspect Inventory and Character State
+
+As a player,
+I want to inspect my inventory and character sheet,
+So that owned items and progression remain clear.
+
+**Acceptance Criteria:**
+
 **Given** the Inventory query succeeds with no owned items or with populated contents
 **When** the Inventory overlay opens
 **Then** it distinguishes empty from populated state and shows authoritative known possession, quantities, and money
@@ -1264,21 +1495,6 @@ So that I can understand the campaign without receiving hidden information or st
 **When** progression data is displayed
 **Then** immutable starting scores, current scores, player and skill XP/levels, skill bonuses, and earned/spent/unspent attribute points are distinct
 **And** P6 titles, achievements, affinities, and spells are absent.
-
-**Given** a transcript result resolved without a roll
-**When** its `mechanical-result` control opens Roll Details
-**Then** the overlay states that no roll was needed and explains the validated rationale, time, cost, and committed consequence
-**And** it does not fabricate a die result or hidden reasoning.
-
-**Given** a transcript result used a roll
-**When** its Roll Details open
-**Then** the view shows the declared difficulty, applicable modifiers and sources, successful-face probability, die, total, success/failure, committed consequence, and XP outcome
-**And** all values match the immutable result evidence.
-
-**Given** result evidence is missing, corrupt, or unreadable
-**When** Roll Details is requested
-**Then** the interface reports that exact failure state
-**And** neither Rowan nor the client reconstructs an explanation from guesses.
 
 **Given** Journal, Inventory, Character Sheet, or Result Details is loading or fails
 **When** the overlay renders
@@ -1300,11 +1516,39 @@ So that I can understand the campaign without receiving hidden information or st
 **Then** the interaction meets the approved 200 ms local-menu target under the evaluation setup
 **And** there is no global roll-log tab or omniscient roster.
 
-### Story 1.12: Save and Resume a Complete Branch
+### Story 1.29: Inspect Mechanical Results
 
 As a player,
-I want to save and restore the whole current situation,
-So that I can resume confidently or compare divergent choices without state leaking between branches.
+I want to inspect how an action resolved,
+So that rolled and routine results are explained from recorded evidence.
+
+**Acceptance Criteria:**
+
+**Given** a check result is displayed
+**When** the player inspects its inline mechanical summary
+**Then** it identifies the skill, rolled or no-roll status, result, and whether XP was awarded
+**And** narration agrees with the committed die, total, consequence, and progression.
+
+**Given** a transcript result resolved without a roll
+**When** its `mechanical-result` control opens Roll Details
+**Then** the overlay states that no roll was needed and explains the validated rationale, time, cost, and committed consequence
+**And** it does not fabricate a die result or hidden reasoning.
+
+**Given** a transcript result used a roll
+**When** its Roll Details open
+**Then** the view shows the declared difficulty, applicable modifiers and sources, successful-face probability, die, total, success/failure, committed consequence, and XP outcome
+**And** all values match the immutable result evidence.
+
+**Given** result evidence is missing, corrupt, or unreadable
+**When** Roll Details is requested
+**Then** the interface reports that exact failure state
+**And** neither Rowan nor the client reconstructs an explanation from guesses.
+
+### Story 1.30: Save a Complete Branch in a Manual Slot
+
+As a player,
+I want to save the complete branch in one of three slots,
+So that the previous durable save survives conflicts and failures.
 
 **Acceptance Criteria:**
 
@@ -1335,8 +1579,31 @@ So that I can resume confidently or compare divergent choices without state leak
 
 **Given** a save commits successfully
 **When** its snapshot is inspected
-**Then** it includes the clock, authored-content/schema versions, fixture and branch origin, inventory, money, possession, ownership, relationships, obligations, commitments, historical facts, observations, claims, beliefs, NPC plans, scheduled events, operation-safe state, character origin, current attributes, player/skill XP and levels, bonuses, allocations, and unspent points
-**And** every causal identifier and state hash required for restoration is preserved.
+**Then** it includes every authoritative state type introduced through Epic 1: clock, authored-content/schema versions, fixture and branch origin, inventory, money, possession, ownership, scheduled events, operation-safe state, character origin, starting and current attributes, player/skill XP and levels, bonuses, allocations, and unspent points
+**And** its versioned snapshot contract preserves causal identifiers and state hashes so later Epic 2 state types must extend the same complete save/load path when introduced.
+
+### Story 1.31: Load a Compatible Branch Without State Leakage
+
+As a player,
+I want to restore a compatible saved branch,
+So that old or incompatible state cannot corrupt my current campaign.
+
+**Acceptance Criteria:**
+
+**Given** at least one compatible occupied save slot exists
+**When** the save index loads and the player activates Continue from Title
+**Then** one accessible save-selection overlay opens with no slot preselected or silently loaded
+**And** each empty, occupied, or unavailable row identifies its slot and state in text, including campaign identity, known place, in-world time, saved-at time, compatibility, and selection state where available.
+
+**Given** save selection is open
+**When** the player presses Escape, activates Close, or completes a successful selection
+**Then** focus is contained while open and returns predictably afterward
+**And** no second overlay is stacked.
+
+**Given** the player confirms an occupied compatible Title slot
+**When** load begins
+**Then** the selected slot identity and revision reach the typed load boundary and the UI shows loading, success, or failure
+**And** the active campaign changes only after successful validation and commit.
 
 **Given** the player chooses a compatible occupied slot
 **When** load is submitted with the selected slot revision and request ID
@@ -1355,13 +1622,26 @@ So that I can resume confidently or compare divergent choices without state leak
 
 **Given** a saved branch is loaded
 **When** the Main Notebook and reference views refresh
-**Then** time, location, money, inventory, ownership, relationships, commitments, beliefs, plans, confirmed starting attributes, current attributes, XP, levels, bonuses, and allocated/unspent points match the snapshot
+**Then** time, location, money, inventory, ownership, confirmed starting attributes, current attributes, XP, levels, bonuses, and allocated/unspent points match the snapshot
 **And** late responses from the previously active branch cannot alter the restored transcript or state.
+
+**Given** the active branch changes after a successful load
+**When** a late event or query response arrives for the prior branch
+**Then** it remains attached only to its original operation subject
+**And** it cannot append to or replace the loaded branch's transcript or state.
 
 **Given** two branches diverged from the same captured state
 **When** either is loaded
 **Then** it restores only its own clock, knowledge, progression, inventory, rewards, and consequences
 **And** abandoned-branch state never carries across.
+
+### Story 1.32: Replay and Revisit a Saved Choice
+
+As a player,
+I want to revisit a saved choice and inspect reproducible outcomes,
+So that branch comparison remains isolated and timely.
+
+**Acceptance Criteria:**
 
 **Given** the same captured initial state, structured proposals, and recorded random inputs
 **When** a branch is replayed for evidence
@@ -1378,11 +1658,11 @@ So that I can resume confidently or compare divergent choices without state leak
 **Then** it meets the approved 2-second target
 **And** progress, overwrite, failure, success, and recovered-prior-state changes are announced without stealing focus.
 
-### Story 1.13: Diagnose and Verify the P0 Causal Loop
+### Story 1.33: Inspect Read-Only Causal Diagnostics
 
 As a playtester,
-I want inspectable and reproducible evidence for the world's decisions and mutations,
-So that I can distinguish believable causality from contradiction, duplication, or decorative narration.
+I want to inspect read-only causal evidence during local playtesting,
+So that I can trace an outcome without changing the live branch.
 
 **Acceptance Criteria:**
 
@@ -1403,8 +1683,16 @@ So that I can distinguish believable causality from contradiction, duplication, 
 
 **Given** the playtester inspects social and simulation state
 **When** diagnostic projections load
-**Then** facts, observations, claims, beliefs, provenance, NPC resources, obligations, plans, replanning reasons, clock, and scheduled-event queue remain separately identifiable
+**Then** the already implemented causal records, clock, and scheduled-event queue remain separately identifiable, and later social facts, observations, claims, beliefs, NPC plans, and reasons extend this read-only projection when their stories add them
 **And** operational logs are never treated as authoritative game truth.
+
+### Story 1.34: Export Redacted Operation Diagnostics
+
+As a playtester,
+I want to read and export correlated diagnostic evidence,
+So that I can investigate failures without disclosing secrets.
+
+**Acceptance Criteria:**
 
 **Given** structured application logging is active
 **When** operations, commits, saves, loads, failures, retries, or repairs occur
@@ -1416,67 +1704,41 @@ So that I can distinguish believable causality from contradiction, duplication, 
 **Then** it contains the evidence needed to investigate the selected operations, versions, hashes, latency, token usage, cost, duplicate attempts, rejected proposals, and contradiction repairs
 **And** secret and hidden-state redaction is applied consistently.
 
-**Given** a captured starting state, validated proposals, and seeded random inputs
-**When** the replay tool runs outside the live branch
-**Then** it reproduces mechanical results and resulting hashes or reports the first divergence
-**And** it does not require regenerated narration to match.
+### Story 1.35: Run a Packaged Local Campaign
 
-**Given** purchase, full-pouch transfer, no-transfer, timing, wait, check, progression, and save/load fixtures
-**When** the P0 foundation evidence suite runs
-**Then** isolated branch ledgers, funds, stock, ownership, elapsed time, rolls, XP, allocations, and restored state reconcile without cross-branch merging
-**And** duplicate/retry cases produce no second mutation.
+As a player,
+I want to launch the finished local build,
+So that a campaign works without a development server.
 
-**Given** the controlled check evidence fixtures
-**When** natural 1, natural 20, 60%, 95%, near-threshold, and high-bonus cases run
-**Then** probability, die, total, consequence, XP, levels, bonus growth, point allocation, and lack of caps match the approved rules
-**And** failed or already-resolved checks award no XP.
+**Acceptance Criteria:**
 
-**Given** the timing evidence fixtures
-**When** 2-word and 31-word exchanges, both authored travel routes, the prepared-pouch handover, 100-loose-coin handling, one-minute silence, and overnight/event waits run
-**Then** each committed duration matches its approved calculation and interruption behavior
-**And** rejected, interrupted, loaded, or retried work does not duplicate elapsed time.
+**Given** a packaged production build
+**When** the application starts
+**Then** FastAPI serves the SPA and API from one loopback-only origin
+**And** no remote binding, account system, cloud service, or external broker is required.
 
-**Given** the real browser accessibility journey
-**When** all eight P0 surfaces are exercised with keyboard, screen-reader semantics, 200% zoom, 320 CSS px-equivalent reflow, and reduced motion
-**Then** focus, announcements, contrast, target sizing, overlays, reading order, and full operation meet the current UX contract
-**And** generated content receives the same semantic treatment as authored content.
+**Given** the completed P0 application is checked in
+**When** its baseline quality commands run independently
+**Then** formatting, linting, strict type checking, backend integration tests, frontend tests, OpenAPI drift checks, and a real-browser startup journey pass
+**And** only the external LLM boundary is eligible for a deterministic test substitute.
 
-**Given** the accepted endurance workload
-**When** four active NPCs are exercised for 60 wall-clock minutes and approximately 100 representative actions
-**Then** the run records simulated seconds, input acknowledgement, local-menu latency, save/load latency, LLM latency, interruptions, tokens, model calls, actual session cost, rejected proposals, duplicate attempts, repairs, and browser/test-machine specifications
-**And** memory ends no more than 100 MB above the post-initial-scene baseline without monotonic per-action growth.
-
-**Given** an evidence run finds an unexplained authoritative contradiction, conservation failure, save failure, severe latency, irrelevant memory, or opaque progression
-**When** the result is evaluated
-**Then** the affected scenario is marked failed with its evidence and must be corrected and repeated
-**And** no later stage is authorized by incomplete or failed evidence.
-
-**Given** Epic 1 is complete but Epic 2's social propagation has not yet been verified
-**When** readiness is reported
-**Then** the tooling reports the P0 foundation evidence separately from the remaining gift/no-gift motive and rumor evidence
-**And** P1 remains unauthorized until Epic 2 completes the full P0 gate.
-
-**Given** the implemented repository and runtime
-**When** scope is audited
-**Then** it contains only the approved P0 foundation content and no speculative P1–P9 state, migrations, modules, UI, or content
-**And** unsupported ideas are recorded as expansion candidates rather than committed consequences.
 
 ## Epic 2: Make Consequences Travel Through People
 
 Players can change an NPC's feasible opportunities and later observe information travel through witnesses, fallible reports, beliefs, and motive-based NPC choices without omniscience or scripted outcomes.
 
-### Story 2.1: Give Each NPC Grounded State and Feasible Plans
+### Story 2.1: Give the Four P0 NPCs Grounded State
 
 As a player,
-I want Brackenford's residents to act from their own circumstances,
-So that their choices feel motivated rather than scripted around me.
+I want to meet residents with distinct needs and obligations,
+So that their choices begin from authored circumstances.
 
 **Acceptance Criteria:**
 
 **Given** a new P0 branch
 **When** Mara, Oren, Tessa, and Ivo are instantiated from authored content
 **Then** each has explicit resources, needs, competing desires, obligations, relationships, current plan, location, and limited knowledge
-**And** no fifth named NPC or broader merchant network is added.
+**And** their richer NPC state references and extends the same Mara-to-Oren obligation ID and current deadline seeded in Story 1.4, preserving any Story 1.24 extension; no fifth named NPC, broader merchant network, or duplicate debt model is added.
 
 **Given** Mara's initial authored state
 **When** it is inspected through development diagnostics
@@ -1492,6 +1754,14 @@ So that their choices feel motivated rather than scripted around me.
 **When** they are inspected
 **Then** Tessa is a neighboring trader and Ivo is a courier and Tessa's friend
 **And** the controlled rumor variant can use Ivo's recorded distrust without making distrust universal in every branch.
+
+### Story 2.2: Let NPCs Choose Feasible Plans
+
+As a player,
+I want to observe residents choosing feasible plans,
+So that their behavior changes with knowledge and resources.
+
+**Acceptance Criteria:**
 
 **Given** an NPC considers a plan
 **When** feasible options are generated
@@ -1513,26 +1783,44 @@ So that their choices feel motivated rather than scripted around me.
 **Then** the committed plan records its motive-based reasons and relevant constraints for diagnostics
 **And** the player-facing presentation reveals only what the character can legitimately perceive.
 
-**Given** a belief changes while physical circumstances remain the same
-**When** the NPC replans
-**Then** the belief may affect option evaluation without rewriting historical facts or compelling a fixed action
-**And** the prior plan and reason history remain available for causal inspection.
-
 **Given** NPC state is saved and loaded
 **When** the branch resumes
 **Then** resources, needs, desires, obligations, relationships, knowledge, current plan, plan status, and recorded reasons are restored together
 **And** loading does not trigger an unrecorded replan.
 
-**Given** the player gives an NPC substantial resources
-**When** future plan selection occurs
-**Then** retirement, investment, debt payment, travel, refusal, or another supported option remains contingent on that NPC's situation
-**And** no universal “gift enough money = obedience” rule exists.
-
-### Story 2.2: Change Mara's Opportunities With a Witnessed Gift
+### Story 2.3: Record Facts and Actual Witness Observations
 
 As a player,
-I want a substantial gift to change Mara's real options,
-So that generosity produces persistent consequences without forcing a scripted response.
+I want nearby people to remember only what they could perceive,
+So that a later gift or report has a trustworthy causal source.
+
+**Acceptance Criteria:**
+
+**Given** a supported world event commits
+**When** its historical fact is recorded
+**Then** the fact has a stable typed identity, event source, place, game time, and authoritative details
+**And** it is distinct from every participant or witness observation.
+
+**Given** an NPC actually perceives a completed event
+**When** observation capture runs in the same authoritative commit
+**Then** the typed observation records witness, source fact, place, time, perceptible details, and uncertainty
+**And** it excludes hidden motives, unobservable mechanics, and facts beyond that witness's perception.
+
+**Given** an NPC is absent, blocked from perceiving the event, or the action never completes
+**When** witness capture evaluates the event
+**Then** that NPC receives no observation
+**And** historical truth is never copied into non-witness knowledge by default.
+
+**Given** the supported event or its operation is retried or a branch is saved and loaded
+**When** causal records are inspected
+**Then** each fact and observation keeps its stable ID, source link, and insertion order without duplication
+**And** the player-facing projection reveals only information legitimately learned by the player character.
+
+### Story 2.4: Complete a Witnessed Full-Pouch Gift
+
+As a player,
+I want to give Mara the prepared pouch in view of Tessa,
+So that the transfer and witnesses reflect a completed action.
 
 **Acceptance Criteria:**
 
@@ -1540,6 +1828,11 @@ So that generosity produces persistent consequences without forcing a scripted r
 **When** the gift or no-gift branch begins
 **Then** it receives an isolated copy containing the untouched prepared pouch with exactly 10,000 gold and no other player gold
 **And** no purchase-branch or sibling-branch mutation is present.
+
+**Given** either isolated comparison branch leaves the day-1 08:00 Market Square capture
+**When** the same five-second authored walk reaches Mara's Stall with Mara and Tessa present
+**Then** the branch records one `p0-gift-opportunity` event with a branch-local stable ID and game second 28,805 before the gift/no-gift decision
+**And** both branches retain the same opportunity timestamp and fixture marker even if no gift occurs; retries cannot record it twice.
 
 **Given** the player offers Mara the full prepared pouch
 **When** the intention is interpreted
@@ -1560,6 +1853,19 @@ So that generosity produces persistent consequences without forcing a scripted r
 **When** the transaction commits
 **Then** Mara receives a recipient observation and Tessa receives a witness observation containing only perceptible details
 **And** Oren, Ivo, and other non-witness knowledge remain unchanged.
+
+### Story 2.5: Compare Mara’s Gift and No-Gift Opportunities
+
+As a player,
+I want to see how the gift changes Mara’s feasible choices,
+So that both branches stay causal and independent.
+
+**Acceptance Criteria:**
+
+**Given** the player gives Mara substantial resources
+**When** future plan selection occurs
+**Then** retirement, investment, debt payment, travel, refusal, or another supported option remains contingent on her situation
+**And** no universal “gift enough money = obedience” rule exists.
 
 **Given** Mara's resources increase by 10,000 gold
 **When** her feasible opportunity set is recalculated
@@ -1591,27 +1897,17 @@ So that generosity produces persistent consequences without forcing a scripted r
 **Then** its resources, ownership, fact, witness observations, Mara's opportunity set, selected plan, reasons, and resulting schedule are restored
 **And** no state crosses into the other branch.
 
-### Story 2.3: Carry a Report Through Actual Contact
+### Story 2.6: Schedule Contact and Record a Spoken Claim
 
 As a player,
-I want news to travel only when people can actually observe and tell one another,
-So that NPC knowledge feels local, limited, and causally earned.
+I want Tessa's report to require a real meeting with Ivo,
+So that a claim has a supported path through the world.
 
 **Acceptance Criteria:**
 
-**Given** a committed world event
-**When** social knowledge records are created
-**Then** historical facts, witness observations, spoken claims, and character beliefs use distinct typed records with stable IDs
-**And** each derived record points to its immediate source and causal chain.
-
-**Given** an NPC witnesses an event
-**When** an observation is created
-**Then** it records the witness, place, game time, perceptible details, and uncertainty
-**And** it excludes hidden motives, unobservable mechanics, and facts outside that witness's perception.
-
-**Given** the P0 gift opportunity occurs
-**When** the scheduler advances 1,800 seconds from that opportunity
-**Then** Tessa and Ivo meet in the Common Room in both gift and no-gift branches unless a committed interruption changes their ability to meet
+**Given** the branch-local `p0-gift-opportunity` event from Story 2.4 is recorded at second 28,805
+**When** the scheduler reaches 1,800 seconds after that event
+**Then** Tessa and Ivo meet in the Common Room at second 30,605 in both gift and no-gift branches unless a committed interruption changes their ability to meet
 **And** the meeting follows the shared clock rather than an out-of-band timer.
 
 **Given** Ivo has not witnessed the gift and has received no claim
@@ -1628,6 +1924,14 @@ So that NPC knowledge feels local, limited, and causally earned.
 **When** she communicates a supported report
 **Then** the claim records speaker, listener, encounter, communicated meaning, acquisition time, and disclosed or undisclosed source
 **And** the claim may be truthful, mistaken, incomplete, distorted, or deceptive without changing the original fact.
+
+### Story 2.7: Let Ivo Form a Belief From Tessa’s Claim
+
+As a player,
+I want to see Tessa’s report reach Ivo through a real meeting,
+So that claims and beliefs have a traceable source.
+
+**Acceptance Criteria:**
 
 **Given** Ivo receives a valid claim
 **When** his belief is updated
@@ -1659,13 +1963,18 @@ So that NPC knowledge feels local, limited, and causally earned.
 **Then** the meeting event, participants, observations, claims, beliefs, provenance, and insertion order restore exactly
 **And** loading cannot deliver the report twice or skip an already committed transmission.
 
-### Story 2.4: Let Fallible Beliefs Shape Later Choices
+### Story 2.8: Let Fallible Beliefs Shape Choices
 
 As a player,
-I want NPCs to act on what they believe rather than omniscient truth,
-So that rumors, doubt, correction, and trust create understandable social consequences.
+I want to see Ivo respond to a fallible report,
+So that beliefs influence choices without rewriting history.
 
 **Acceptance Criteria:**
+
+**Given** a belief changes while physical circumstances remain the same
+**When** the NPC replans
+**Then** the belief may affect option evaluation without rewriting historical facts or compelling a fixed action
+**And** the prior plan and reason history remain available for causal inspection.
 
 **Given** the controlled rumor branch and Tessa's gift observation
 **When** Tessa reports that the gift may have bought influence
@@ -1697,6 +2006,14 @@ So that rumors, doubt, correction, and trust create understandable social conseq
 **Then** it must be consistent with what the speaker knows and the supported encounter
 **And** the listener receives only the communicated claim, not the speaker's hidden knowledge or intent.
 
+### Story 2.9: Correct and Inspect a Belief-Driven Choice
+
+As a player,
+I want to observe how later evidence changes a belief-driven choice,
+So that my knowledge and saved branch remain honest.
+
+**Acceptance Criteria:**
+
 **Given** Ivo later receives corroboration, contradiction, or correction through a supported observation or contact
 **When** his belief updates
 **Then** the new evidence and resulting confidence are appended to belief history
@@ -1722,78 +2039,6 @@ So that rumors, doubt, correction, and trust create understandable social conseq
 **Then** the fact, observations, claims, belief history, confidence, selected plan, decision reasons, and observable consequences persist
 **And** no universal crime, gift, or reputation score is inferred.
 
-### Story 2.5: Verify the Complete P0 Social-Causality Gate
-
-As a playtester,
-I want repeated evidence that resources and reports change behavior for explainable reasons,
-So that P0 proves a causal world before later systems expand it.
-
-**Acceptance Criteria:**
-
-**Given** the captured P0 starting state
-**When** the controlled gift/no-gift protocol runs
-**Then** it executes three isolated repetitions of each branch from equivalent initial state
-**And** purchase, gift, and no-gift ledgers never merge.
-
-**Given** each gift/no-gift repetition
-**When** the branch completes its relevant consequences
-**Then** player and NPC funds, pouch ownership, stall stock, elapsed time, observations, plans, and saved state reconcile exactly
-**And** Mara's feasible opportunity set differs after the gift without requiring one scripted decision.
-
-**Given** Mara selects a plan in either branch
-**When** the result is reviewed
-**Then** diagnostics provide a motive-based explanation grounded in her needs, desires, debt, relationships, resources, knowledge, risk, and time
-**And** an unexplained internal flag or narration-only change fails the evidence check.
-
-**Given** Tessa witnesses the gift and later meets Ivo
-**When** knowledge is inspected before and after contact
-**Then** Ivo knows nothing about the gift before receiving a supported claim
-**And** the complete observation → encounter → claim → belief provenance exists afterward.
-
-**Given** at least one controlled rumor variant
-**When** Tessa suggests the gift bought influence and Ivo applies his recorded distrust
-**Then** the resulting claim may be distorted or doubted and may change a later choice
-**And** the original gift fact remains unchanged.
-
-**Given** the same scenario is replayed from captured proposals and seeded random evidence
-**When** its mechanics resolve
-**Then** transfers, timings, checks, contacts, beliefs, plans, and committed consequences reproduce
-**And** newly generated narration may differ without changing the evidence result.
-
-**Given** a branch is saved before gift consequences, contact, or belief-driven action
-**When** it is loaded and completed
-**Then** every causal dependency resumes without duplicate transfer, transmission, replan, time, XP, or reward
-**And** its outcome remains isolated from sibling branches.
-
-**Given** the player attempts one unplanned but supported P0 approach
-**When** the engine adjudicates it
-**Then** the same proposal, validation, transaction, knowledge, timing, and persistence rules apply
-**And** unsupported expansion is recorded rather than improvised into authoritative success.
-
-**Given** a completed controlled run
-**When** the playtester answers “what changed?”, “why did each person act?”, “what felt unfair?”, and “what do you want next?”
-**Then** the answers are recorded with the run evidence
-**And** believability is evaluated separately from mechanical consistency.
-
-**Given** the playtester reviews Mara's and Ivo's outcomes
-**When** asked to explain them
-**Then** the playtester can identify why the recipient's feasible plan changed and why the report recipient behaved differently
-**And** inability to provide a plausible explanation is recorded as a believability failure rather than hidden by passing mechanics.
-
-**Given** any repetition finds an unexplained authoritative contradiction, conservation error, knowledge leak, duplicate mutation, or save/load failure
-**When** the gate is evaluated
-**Then** the affected scenario fails, is corrected, and is repeated
-**And** P1 remains unauthorized until the repeated evidence has zero unexplained failures.
-
-**Given** the mechanical evidence passes
-**When** expansion is considered
-**Then** two voluntary return sessions by Kyle and available friend feedback are recorded as desirability signals
-**And** those signals inform expansion without becoming an automatic public-release or market claim.
-
-**Given** all P0 mechanical, persistence, knowledge, performance, accessibility, and believability checks pass
-**When** the P0 gate is closed
-**Then** Epic 2 records the evidence package and marks P0 eligible for a separate P1 authorization decision
-**And** it does not automatically enable P1, multiplayer, public release, or later-stage content.
 
 ## Epic 3: Make Resources and Effects Authoritative
 
