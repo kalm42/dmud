@@ -1,30 +1,28 @@
 ---
 title: "dmud — GDD Development Epics"
 created: 2026-09-07
-updated: 2026-09-07
-version: "0.3"
-status: draft-for-correction
+updated: 2026-09-15
+version: "0.8"
+status: staged-design-baseline-approved
 ---
 
 # dmud — Development Epics
 
-Design breakdown accompanying [gdd.md](gdd.md). G IDs refer to its decision register, which distinguishes accepted corrections from unapproved tuning. No staffing, sprint lengths, estimates, engine choices, or implementation authorization are implied. Detailed technical stories belong to a later workflow.
+Design breakdown accompanying [gdd.md](gdd.md). G IDs refer to its decision register. P0 remains the initial implementation. P1–P9 are individually evidence-gated; approving their designs does not authorize implementing them early. These are design work packages, not estimates, sprint commitments, or technical stories.
 
-## E1 — Act in a small persistent world
+## E1 — Enter and act in a small persistent world
 
-**Stage:** P0. **Pillars:** P-A, P-D. **Dependencies:** None. **Value:** Make an intention produce an explainable, durable consequence in the three-location world.
+**Stage:** P0. **Pillars:** P-A, P-D. **Dependencies:** None. **Value:** Establish a player-authored character, then make an intention produce an explainable, durable consequence in the three-location world.
 
 | Story | Player outcome | Evidence |
 | --- | --- | --- |
-| E1.1 — Discover the small world | Inspect three locations, four named people, exits, inventory, and known circumstances | Navigation and descriptions expose only appropriate knowledge; no extra world scope |
-| E1.2 — Act and transact | Converse, move, give, purchase, and wait using free text without proactive action suggestions | Feasibility, consent, stock, and funds govern transactions; rejection leaves no partial transfer |
-| E1.3 — Resolve uncertainty | Understand stakes and attempt the single meaningful Persuasion check | Pre-roll difficulty and actual success probability, natural 1 failure/natural 20 success, recorded modifiers/result, matching consequences; no unchanged-condition reroll loophole |
-| E1.4 — Resume the same situation | Save and load without losing changes | Money, items, clock, relationships, commitments, beliefs, plans, XP/levels/bonuses and allocated/unspent points restored; repeated requests do not double-spend |
-| E1.5 — Grow through a difficult check | Gain challenge-dependent XP, raise a skill bonus, and allocate player-level attribute points | No attribute/skill cap; zero XP for checks failing only on 1; threshold test saves avoid adding encounters; resolved check awards once |
+| E1.0 — Begin or continue | Choose New Game or Continue and complete Rowan-led Session 0 | Three save slots behave correctly; categorized inputs and the 8/10/12/13/14 array persist; confirmation starts day 1 at 08:00 without charging Session 0 time and captures the P0 fixture state |
+| E1.1 — Discover the small world | Inspect three locations, four named people, exits, inventory, and known circumstances | The player owns one prepared P0 test-fixture pouch containing exactly 10,000 gold and no other gold; descriptions expose only appropriate knowledge and add no world scope |
+| E1.2 — Act and transact | Converse, move, give, purchase, and wait through free text | Feasibility, consent, stock, time, and funds govern atomic outcomes; the 1-gold purchase branch and full-pouch gift branch each reload the captured state and never merge; no proactive action suggestions |
+| E1.3 — Resolve uncertainty | Understand stakes and attempt the controlled Persuasion check | Presence 14 (+2) + Persuasion 1 against difficulty 12 is 60%; natural 1/20 and no-reroll rules hold |
+| E1.4 — Resume and grow | Save/load, gain challenge-dependent XP, level a skill, and allocate an attribute point | Complete restoration, one-time awards, no caps, zero XP on failure and 95%-success checks |
 
-**Scope:** G03–G08, G15–G16, and proposed G18 tuning as applicable to P0. No ward simulation, combat, affinity progression, dedicated training activities, or basic-skill unlock system. The action-driven clock uses seconds and pauses offline. Travel uses distance/speed; dialogue uses rendered speech; handling and waits use validated contextual estimates. Timed and event waits yield to actual events and attention-worthy silence. Keep one check situation, one player XP track, and one exercised skill.
-
-**Exit evidence:** One inspect → move → purchase/converse → consequential check → save/load cycle, including a rejected operation, interrupted request/wait, natural-roll extremes, and near-threshold leveling save, preserves authoritative consistency. Verify room/travel distances and movement modes affect duration, speech/handling are counted once, and no proactive suggestions steer the player. E2 supplies the stronger NPC/social proof; E1 alone does not pass P0.
+**Exit evidence:** Complete the inspect → move → transact/converse → consequential check → save/load loop, including rejection, interruption, timing variants, natural-roll extremes, and near-threshold growth. E2 supplies the stronger causal-social proof.
 
 ## E2 — Make consequences travel through people
 
@@ -32,87 +30,133 @@ Design breakdown accompanying [gdd.md](gdd.md). G IDs refer to its decision regi
 
 | Story | Player outcome | Evidence |
 | --- | --- | --- |
-| E2.1 — Change someone's options | Give Mara transformative resources and observe a motivated decision | Gift/no-gift comparison changes feasible plans; behavior reflects need, competing desire, obligation, and affected relationship |
-| E2.2 — Follow a report | See a witness later communicate through a real encounter | Observation and receipt separated; no NPC omniscience; source and timing inspectable in test evidence |
-| E2.3 — Encounter imperfect belief | Experience a changed response to a distorted or doubted report | Belief affects a choice while original facts remain unchanged; no global reputation overwrite |
-| E2.4 — Test persistence and credibility | Resume and ask about earlier events | Plans, commitments, and knowledge affect later actions after loading; captured proposals/rolls reproduce mechanical outcomes |
+| E2.1 — Change someone's options | Give Mara the prepared P0 test-fixture pouch containing exactly 10,000 gold and observe a motivated decision | Gift/no-gift comparison reloads the same untouched fixture state, changes feasible plans, and does not prescribe retirement |
+| E2.2 — Follow a report | See Tessa later communicate through a real encounter with Ivo | Observation and receipt are separate; no non-witness omniscience |
+| E2.3 — Encounter imperfect belief | Experience a changed response to a distorted or doubted report | Belief affects choice while the original event remains unchanged |
+| E2.4 — Preserve causality | Resume and ask about earlier events | Plans, commitments, knowledge, and resources survive loading without duplication inside a branch; isolated fixture branches never merge state |
 
-**Scope:** G04–G05, G08, G17. Exactly one social conflict across the existing four people and three locations. The 10,000-gold balance is controlled test funding, not an economy to balance. Keep the first gift witnessed and simple; anonymous gold delivery is a desired later test. The scheduled report encounter is 1,800 seconds after the gift opportunity, with actual travel/handling time respected.
+**P0 gate:** Capture one starting state with the player's single prepared P0 test-fixture pouch containing exactly 10,000 gold and no other gold. Reload it independently for the purchase, full-pouch gift, no-gift, and rumor branches; never merge their outcomes. Run three controlled gift/no-gift pairs and at least one rumor variant. Require zero unexplained contradictions or conservation/save failures, then record causal comprehension and believability separately. The P0 fixture and all branch outcomes are discarded before later-stage economy tests.
 
-**P0 exit gate:** All five GDD P0 evidence checks, with the G17 proposed repetition protocol. Record Kyle's explanation and believability assessment separately from consistency checks. Investigate failures before increasing scope. Passing P0 supports deciding whether to try P1; it does not prove the complete game enjoyable.
+## E3 — Make resources and effects authoritative
 
-## E3 — Secure Brackenford's future through play
-
-**Stage:** Conditional P1. **Pillars:** P-A, P-B, P-C. **Dependency:** P0 evidence gate and decision to expand. **Value:** Pursue a community future and livelihood without following a fixed plot.
+**Stage:** Conditional P1. **Pillars:** P-A, P-D. **Dependency:** P0 gate. **Value:** Establish the shared mechanical language used by deprivation, crafting, spells, items, and combat.
 
 | Story | Player outcome | Evidence |
 | --- | --- | --- |
-| E3.1 — Understand the community pressure | Inspect known safety/subsistence needs, warnings, and commitments | Viability thresholds and pressure are concrete and visible enough to plan; long waits interrupt for warnings |
-| E3.2 — Negotiate a supported future | Choose among at least two plausible routes and fulfill the relevant agreements | Protection/repair/relocation outcomes use actual resources and commitments; an unplanned supported solution can meet the same conditions |
-| E3.3 — Craft and apply alchemy | Purchase ingredients, craft potions or brewing products, and apply or distribute them | Declared ingredients present in inventory; G03 check determines success; successful craft produces a persistent item; failed craft consumes ingredients with no output |
-| E3.4 — Apply a poison | Coat a weapon or food item and observe the effect on contact or consumption | Poison persists on item until triggered or cleaned; applied effect uses G03 modifiers; effect duration and magnitude match the declared recipe |
-| E3.5 — Live with the result | Meet viability conditions or recover from setbacks, then continue | Success persists for the defined window; failure offers recovery; NPC adaptation and unresolved concerns survive save/load |
+| E3.1 — Have three resource pools | See current/base/effective maximum Health, Mana, and Stamina | Formulas, growth, absolute deficits, clamps, save/load, and death at 0 Health match G22 |
+| E3.2 — Exert and recover | Pay Stamina for strenuous actions and recover through rest | 0/5/10/20 bands, full-cost rejection, 0-Stamina restrictions, and 10-minute recovery are exact |
+| E3.3 — Receive a bounded effect | Gain an authored or generated buff/debuff whose mechanics remain stable | The LLM may propose target, shape, duration, magnitude, and presentation within the source budget; validation and stable identity match G24 |
+| E3.4 — Stack and remove effects | Experience Stack, Refresh, Replace, opposing modifiers, and causal treatment | Arithmetic order, minimums, linked removal, expiration, and persistence remain correct |
+| E3.5 — Understand known effects | Inspect known mechanics and observe symptoms of unknown effects | UI reveals only justified source, stack, duration, mechanics, and removal knowledge |
 
-**Scope:** G01–G02, G07, G10, G19. Reuse the hub and cast; use purchased ingredients with no stall, lab, or production chain. Alchemy is personal crafting; NPC purchasing follows preference, affordability, and actual need. No building system, additional region, full economy, or forest-to-tavern production chain.
+**Controlled fixtures:** Sharpened, Bleeding, simultaneous +25%/−25%, diagnostic-only Star-metal Edge (+20 damage on the next successful hit within 10 minutes from rare artifact-grade oil), every tier/shape ceiling, and one-above-limit invalid proposals. Verify the declared same-timestamp order for completion, ticks/thresholds, expirations/transitions, recalculation/clamps, and death. P1 excludes hunger, sleep, access, autonomous livelihood, alchemy, spells, and combat.
 
-**Before implementation:** Define the four household populations/resources, protection-contract requirements and costs, warning/loss rules, and budget feasibility for each test route. Define G19 ingredient prices, NPC needs that crafted items can serve, and craft-type thresholds. The GDD proposes thresholds and effect values but does not claim those have been numerically balanced.
+## E4 — Make places physically accessible
 
-**Exit evidence:** Two plausible viable routes, one unplanned supported approach, and a crafting session that produces a used item. At least one successful craft and one failed craft observed. Measure understandable causality, response times, model usage/cost, and remaining motivation to play.
-
-## E4 — Earn a distinctive affinity ability
-
-**Stage:** Conditional P1. **Pillars:** P-D, P-A. **Dependency:** E3 provides consequential activity and history. **Value:** Choose a small build, obtain an uncertain but bounded awakening, and earn an optional evolution.
+**Stage:** Conditional P2. **Pillars:** P-A, P-B. **Dependency:** P1 gate. **Value:** Make possession, permission, locality, intrusion, and evidence causal rather than abstract.
 
 | Story | Player outcome | Evidence |
 | --- | --- | --- |
-| E4.1 — Choose an affinity package | Choose between two small packages without losing universal basic-skill access | Each affinity's bonus, ability ownership, and available slots are explicit; no classes |
-| E4.2 — Awaken through a stone | Use the one concept stone with the whole affinity set affecting the result | Uncertain supported ability occupies one owning-affinity slot; rarity affects bounded quality; invalid outcome consumes nothing |
-| E4.3 — Receive distinct recognition | Earn one title and one generated achievement | Title applies its buff; achievement creates its budgeted item prize; narration reflects actual history |
-| E4.4 — Select an earned variant | Meet a meaningful-use and earned-record prerequisite, then choose an upgrade | Award alone does not upgrade; selling the prize does not remove the record; selected variant replaces existing ability within its slot |
+| E4.1 — Enter by right | Use permission or a matching key and share a capacity-two bed | Ownership gives no remote use; physical access and capacity govern use |
+| E4.2 — Pick a lock | Attempt a 60-second Agility + Sleight check at difficulty 12 | Failure consumes one pick; another owned pick allows another fully resolved attempt |
+| E4.3 — Force entry | Spend 30 seconds and 10 Stamina on Body + Athletics difficulty 14 | Every attempt is loud; success leaves the door broken/open; paid retries remain possible |
+| E4.4 — Take local property | Remove one fungible serving and one distinctive marked object | Physiological/physical use succeeds despite ownership while property truth persists |
+| E4.5 — Learn through evidence | Observe absence, compare memory, form a hypothesis, and possibly accuse | Unseen theft grants no knowledge; suspicion needs a cause and may be wrong |
 
-**Scope:** G09, G11–G13. At most four awakening candidates total, two rarity bands, one ability variant, one title, and one achievement/prize. The LLM judges thematic fit; code validates mechanical constraints only. No full magic library, extra basic-skill gates, replacement/respec system, or magical business domain.
+**Controlled fixture:** Ivo's Home, its four door states, Ivo and permitted guest Mara's keys, one bed, one food serving, and one marked object. Save/load preserves possession, access, permission, event history, observations, and beliefs. Formal policing is excluded through P9.
 
-**Before implementation:** Specify both package kits, supported candidate effects/costs/ranges/durations, the rarity effect budget, title and item effects, the qualifying achievement, and the variant's tradeoff. Keep these inside the experiment's content budget.
+## E5 — Live with hunger and fatigue
 
-**Exit evidence:** Exercise both packages and controlled rarity outcomes; demonstrate correct slot ownership, distinct rewards, and optional earned evolution. Ask whether powers feel history-shaped and worth their limited slots. Review G17's voluntary return-session signal before expanding.
-
-## E5 — Daily quest system and gacha rewards
-
-**Stage:** Conditional P1. **Pillars:** P-A, P-D. **Dependency:** E3 (alchemy system operational; crafting quests require it). **Value:** Complete system-assigned daily objectives for XP and gacha item draws; experience history-reflecting rewards through practice.
+**Stage:** Conditional P3. **Pillars:** P-A, P-B. **Dependency:** P2 gate. **Value:** Let food, sleep, shelter, and deliberate neglect matter through transparent causal consequences.
 
 | Story | Player outcome | Evidence |
 | --- | --- | --- |
-| E5.1 — Receive daily quests | See three System-assigned quests appear at in-game dawn; read objectives, explicit success conditions, and reward information in the journal | Quests visible in distinct journal category in the System's fourth-wall-breaking voice; each has a stated objective, explicit success conditions, relevant skill, and reward preview; no quest requires a fixed solution path |
-| E5.2 — Complete a quest and claim XP | Fulfill the stated objective (crafting, social, or observation) and receive XP reward | XP awarded to player XP track and stated skill; partial completion does not award; a retry of an already-resolved request does not award again |
-| E5.3 — Draw from the gacha pool | Receive a gacha draw on quest completion; draw one item from the known pool | Pool contents visible before drawing; draw result uses RNG; item is created in inventory with explicit effects stated at draw time; selling or losing the item does not undo the draw record |
-| E5.4 — Observe quest expiry and refresh | Let a quest expire without completing it; observe replacement at next dawn | Expired quest produces no reward, no penalty; three new quests replace the previous set; expired quests do not carry over |
+| E5.1 — Become Starved | Go 24 hours without a completed serving and accrue further daily stacks | Each stack multiplies effective max Health by 0.75, rounds, clamps current without damage triggers, and persists |
+| E5.2 — Eat and recover capacity | Eat any complete serving, including expired food | Hunger timer resets and one Starved stack is removed; restored maximum does not heal current Health |
+| E5.3 — Become Exhausted | Go 24 hours without adequate sleep and accrue further daily stacks | Effective max Stamina, clamp, and removal mirror Starved; 0 Stamina is restrictive but not lethal |
+| E5.4 — Sleep adequately | Complete uninterrupted eight-hour sleep in a usable bed and protected place | Timer resets, one stack is removed, and Stamina fills to the new effective maximum; interrupted/unsafe sleep fails qualification |
+| E5.5 — Prepare varied food | Eat raw cabbage or use recipe-specific tools, time, Stamina, and ingredients | Six fixture recipes produce exact yields and fresh batch expiration timestamps |
+| E5.6 — Risk spoiled food | Consume expired food and resolve a Constitution check | Hunger is satisfied regardless; overdue fraction determines probability, nearest-achievable difficulty, XP, and sickness tier |
 
-**Scope:** G20. Daily quest categories: crafting (make N items of a given type using G19 crafting), social (fulfill an NPC concern or commitment), observation (visit a location and inspect a condition). No penalty mechanic, streak system, or player-configured quest preferences.
+**Scope:** G26. Hunger and effect timers continue during sleep; inadequate sleep still receives ordinary short-rest Stamina recovery. P3 does not force player action and includes no nutrition/macronutrients, storage modifiers, or ingredient-age inheritance.
 
-**Before implementation:** Define all three quest-category templates and sample objectives. Define the gacha pool: list every item at each rarity tier (common, uncommon, rare) with explicit effects and gold-value equivalents. Define the fictional System framing (status-window interface, narrator voice, attribution). These must be complete before implementation.
+## E6 — Let needs become plans
 
-**Exit evidence:** Exercise all three quest categories across multiple in-game days. Verify correct XP awards, gacha draws from the declared pool, and clean expiry/refresh. Ask whether System quests feel like a meaningful addition or an intrusion on free-play intent. Record Kyle's answer as a signal before extending the quest pool.
-
-## E6 — Hidden bonus objectives
-
-**Stage:** Conditional P2. **Pillars:** P-A, P-D. **Dependency:** E5 (quests must exist before bonus objectives can extend them); P1 evidence gate. **Value:** Reward unusual, creative, and accidental play with surprise bonuses that make the player feel seen by the world.
+**Stage:** Conditional P4. **Pillars:** P-B, P-C. **Dependency:** P3 gate. **Value:** Observe an NPC satisfy needs through work, money, access, preparation, and recovery instead of resource abstraction.
 
 | Story | Player outcome | Evidence |
 | --- | --- | --- |
-| E6.1 — Trigger a hidden bonus | Complete a quest in an unusual, creative, or accidental way and receive an unexpected additional reward | LLM-generated bonus condition was recorded at quest creation (hidden); player's approach satisfied it; bonus XP and/or additional item awarded |
-| E6.2 — Verify LLM judgment and budget | Internal: hidden conditions generate cleanly; LLM judgment is consistent; bonus rewards stay within declared budget | Multiple triggered and non-triggered bonuses across different quest types; no bonus rewarded for a routine approach; no budget overflow |
-| E6.3 — Evaluate player perception | Kyle reports that bonus felt like recognition of creativity, not random luck | Interview after first triggered bonus; record whether the player understood what they did to earn it (they should not have known in advance) |
+| E6.1 — Watch priorities change | See Ivo's hunger/sleep pressures compete with obligations and immediate threats | Thresholds change priority; after Starved, only an immediate threat outranks food while personality, knowledge, resources, and risk still select the plan |
+| E6.2 — Earn rather than receive money | Ivo completes Tessa's four-hour courier shift for 3 gold | Payment transfers only at completion and only from Tessa's finite 12-gold business budget |
+| E6.3 — Obtain and prepare food | Ivo buys a 1-gold cabbage, prefers feasible stew, or eats it raw | Stock, gold, location, access, tools, time, Stamina, and ingredients all reconcile |
+| E6.4 — Sleep after eating | Ivo reaches his bed and completes adequate protected sleep | The plan physically traverses every required step and satisfies P3 rather than clearing needs abstractly |
+| E6.5 — Replan after failure | Work, funds, stock, hearth, protection, or access becomes unavailable | Ivo chooses another feasible known plan; risky trespass/theft/force is eligible only when character and circumstances support it |
+| E6.6 — Continue off screen | Let game time advance while Ivo is elsewhere | Identical inputs yield the same resource/time/consequence chain; the player learns only through plausible contact or observation |
 
-**Scope:** G21. Hidden bonus conditions apply to all quest types: System daily quests and organic NPC quests. The LLM generates 1–3 bonus conditions per quest at creation time, each describing an unusual or creative approach (not the default successful path). The LLM evaluates whether the player's actual actions satisfied a bonus condition at quest completion or fulfillment. Rules validate that bonus rewards are within a declared budget (additional XP, one extra gacha draw, or a small named item). No bonus condition is surfaced to the player before or after it triggers — the reward arrives with a brief System notification but without revealing what the condition was.
+**P4 gate:** Begin Ivo at 0 discretionary gold and 12 hours since meal/sleep. Prove the successful loop plus every declared failure branch without inventing stock, money, access, or outcomes and without adding a fifth NPC.
 
-**Before implementation:** Specify the bonus reward budget: XP amount range, item value ceiling, whether a gacha draw is available as a bonus. Define how bonus conditions are stored and retrieved at evaluation time. Define the System notification style for a triggered bonus — brief and distinct from regular quest completion messages.
+## E7 — Secure Brackenford's future through play
 
-**Exit evidence:** At least three triggered bonus objectives across different quest types and approaches. At least three non-triggered completions (to confirm the LLM does not over-award). Confirm no bonus fires on a routine approach that matches the primary success path. Record Kyle's description of what they thought triggered the bonus; this should not match the hidden condition (the surprise should hold).
+**Stage:** Conditional P5. **Pillars:** P-A, P-B, P-C. **Dependency:** P4 gate. **Value:** Sustain four households and develop personal alchemy through ordinary causal activity.
+
+| Story | Player outcome | Evidence |
+| --- | --- | --- |
+| E7.1 — Understand community pressure | Inspect protection, meals, sleep, household streaks, and commitments | Known facts are concrete; warnings interrupt waits at three and one ward-days remaining |
+| E7.2 — Sustain households | Fulfill three consecutive lived-stability days by mixed supported means | Every resident actually eats, sleeps safely, and avoids Exposed; only a failing household resets |
+| E7.3 — Protect or relocate | Repair the ward, fund patrol, relocate, host, or support another valid plan | Actual resources, labor, acceptance, local access, and commitments govern success |
+| E7.4 — Craft and apply alchemy | Use known recipes and the bruised-duskroot uncertainty fixture | Inputs, tools, time, checks, outputs, failures, item effects, and XP commit atomically |
+| E7.5 — Progress a craft track | Reach a production threshold and adopt or defer a revealed recipe | Only successful distinct crafts count; adoption adds rather than replaces recipes |
+
+**P5 gate:** Complete two plausible community routes and one unplanned supported route, plus successful and failed crafts and one applied product. Automatic daily food loss is forbidden; ward expiry changes protection only.
+
+## E8 — Earn a distinctive affinity spell
+
+**Stage:** Conditional P6. **Pillars:** P-D, P-A. **Dependency:** P5 gate. **Value:** Choose a small build, receive a bounded history-shaped awakening, and earn an optional evolution.
+
+| Story | Player outcome | Evidence |
+| --- | --- | --- |
+| E8.1 — Choose an affinity package | Choose Ember + Fellowship or Vessel + Fellowship | Listed skills, starting spells, Mana costs, and two slots per affinity apply; basic skills stay universal |
+| E8.2 — Awaken through a stone | Receive one uniformly selected package candidate from a retained 80/20 rarity | Slot ownership and mechanics are fixed; generated name/manifestation reflects history without changing them |
+| E8.3 — Receive recognition | Earn Brackenford's Anchor and Rest Is Part of the Work/Copper Sandglass | Title buff and achievement prize remain distinct and persist independently of item possession |
+| E8.4 — Select an earned variant | Meet three-use and achievement prerequisites and choose Deepened | Exact tradeoff is revealed before confirmation; replacement consumes no extra slot |
+
+## E9 — Daily quest system and gacha rewards
+
+**Stage:** Conditional P7. **Pillars:** P-A, P-D. **Dependency:** P6 gate and operational alchemy. **Value:** Test whether explicit LitRPG objectives complement free play.
+
+| Story | Player outcome | Evidence |
+| --- | --- | --- |
+| E9.1 — Receive daily quests | See crafting, social, and observation quests at 06:00 | Exactly three slots show explicit success conditions, relevant skill, and reward |
+| E9.2 — Complete once | Fulfill a quest for 25 player XP, 25 skill XP, and one draw | Partial or repeated resolution cannot pay twice |
+| E9.3 — Draw from the known pool | Receive one item using 70/25/5 tier odds and uniform in-tier selection | Pool is visible beforehand; result/effect is explicit and persists |
+| E9.4 — Expire and refresh | Leave a quest incomplete until the next 06:00 | Replacement is clean and carries no penalty, streak, or multiplier |
+
+## E10 — Hidden bonus objectives
+
+**Stage:** Conditional P8. **Pillars:** P-A, P-D. **Dependency:** P7 gate. **Value:** Reward unusual or creative play without revealing a checklist.
+
+| Story | Player outcome | Evidence |
+| --- | --- | --- |
+| E10.1 — Trigger a hidden bonus | Complete a supported quest unusually and receive an unexpected bounded reward | One private stable condition existed at creation; committed evidence satisfies it; it pays once |
+| E10.2 — Avoid arbitrary rewards | Complete quests through routine or nonqualifying methods | No over-award, budget overflow, or retroactive trigger invention occurs |
+| E10.3 — Interpret the surprise | See the fixed notification and reward, not the condition | Player inference is recorded without confirmation or denial |
+
+## E11 — Resolve a bounded combat encounter
+
+**Stage:** Conditional P9. **Pillars:** P-A, P-D. **Dependencies:** P1 resources/effects, P2 access, P5 items, P6 spells, and P8 gate. **Value:** Fight, flee, or surrender while every cost and consequence remains understandable and durable.
+
+| Story | Player outcome | Evidence |
+| --- | --- | --- |
+| E11.1 — Enter and read combat | Encounter the road robber at 10 m and understand order, positions, pools, and actions | Initiative uses Agility; six-second rounds and current/effective maximum pools are visible |
+| E11.2 — Move, attack, defend, and cast | Use melee, ranged, defend, movement, and Cinder Lance | Stamina/Mana costs, range, Defense, damage, misses, and atomic commitment match G23 |
+| E11.3 — Use effects and items | Bleed, sharpen, recover, or apply another supported effect | Shared P1 rules govern magnitude, stacking, duration, removal, and persistence |
+| E11.4 — Die or revive | Reach 0 Health or use a supported revival within its declared window | Death is immediate at 0; there is no Downed/stabilization interval; save recovery remains available |
+| E11.5 — Choose an exit | Defeat, escape, accept surrender, or surrender | Time, transfer, one-time rewards, XP, and post-combat state reconcile and persist |
+
+**P9 gate:** Complete every exit plus insufficient-resource, miss, effect, death/revival, and mid-combat save/load cases from controlled saves. No tactical map, party, enemy generation, equipment progression, or combat quest is added.
 
 ## Sequence and deferred work
 
-E1 → E2 → P0 evidence gate → E3 → E4 → E5 → P1 review → E6 → P2 review. E3–E6 remain conditional and may be revised after P0; their design dependencies do not justify implementing them early. E5 depends on E3's alchemy system being operational for crafting quest objectives. E6 depends on E5; bonus objectives extend the quest system and cannot exist without it.
+E1 → E2 → P0 gate → E3/P1 → E4/P2 → E5/P3 → E6/P4 → E7/P5 → E8/P6 → E9/P7 → E10/P8 → E11/P9. Every stage includes its controlled fixture, a failure/recovery route, save/load, and one unplanned supported approach before expansion.
 
-All locations are authored; never introduce procedural geography. Hidden rooms, puzzles, traps, and anonymous gifts are later tests, not P0 additions.
-
-Broader generative affinities, abilities, spells, items, traps, titles, and achievements remain vision ambitions. Full production/construction, another settlement, and co-op are not committed epics. Classes are removed; place/domain powers have no scheduled revisit. Public v1.0 and post-launch scope are unset.
+All locations are authored. Broader configurable/generated effects, affinities, spells, items, traps, titles, achievements, skill-practice-shaped variants, enemies, equipment, and encounters remain later ambitions. Detailed food storage, nutrition, formal policing, full production/construction, another settlement, difficulty modes, co-op, public-v1.0 scope, and a post-launch roadmap are not committed epics. Classes are removed; place/domain powers have no scheduled revisit.

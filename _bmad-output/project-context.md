@@ -136,7 +136,7 @@ _This file contains critical rules and patterns that AI agents must follow when 
 - Store SQLite databases, saves, logs, provider responses, build output, and test artifacts outside source control.
 - Browser storage may persist validated presentation preferences only; it must never contain authoritative game state.
 - Use native DOM and React input handling. Enter submits; Shift+Enter inserts a line.
-- Keep every control keyboard reachable, identify speakers without relying on color, and support text sizing across the proposed 16–24 px range.
+- Keep every control keyboard reachable, identify speakers without relying on color, and preserve the user's browser text-size and zoom choices without an in-game text-size control.
 - Do not add suggested actions, recommended dialogue, action chips, or other strategy-steering controls.
 - Show explicit pending, resolved, rejected, failed, and interrupted request states.
 - Use typed, versioned SSE for operation progress and polling for recovery; reconnect with monotonically increasing event IDs and `Last-Event-ID`.

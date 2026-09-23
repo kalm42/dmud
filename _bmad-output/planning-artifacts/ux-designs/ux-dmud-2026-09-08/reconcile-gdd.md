@@ -2,7 +2,7 @@
 
 Sources reconciled:
 
-- `../../gdds/gdd-dmud-2026-09-07/gdd.md` — version 0.3, `draft-for-correction`
+- `../../gdds/gdd-dmud-2026-09-07/gdd.md` — version 0.8, `staged-design-baseline-approved`
 - `.decision-log.md` — canonical UX discovery decisions
 - `mockups/direction-dm-notebook.html` — promoted first-pass visual reference
 
@@ -32,7 +32,7 @@ Sources reconciled:
 - One composer handles questions to Rowan, character actions, and in-world speech. Rowan infers message type from ordinary language and context; no prefix or mode switch is required. Ambiguity triggers a neutral, zero-time clarification before commitment.
 - Continue-game recall is conversational: the player may ask Rowan anything, and Rowan answers only with information the character legitimately knows.
 - New Game includes a collaborative Session 0. Rowan asks for the character's name, origin, cares, hates, what the player thinks would be cool, and hopes for play. Rowan first invites the player to author the concept and offers background ideas only when asked.
-- The player directly assigns a fixed standard array on the character sheet. Stats remain editable until confirmation, then read-only in ordinary character-sheet use. Exact array values and final attribute names remain open.
+- The player directly assigns the fixed `8, 10, 12, 13, 14` array across Body, Agility, Constitution, Mind, and Presence on the character sheet. Stats remain editable until confirmation, then read-only in ordinary character-sheet use.
 - Before play, Rowan reflects the character and campaign understanding back for confirmation. Session 0 ends with a personally relevant opening situation, while establishing opportunities and tensions without predetermining outcomes or overriding NPC agency.
 - The character sheet owns stats, titles, and achievements. New characters begin with no titles or achievements. Personalized titles, achievements, and ability upgrades arise from subsequent play and remain distinct reward types.
 - First-pass novelty recognition is save/character-local. Cross-player “world first” recognition is deferred to a possible online indie release.
@@ -40,24 +40,24 @@ Sources reconciled:
 
 ## Deferred or Intentionally Omitted
 
-- No in-game accessibility settings screen is required merely to duplicate browser text/page zoom or the operating system's motion preference. An additional convenience control remains optional.
+- No in-game text-size control is provided: browser preferences and zoom own text sizing. A convenience control for reduced motion may remain optional, but it does not weaken the required operating-system preference support.
 - No persistent DM portrait, NPC portrait rail, nearby-character list, or omniscient presence summary is included. Other characters appear only through perceived or legitimately known story information.
 - No separate full-page destinations are required for inventory, character reference, or routine roll inspection.
-- Exact Session 0 stat-array values, final attribute vocabulary, validation boundaries beyond confirmation, and presentation of player preferences versus binding character/campaign facts remain open.
+- Session 0 validates one use of each approved array value across the five approved attributes and allows correction until atomic character confirmation. Storage for player preferences versus binding character/campaign facts remains an architecture/content-model decision.
 - Cross-player achievement comparison, identity matching across generated wording, shared account/registry scope, privacy, consent, and world-first arbitration are later online-product decisions.
-- The current mockup does not define dedicated UI for conditional P1/P2 systems: alchemy, affinity awakening/evolution, daily quests, gacha pools, hidden bonus objectives, titles, or achievements. Their GDD statuses and phase gates are unchanged. When implemented, their accepted/proposed distinctions, explicit conditions, reward separation, and information boundaries still apply.
-- The GDD requires no illustration, portrait, animation, generated-image pipeline, music, or audio asset for P0/P1. The mockup's lightweight player avatar and CSS waiting motion demonstrate presentation only and do not create an asset-pipeline requirement.
+- The current mockup does not define dedicated UI for the conditional P1–P9 systems: effects/resources, access/ownership, survival needs, autonomous livelihoods, community/alchemy, affinity awakening and recognition, daily quests/gacha, hidden bonuses, or combat. Their GDD stage gates remain unchanged and each requires a later phase-specific UX update before implementation.
+- The GDD requires no illustration, portrait, animation, generated-image pipeline, music, or audio asset for P0–P9. The mockup's lightweight player avatar and CSS waiting motion demonstrate presentation only and do not create an asset-pipeline requirement.
 - Multiple Dungeon Masters with different personalities remain a possible future idea, not accepted first-pass scope.
 
-## Resolved Conflicts and Clarifications
+## Conflicts and Clarifications
 
 - GDD references to “present people” do not authorize an omniscient roster. In player-facing UX, “present” means currently perceived or legitimately known; successful stealth, concealment, and unknown presence must not leak.
-- G15's proposed adjustable 16–24 px in-game text control is not promoted. The accepted decision is WCAG 2.2 AA support for browser zoom and reflow; a duplicate in-game control is optional.
-- The mockup's fixed 1180 px frame and `min-width: 1040px` are demonstration framing, not approved responsive behavior. The final UX must reflow at the WCAG AA target and remain usable at 200% zoom.
+- **Resolved — G15 text sizing:** GDD v0.8 and the UX spines assign preferred text size to browser settings, provide no in-game text-size control, and retain browser zoom/reflow requirements. DESIGN.md expresses that decision through relative `rem` typography without a fixed root size.
+- The updated mock keeps the wide desktop composition as one branch and adds fluid/narrow reflow for enlarged browser text. The final implementation must still verify the WCAG AA reflow target and 200% zoom behavior rather than treating the reference as test evidence.
 - The mockup's “Ward holds for 5 days” is illustrative scene content. It neither approves nor changes proposed G02's seven-day starting pressure, and it must not introduce a ward subsystem into P0, where ward pressure is explicitly excluded.
 - The mockup shows one save card, while accepted G08 requires three manual save slots. The card demonstrates presentation for one slot only.
 - Session 0 background suggestions are permitted only when the player requests creative help. This is a bounded pre-play exception and does not weaken the accepted prohibition on unsolicited in-play action suggestions.
-- Titles, achievements, and earned ability variants may have character-sheet homes without entering P0. They remain excluded from P0 and conditionally budgeted for P1.
+- Titles, achievements, and earned ability variants may have character-sheet homes without entering P0. They remain excluded from P0 and conditionally budgeted for P6.
 - Rowan's personality is visible through language and feedback, resolving the earlier portrait asymmetry without removing the explicit Dungeon Master relationship.
 
 ## Qualitative Ideas at Risk of Being Dropped

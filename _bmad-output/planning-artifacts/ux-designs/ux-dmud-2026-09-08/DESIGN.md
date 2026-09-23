@@ -6,7 +6,7 @@ implementation_scope: P0
 sources:
   - ../../briefs/brief-dmud-2026-09-05/brief.md
   - ../../gdds/gdd-dmud-2026-09-07/gdd.md
-updated: 2026-09-08
+updated: 2026-09-15
 colors:
   paper: '#F3EAD6'
   paper-light: '#FFFAF0'
@@ -23,38 +23,38 @@ colors:
 typography:
   story:
     fontFamily: 'Georgia, "Times New Roman", serif'
-    fontSize: '18px'
+    fontSize: '1.125rem'
     fontWeight: '400'
     lineHeight: '1.65'
   scene-title:
     fontFamily: 'Georgia, "Times New Roman", serif'
-    fontSize: '28px'
+    fontSize: '1.75rem'
     fontWeight: '700'
     lineHeight: '1.2'
   overlay-title:
     fontFamily: 'Georgia, "Times New Roman", serif'
-    fontSize: '24px'
+    fontSize: '1.5rem'
     fontWeight: '700'
     lineHeight: '1.25'
   interface:
     fontFamily: '"Trebuchet MS", Arial, sans-serif'
-    fontSize: '16px'
+    fontSize: '1rem'
     fontWeight: '400'
     lineHeight: '1.5'
   interface-strong:
     fontFamily: '"Trebuchet MS", Arial, sans-serif'
-    fontSize: '16px'
+    fontSize: '1rem'
     fontWeight: '700'
     lineHeight: '1.4'
   label:
     fontFamily: '"Trebuchet MS", Arial, sans-serif'
-    fontSize: '13px'
+    fontSize: '0.8125rem'
     fontWeight: '700'
     lineHeight: '1.4'
     letterSpacing: '0.08em'
   caption:
     fontFamily: '"Trebuchet MS", Arial, sans-serif'
-    fontSize: '14px'
+    fontSize: '0.875rem'
     fontWeight: '400'
     lineHeight: '1.45'
 rounded:
@@ -146,7 +146,7 @@ components:
 
 ## Brand & Style
 
-dmud looks like a living tabletop notebook shared between a player and Dungeon Master Rowan: warm paper, ruled structure, readable ink, and small tactile details. It should feel personal and accumulated rather than antique, ornate, or like a generic chat application. The interface stays quiet enough for long reading sessions while labels make narration, NPC speech, James's intentions, and mechanics easy to skim. Conditional-P1 System and award treatments are retained as deferred visual guardrails, not P0 implementation requirements.
+dmud looks like a living tabletop notebook shared between a player and Dungeon Master Rowan: warm paper, ruled structure, readable ink, and small tactile details. It should feel personal and accumulated rather than antique, ornate, or like a generic chat application. The interface stays quiet enough for long reading sessions while labels make narration, NPC speech, the player's intentions, and mechanics easy to skim. Post-P0 System and award treatments are retained as deferred visual guardrails, not P0 implementation requirements.
 
 The promoted main-notebook composition is illustrated in [The DM's Notebook direction](./mockups/direction-dm-notebook.html). DESIGN.md and EXPERIENCE.md are authoritative wherever that mockup conflicts with them.
 
@@ -164,7 +164,7 @@ The promoted main-notebook composition is illustrated in [The DM's Notebook dire
 | Red pencil | `{colors.red-pencil}` | System accent and error emphasis, always paired with text |
 | Rule | `{colors.rule}` | Dividers and quiet boundaries |
 | Note | `{colors.note}` | Pending-response and taped-note accents |
-| Player note | `{colors.player-note}` | James's submitted intention |
+| Player note | `{colors.player-note}` | The player's submitted intention |
 | Focus | `{colors.focus}` | Keyboard focus only; never decorative |
 
 Contrast targets: `{colors.ink}` on `{colors.paper-light}` must meet at least 7:1; all normal text and control labels must meet 4.5:1 against their rendered backgrounds; focus rings and essential component boundaries must meet 3:1 against adjacent colors. Speaker and state meaning must never depend on hue.
@@ -173,13 +173,15 @@ Contrast targets: `{colors.ink}` on `{colors.paper-light}` must meet at least 7:
 
 Use `{typography.story}` for narration and sustained reading. Use `{typography.interface}` for controls, player intentions, mechanics, status copy, and overlays; `{typography.interface-strong}` provides emphasis. Scene and overlay headings use `{typography.scene-title}` and `{typography.overlay-title}`. Small categorical labels use `{typography.label}`, but the visible text must remain meaningful without capitalization or letter spacing.
 
+All typography sizes use `rem` and inherit the browser's root text size. The application must not replace that preference with a fixed-pixel root font size and must not provide an in-game text-size control. This implements the browser-owned sizing decision now recorded in GDD v0.8 `G15`.
+
 Prefer short line lengths of roughly 55–75 characters for narration. Do not introduce handwriting fonts for player notes: separation comes from paper treatment and explicit labels. Comic Sans is prohibited everywhere.
 
 ## Layout & Spacing
 
 Use the 4px-based scale in `spacing`, with `{spacing.2}` for tight relationships, `{spacing.4}` for component padding, and `{spacing.5}`–`{spacing.7}` between major regions. On an ordinary desktop viewport, the notebook may use three regions: navigation, the dominant story page, and a narrow player-character reference margin. The transcript and composer remain the visual center.
 
-At zoomed or narrow widths, regions reflow into one reading column without horizontal page scrolling or lost controls. Navigation compacts into a labeled top region, overlays fit within the viewport, and the player-character reference becomes a compact block rather than forcing a persistent third column. The implementation must not retain the promoted mockup's fixed minimum width.
+At zoomed or narrow widths, regions reflow into one reading column without horizontal page scrolling or lost controls. Navigation compacts into a labeled top region, overlays fit within the viewport, and the player-character reference becomes a compact block rather than forcing a persistent third column. The promoted mockup's wide three-region branch is not a minimum-width requirement.
 
 ## Elevation & Depth
 
@@ -191,21 +193,23 @@ Corners are lightly softened, not pill-shaped: `{rounded.sm}` for notes and inli
 
 ## Components
 
+Every pointer-operated interactive component must provide a target at least 24 by 24 CSS px, or meet the WCAG 2.2 spacing exception when its visible control is smaller. That hit area and separation must remain intact when browser text is enlarged, at 200% page zoom, and in the 320 CSS px-equivalent reflow layout. Apply this acceptance rule especially to compact navigation, inline `mechanical-result` controls, and `reference-overlay` close controls.
+
 | Component | Visual contract |
 | --- | --- |
-| `action-button` | Solid `{colors.forest}` with `{colors.paper-light}` text, compact rectangular silhouette, and a clearly external `{colors.focus}` focus ring. |
+| `action-button` | Solid `{colors.forest}` with `{colors.paper-light}` text, compact rectangular silhouette, a clearly external `{colors.focus}` focus ring, and a pointer target that meets the component target-size rule above. |
 | `notebook-navigation` | `{colors.forest-deep}` spine with explicit labels; selected items use `{colors.forest}` plus a non-color marker. |
 | `story-entry` | Long-form `{typography.story}` on `{colors.paper-light}`; speaker or message-type label precedes content. NPC speech may add a `{colors.forest}` rule and subtle `{colors.player-note}` wash. |
 | `player-intention` | A labeled `{colors.player-note}` scrap using interface type; legible and selectable, with decorative tilt optional only when motion/reflow are unaffected. |
 | `message-composer` | High-contrast field with a 2px `{colors.ink-muted}` boundary, visible label, generous internal spacing, and adjacent `action-button`. |
 | `response-status` | `{colors.note}` paper strip with a truthful text state, Rowan attribution, and optional small playful activity mark. Failed state adds a `{colors.red-pencil}` border and explicit recovery copy. |
-| `character-card` | One compact card for James only. Use a monogram or text identity block, not required portrait art; do not imply a roster of nearby characters. |
-| `reference-overlay` | Centered, viewport-bounded paper panel with title, close control, subdued backdrop, and clear section dividers. Inventory, character sheet, roll details, and save/load share this shell. |
-| `mechanical-result` | Inline dashed or ruled control attached to the relevant story entry; always states skill/result and whether a roll occurred before “Details.” |
-| `system-notice` | Deferred conditional-P1 treatment for the fourth-wall-breaking LitRPG System: `{colors.red-pencil}` border/label, visually distinct from Rowan, award narration, NPC speech, and ordinary mechanics. It is not a P0 implementation requirement. |
-| `award-notice` | Deferred conditional-P1 treatment for a committed achievement, title, prize, or earned variant: `{colors.forest}` accent on `{colors.paper}`, distinct from the System voice and never shown before the underlying reward commits. It is not a P0 implementation requirement. |
+| `character-card` | One compact card for the current player character. Use a monogram or text identity block, not required portrait art; do not imply a roster of nearby characters. |
+| `reference-overlay` | Centered, viewport-bounded paper panel with title, close control, subdued backdrop, and clear section dividers. Its close control meets the component target-size rule above. Inventory, character sheet, roll details, and save/load share this shell. |
+| `mechanical-result` | Inline dashed or ruled control attached to the relevant story entry; always states skill/result and whether a roll occurred before “Details,” and meets the component target-size rule above without disrupting prose reflow. |
+| `system-notice` | Deferred P7–P8 treatment for the fourth-wall-breaking LitRPG System: `{colors.red-pencil}` border/label, visually distinct from Rowan, award narration, NPC speech, and ordinary mechanics. It is not a P0 implementation requirement. |
+| `award-notice` | Deferred P6–P8 treatment for a committed achievement, title, prize, or earned variant: `{colors.forest}` accent on `{colors.paper}`, distinct from the System voice and never shown before the underlying reward commits. It is not a P0 implementation requirement. |
 | `journal-entry` | Text-first row separated by `{colors.rule}`; status is written in words, never a color chip alone. |
-| `stat-assignment` | Clear attribute/value pairing on `{colors.paper}`; available, assigned, invalid, and locked states use text plus boundary changes. |
+| `stat-assignment` | Clear pairing of Body, Agility, Constitution, Mind, and Presence with the fixed values 8, 10, 12, 13, and 14 on `{colors.paper}`; available, assigned, invalid, and locked states use text plus boundary changes. |
 | `attribute-allocation` | In-play P0 progression surface on `{colors.paper}`: unspent, previewed, confirmed, invalid, and persisted states use explicit counts and text plus `{colors.forest}` or `{colors.red-pencil}` boundaries. |
 | `save-slot` | Paper row showing slot identity, campaign/place, in-world time, and saved-at metadata; current selection uses border and text, not color alone. |
 
@@ -215,8 +219,8 @@ Corners are lightly softened, not pill-shaped: `{rounded.sm}` for notes and inli
 | --- | --- |
 | Make the transcript the dominant visual surface. | Make the interface resemble a command terminal or generic messenger. |
 | Label narration, NPCs, intentions, mechanics, and Rowan explicitly; keep deferred System and award treatments separate. | Distinguish voices with color alone or merge the LitRPG System with award narration. |
-| Show only James in the persistent character reference. | Build an omniscient nearby-character roster or leak hidden actors. |
+| Show only the current player character in the persistent character reference. | Build an omniscient nearby-character roster or leak hidden actors. |
 | Use overlays for inventory, character sheet, roll details, and save/load. | Open reference content in new tabs or stack modal layers. |
-| Keep absurdity in small waiting details; reserve deferred P1 humor for the distinct System voice. | Let decorative humor obstruct status truth, reading, or focus. |
+| Keep absurdity in small waiting details; reserve deferred P7–P8 humor for the distinct System voice. | Let decorative humor obstruct status truth, reading, or focus. |
 | Preserve browser zoom, text selection, and responsive reflow. | Fix the notebook to a desktop canvas width. |
 | Use system-safe serif and sans-serif families. | Use Comic Sans, faux handwriting, dense medieval display faces, or illegible parchment textures. |
