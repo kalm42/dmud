@@ -4,8 +4,12 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import App from "./app/App.tsx";
 
 const queryClient = new QueryClient();
+const root = document.getElementById("root");
+if (root === null) {
+  throw new Error("Application root element is missing");
+}
 
-createRoot(document.getElementById("root")!).render(
+createRoot(root).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <App />

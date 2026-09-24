@@ -49,6 +49,8 @@ python3 scripts/check_contract.py
 cd frontend && npm run test:e2e
 ```
 
+The GitHub Actions quality workflow runs these gates on pushes and pull requests, including contract regeneration and the real-browser journey.
+
 ## Verified on 2026-09-23
 
 Node 24.20.0 and uv 0.12.0 were exercised through `npm exec --yes --package=node@24.20.0 -- npm ci` and `uvx --from uv==0.12.0 uv sync --locked`. Python 3.14.7 and SQLite 3.54.0 were installed locally. The host's default Node 24.13.0 and uv 0.8.11 are older than the documented prerequisites, so use the selected versions for routine development.

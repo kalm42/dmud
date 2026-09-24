@@ -8,8 +8,8 @@ export function useStatus() {
   return useQuery({
     ...getStatusOptions(),
     retry: false,
-    queryFn: async () => {
-      const response = await getStatus({ throwOnError: true });
+    queryFn: async ({ signal }) => {
+      const response = await getStatus({ signal, throwOnError: true });
       const payload: unknown = response.data;
       return parseStatus(payload);
     },

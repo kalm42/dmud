@@ -4,7 +4,7 @@ baseline_commit: f5b0e37f768bd97fc7f526d3ed47bed367f39e3e
 
 # Story 1.1: Run the Local dmud Application Foundation
 
-Status: review
+Status: done
 
 ## Story
 
@@ -35,6 +35,15 @@ so that I can begin a campaign on a stable local system.
   - [x] Run frontend formatting/linting, `tsc --noEmit` in strict mode, and build; run backend Ruff format/lint, Pyright strict, and pytest. Keep these as separate failing commands.
   - [x] Add a backend integration test through the real FastAPI ASGI app, including the SQLite minimum-version guard where it can be injected without global state. Add a real Playwright browser journey that starts Vite and FastAPI, sees the shell and API result, and verifies the proxy without route mocks. Use isolated test storage if startup opens SQLite.
   - [x] Regenerate the OpenAPI/client artifacts in the check path and fail on drift. Run the checks from a clean install, document actual commands/results, and verify secret-canary absence.
+
+### Review Findings
+
+- [x] [Review][Patch] Keep the credential canary outside Vite's served root and test that it is not browser-readable (High; AC 3) [`frontend/playwright.config.cjs`:9, `tests/e2e/app.spec.ts`:31]
+- [x] [Review][Patch] Restrict the development API proxy override to a loopback target (Medium; AC 2) [`frontend/vite.config.ts`:9]
+- [x] [Review][Patch] Report malformed API responses separately from a disconnected backend (Low; AC 2) [`frontend/src/app/App.tsx`:19]
+- [x] [Review][Patch] Enforce contract regeneration and drift checks in CI (Medium; AC 5 and project context) [`.github/workflows/quality.yml`:51]
+- [x] [Review][Patch] Classify invalid JSON as an unexpected API response (Low; AC 2) [`frontend/src/app/App.tsx`:22]
+- [x] [Review][Patch] Forward the query abort signal to the status request (Low) [`frontend/src/api/useStatus.ts`:11]
 
 ## Dev Notes
 
@@ -100,6 +109,7 @@ Codex GPT-6.
 
 ### File List
 
+- `.github/workflows/quality.yml`
 - `.gitignore`
 - `README.md`
 - `_bmad-output/implementation-artifacts/1-1-run-the-local-dmud-application-foundation.md`
@@ -161,3 +171,5 @@ Codex GPT-6.
 ### Change Log
 
 - 2026-09-23: Built the locked local frontend/backend foundation, generated API boundary, startup shell, and independent verification gates; moved story to review.
+- 2026-09-23: Resolved all three code-review findings, repaired the frontend lint gate, reran frontend checks and three real-browser journeys; moved story to done.
+- 2026-09-23: Applied follow-up review patches for CI contract drift enforcement, malformed JSON messaging, and request cancellation; verified all local quality gates.

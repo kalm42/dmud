@@ -28,9 +28,14 @@ test("App keeps the backend canary out of browser-visible surfaces", async ({
   page,
   request,
 }) => {
+  const canary = process.env.DMUD_TEST_CANARY;
+  if (canary === undefined) {
+    throw new Error("Playwright did not provide the test credential canary");
+  }
   const responses = await Promise.all([
     request.get("http://127.0.0.1:5173/"),
     request.get("http://127.0.0.1:5173/src/main.tsx"),
+    request.get("http://127.0.0.1:5173/playwright.config.cjs"),
     request.get("http://127.0.0.1:5173/api/status"),
   ]);
   const texts = await Promise.all(responses.map((response) => response.text()));
@@ -48,5 +53,5 @@ test("App keeps the backend canary out of browser-visible surfaces", async ({
       await page.locator("body").innerText(),
       ...Object.values(storage),
     ].join(" "),
-  ).not.toContain("canary-private-credential-123");
+  ).not.toContain(canary);
 });

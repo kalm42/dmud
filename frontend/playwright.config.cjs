@@ -1,4 +1,8 @@
 const { defineConfig } = require("@playwright/test");
+const { randomBytes } = require("node:crypto");
+
+const canary = `canary-private-credential-${randomBytes(16).toString("hex")}`;
+process.env.DMUD_TEST_CANARY = canary;
 
 module.exports = defineConfig({
   testDir: "../tests/e2e",
@@ -6,7 +10,8 @@ module.exports = defineConfig({
   webServer: [
     {
       command:
-        "cd ../backend && DMUD_LLM_API_KEY=canary-private-credential-123 PYTHONPATH=src uv run uvicorn dmud.main:app --host 127.0.0.1 --port 8000",
+        "cd ../backend && uv run uvicorn dmud.main:app --host 127.0.0.1 --port 8000",
+      env: { DMUD_LLM_API_KEY: canary, PYTHONPATH: "src" },
       url: "http://127.0.0.1:8000/api/status",
       reuseExistingServer: false,
     },

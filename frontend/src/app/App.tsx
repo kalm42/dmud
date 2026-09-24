@@ -1,4 +1,5 @@
 import { useStatus } from "../api/useStatus";
+import { ZodError } from "zod";
 import "./app.css";
 
 /** Render the local startup shell; for example, <App />. */
@@ -18,8 +19,10 @@ function App() {
         {status.isPending && <p role="status">Checking local API…</p>}
         {status.isError && (
           <p role="alert">
-            The local API is unavailable. Start the backend and reload this
-            page.
+            {status.error instanceof ZodError ||
+            status.error instanceof SyntaxError
+              ? "The local API returned an unexpected response. Check the backend version and reload this page."
+              : "The local API is unavailable. Start the backend and reload this page."}
           </p>
         )}
         {status.isSuccess && (
