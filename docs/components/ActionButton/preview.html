@@ -1,0 +1,15 @@
+<!-- @dsCard group="Actions" height=120 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>ActionButton — preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var D = window.Dmud, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div',{className:'dm-demo-row',style:{padding:'16px'}},
+  h(D.ActionButton,null,'Send'),
+  h(D.ActionButton,{variant:'quiet'},'Open character sheet'),
+  h(D.ActionButton,{disabled:true,disabledReason:'Assign all five stats first.'},'Confirm character')));
+</script>
+</body>
+</html>

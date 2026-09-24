@@ -1,0 +1,15 @@
+<!-- @dsCard group="Navigation" height=300 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>NotebookNavigation — preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var D = window.Dmud, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div',{style:{padding:'16px',maxWidth:'15rem'}},
+  h(D.NotebookNavigation,{title:'Brackenford',currentId:'notebook',items:[
+    {id:'notebook',label:'Notebook'},{id:'journal',label:'Journal'},{id:'inventory',label:'Inventory'},
+    {id:'sheet',label:'Character sheet'},{id:'saves',label:'Save / Load'}]})));
+</script>
+</body>
+</html>

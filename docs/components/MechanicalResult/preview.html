@@ -1,0 +1,14 @@
+<!-- @dsCard group="Transcript" height=120 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>MechanicalResult — preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var D = window.Dmud, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div',{className:'dm-demo'},
+    h(D.MechanicalResult,{skill:'Persuasion',roll:'14 + 3 = 17 vs 15',result:'success',onDetails:function(){}}),
+    h(D.MechanicalResult,{skill:'Haggling',rolled:false,result:'known price, 1 gold',onDetails:function(){}})));
+</script>
+</body>
+</html>

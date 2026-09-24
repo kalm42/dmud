@@ -1,0 +1,12 @@
+<!-- @dsCard group="Reference" height=260 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>CharacterCard — preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var D = window.Dmud, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div',{style:{padding:'16px'}},h(D.CharacterCard,{name:'James',descriptor:'Former mill clerk, Brackenford',facts:[{label:'Level',value:'2'},{label:'Coin',value:'14 gold'},{label:'Unspent',value:'1 point'}],onOpen:function(){}})));
+</script>
+</body>
+</html>

@@ -1,19 +1,23 @@
 ---
-name: dmud — The DM's Notebook
+name: dmud — The Campaign Book
 description: Experience contract for a persistent, text-first fantasy role-playing game.
 status: final
 implementation_scope: P0
 sources:
   - ../../briefs/brief-dmud-2026-09-05/brief.md
   - ../../gdds/gdd-dmud-2026-09-07/gdd.md
-updated: 2026-09-23
+  - ../../../../docs/README.md
+  - ../../../../docs/tokens.json
+  - ../../../../docs/design-system.json
+  - ../../../../docs/components/
+updated: 2026-09-24
 ---
 
 # dmud — Experience Spine
 
 ## Foundation
 
-Initial form factor is a locally run desktop browser for solo, 20–60-minute sessions. Keyboard and mouse are baseline; screen-reader operation is equally required. Architecture 1.2 selects a React UI, FastAPI backend, SQLite storage, and loopback-only packaging for P0; this UX document does not own those technology choices. The LLM provider, public deployment model, and audio system remain unselected. [DESIGN.md](./DESIGN.md) owns visual identity; this file owns behavior.
+Initial form factor is a locally run desktop browser for solo, 20–60-minute sessions. Keyboard and mouse are baseline; screen-reader operation is equally required. Architecture 1.2 selects a React UI, FastAPI backend, SQLite storage, and loopback-only packaging for P0; this UX document does not own those technology choices. The LLM provider, public deployment model, and audio system remain unselected. [DESIGN.md](./DESIGN.md) owns visual identity; this file owns behavior. The `docs/` package is authoritative wherever its concrete tokens, component rules, or copy conflict with older UX decisions or mockups.
 
 The experience promise is tabletop agency: the player writes an ordinary or outrageous intention in their own words, and Rowan answers like a Dungeon Master adjudicating a persistent world—not like a verb parser. The rules own authoritative state and mechanics; presentation never claims success before a result is committed.
 
@@ -48,7 +52,7 @@ This spine pair is the downstream implementation contract for **P0**. E3–E11 a
 | Character sheet | Main Notebook; Session 0 | Inspect the current player character's stats and progression records; assign 8, 10, 12, 13, and 14 exactly once across Body, Agility, Constitution, Mind, and Presence during Session 0; and allocate earned attribute points during P0 play. Uses `reference-overlay` in play. |
 | Roll details | Inline `mechanical-result` | Explain a specific rolled or no-roll resolution, including uncertainty, modifiers and sources, stakes/cost, and rationale. Uses `reference-overlay`. |
 
-The [promoted Main Notebook mock](./mockups/direction-dm-notebook.html) illustrates the Main Notebook together with Inventory, Character sheet, and Roll details overlays. Title, Session 0, Save selection, and Journal remain spine-only.
+The [historical Main Notebook mock](./mockups/direction-dm-notebook.html) illustrates the three-region layout and reference overlays. Its old colors, fonts, decoration, and component treatments are superseded by `docs/` and DESIGN.md. Title, Session 0, Save selection, and Journal remain spine-only.
 
 Information hierarchy in the Main Notebook is: current transcript and scene context; `message-composer` plus truthful request status; the current player character's `character-card`; then factual navigation and reference controls. No Settings surface or in-game control is provided for text size; the browser owns the player's preferred text size. Post-P0 System and award presentation is outside the P0 IA.
 
@@ -70,27 +74,31 @@ Pending copy may use absurd backstage lines such as “Corralling the goblins,�
 
 ## Component Patterns
 
-Behavioral rules below pair one-for-one with DESIGN.md Components.
+Behavioral rules below pair with DESIGN.md Components and the authoritative `docs/components/*/README.md` contracts. The supplied component interface is `docs/components/index.d.ts`; the bundle represents component behavior, while this spine describes product-level flows.
 
 Every pointer-operated interactive component must expose a target at least 24 by 24 CSS px or satisfy the WCAG 2.2 spacing exception. This target and spacing remain available when browser text is enlarged, at 200% page zoom, and in the 320 CSS px-equivalent reflow layout; inline mechanics and overlay close controls are explicit acceptance cases.
 
 | Component | Behavioral contract |
 | --- | --- |
 | `action-button` | Activates on click or keyboard activation; never relies on an icon alone; disabled state includes a reason when not obvious. |
-| `notebook-navigation` | Exposes Main Notebook destinations and factual campaign controls in a stable reading order. Current location is programmatically indicated. |
-| `story-entry` | Appends only after its status is known; exposes speaker/message type before content and remains selectable. Do not collapse prior consequences silently. |
+| `notebook-navigation` | Exposes Notebook, Journal, Inventory, Character sheet, then Save / Load in that stable reading order. Current location has `aria-current="page"`; at ≤40rem it wraps into a labeled top region without hiding labels. |
+| `notebook-page` | Exactly one page contains the transcript and composer; navigation and character card stay outside. Its `plain` variant may drop ornament when space is tight. |
+| `scene-heading`, `scene-divider` | A heading marks a genuine place or time change; one decorative divider precedes the next scene, never an ordinary turn. The first narration after the heading receives one drop cap. |
+| `story-turn` | Groups one verbatim player intention and Rowan’s responses. Its margin folds when the story column is under 34rem; continued same-voice entries tighten spacing without losing semantic speaker identification. |
+| `known-character` | Opens from a known NPC name inside `reference-overlay`; each fact includes its source where known. Honest empty state; reading it costs no fictional time. |
+| `story-entry` | Appends only after its status is known; exposes speaker/message type before content and remains selectable. An NPC name opens what the character knows, with no hidden identity or epithet leak. Do not collapse prior consequences silently. |
 | `player-intention` | Echoes the exact submitted text and its status so the player can verify what Rowan interpreted. |
-| `message-composer` | One input for Rowan questions, character actions, and in-world speech. Enter sends; Shift+Enter inserts a line. No mode, prefix, suggestion chips, or generated replies. |
+| `message-composer` | One input for Rowan questions, character actions, and in-world speech. Enter sends; Shift+Enter inserts a line, while IME composition is respected. A visible hint explains both keys. No mode, prefix, suggestion chips, or generated replies. |
 | `response-status` | Acknowledges submission immediately, then transitions to clarification, resolved, interrupted, or failed. Updates are announced without moving focus. |
 | `character-card` | Opens the current player character's sheet. Contains only that character's information; never derives a visible roster from omniscient simulation state. |
 | `reference-overlay` | One overlay at a time. Has an accessible name/role, closes with its control or Escape, contains focus, and returns focus to its invoker. Opening it advances no fictional time. |
-| `mechanical-result` | Belongs to one transcript result. Activating it opens its explanation; “no roll needed” is a supported, inspectable result. |
+| `mechanical-result` | Belongs to one transcript result. Summary always states skill, rolled/no roll, and result; Details has a skill-specific accessible name and opens that result’s explanation. “No roll needed” is inspectable. |
 | `system-notice` | Deferred P7–P8 component for LitRPG System messages. It remains distinct from Rowan, award narration, and mechanics and cannot imply an uncommitted reward. Not required in P0. |
 | `award-notice` | Deferred P6–P8 component that appears only after the underlying reward commits, identifies the reward type, and is announced once. Not required in P0. |
 | `journal-entry` | Restates known information and recorded commitments. Never exposes hidden motives/state or recommends what the player should do next. |
 | `stat-assignment` | Assigns 8, 10, 12, 13, and 14 exactly once across Body, Agility, Constitution, Mind, and Presence; reports duplicate or missing values and unassigned attributes inline; and locks ordinary editing only after confirmation. |
 | `attribute-allocation` | In P0 play, shows earned, spent, and unspent attribute points; previews the chosen increase; requires explicit confirmation; rejects overspending; and reflects only persisted allocation. It never changes the starting-array record. |
-| `save-slot` | Shows enough branch context to choose safely. Save/load progress is explicit; overwrite requires confirmation; a failed operation preserves the prior durable state. |
+| `save-slot` | Exactly three manual slots. Each occupied slot shows campaign, place, in-world time, and saved-at context; empty slots say “Empty slot.” Save/load progress is explicit; overwrite requires confirmation; a failed operation preserves the prior durable state. |
 
 ## State Patterns
 
@@ -110,7 +118,7 @@ If a request fails after some state was legitimately committed, the response ide
 ## Interaction Primitives
 
 - Click or keyboard activation opens navigation, inline mechanics, and overlays. Tab/Shift+Tab follow visible reading order; Escape dismisses the active overlay.
-- Enter submits from `message-composer`; Shift+Enter adds a line. Submission echoes a `player-intention` and enters `response-status` immediately.
+- Enter submits from `message-composer`; Shift+Enter adds a line; IME composition never triggers a premature send. Submission echoes a `player-intention` verbatim and enters `response-status` within 100 ms.
 - Rowan classifies natural language from words and context. “What do I know about Mara's debt?” is a zero-time Dungeon Master question; “Walk to Mara's stall” is an in-world action; ordinary synonyms must not require MUD syntax.
 - Ambiguity triggers clarification before commitment. “I'll talk to Mara about the debt” may prompt whether James wants to ask a general question or discuss a specific arrangement. Clarification commits no fictional time or world state and offers no strategy.
 - Before a consequential action is committed, reasonably knowable interpretation, stakes, and costs are exposed. Rare-resource spending or materially changed intent requires clarification.
@@ -119,7 +127,7 @@ If a request fails after some state was legitimately committed, the response ide
 
 ## Text UI & Information Boundaries
 
-The notebook is a non-diegetic tabletop artifact shared with Rowan. Narration and NPC speech communicate the fiction; mechanics explain adjudication. In deferred P7–P8 work, the LitRPG System may deliberately break the fourth wall, while P6–P8 award narration remains a separate voice; neither is part of this P0 implementation contract. Every active voice is labeled in text and exposed semantically, not just styled differently.
+The campaign book is a non-diegetic tabletop artifact shared with Rowan. Every row writes its voice in the margin, including Narration, Rowan, You, or the NPC name; the margin folds above narrow story columns. A scene divider and heading appear only for genuine scene changes. Narration and NPC speech communicate the fiction; mechanics explain adjudication. In deferred P7–P8 work, the LitRPG System may deliberately break the fourth wall, while P6–P8 award narration remains a separate voice; neither is part of this P0 implementation contract. Every active voice is labeled in text and exposed semantically, not just styled differently.
 
 Only information the current player character perceives or legitimately knows may enter the transcript, journal, overlays, or character reference. The UI must never expose hidden characters because they exist in simulation state, including characters who succeeded at stealth or concealment. Crowded scenes are handled through narration, not an always-on roster. Rowan may answer recall questions using known evidence, but never reveal secrets that character did not learn.
 
@@ -132,7 +140,7 @@ Only information the current player character perceives or legitimately knows ma
 
 ## Game Feel & Juice
 
-The main feedback arc is intention → immediate acknowledgement → playful anticipation → trustworthy consequence. While Rowan works, `response-status` cycles short absurd backstage messages and may use a small looping activity animation. Copy changes must not reset screen-reader speech or imply progress that is not measured. Under `prefers-reduced-motion`, replace looping movement with a static mark and changing or stable status text.
+The main feedback arc is intention → immediate acknowledgement → playful anticipation → trustworthy consequence. The submitted words appear on a sage scrap with a written status; Rowan’s response status occupies a candle strip and changes in place. While Rowan works, `response-status` cycles short absurd backstage messages and may use a small looping activity animation. Copy changes must not reset screen-reader speech or imply progress that is not measured. Under `prefers-reduced-motion`, replace looping movement with a static mark and changing or stable status text.
 
 Resolution replaces the pending state in context without stealing focus. Inline mechanics make surprising outcomes inspectable. No audio, illustration, screen shake, confetti, or portrait asset is required. Inherit the approved G16 evaluation targets: visible input acknowledgement within 100 ms, local menus within 200 ms, save/load within 2 seconds, 95% of completed LLM-mediated actions within 10 seconds, and a recoverable interruption by 30 seconds. Architecture and testing own how those targets are achieved and measured.
 
@@ -168,7 +176,7 @@ The browser-owned sizing rule implements GDD v0.8 `G15`: users choose their pref
 - **Ordinary desktop:** navigation, dominant story page, and compact player-character reference may occupy three regions while transcript and composer remain central.
 - **200% browser zoom and narrow/reflow layout:** regions collapse into one reading column; navigation becomes a labeled top region; the character reference becomes a compact block; controls remain fully available without horizontal page scrolling.
 - **Overlays:** `reference-overlay` stays bounded by the visible viewport, scrolls internally when necessary, and never stacks. Opening, closing, and focus-return behavior does not change with width or zoom.
-- **Interaction parity:** keyboard, pointer, and screen-reader semantics remain identical across responsive variations. The promoted mock's wide three-region branch is not an implementation minimum width.
+- **Interaction parity:** keyboard, pointer, and screen-reader semantics remain identical across responsive variations. The historical mock's wide three-region branch is not an implementation minimum width; `docs/components/StoryTurn/README.md` sets the story-column fold at 34rem and navigation wraps at ≤40rem.
 
 ## Deferred Post-P0 Experience
 

@@ -1,0 +1,14 @@
+<!-- @dsCard group="Reference" height=260 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>JournalEntry — preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var D = window.Dmud, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div',{className:'dm-demo',style:{gap:0}},
+  h(D.JournalEntry,{title:'Mara\u2019s debt',status:'Known',source:'Heard from Tessa, Day 2'},'Mara owes Oren money. You don\u2019t know how much.'),
+  h(D.JournalEntry,{title:'Help at the mill',status:'Commitment',source:'Agreed with Oren, Day 3'},'You promised Oren two days\u2019 work in exchange for a week\u2019s extension.')));
+</script>
+</body>
+</html>

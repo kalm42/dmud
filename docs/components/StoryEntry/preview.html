@@ -1,0 +1,18 @@
+<!-- @dsCard group="Transcript" height=560 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>StoryEntry — preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var D = window.Dmud, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div',{className:'dm-demo',style:{padding:'24px 16px'}},
+    h(D.StoryEntry,{kind:'narration',dropCap:true},h('p',null,'Market Square smells of wet straw and frying onions. Mara wipes the counter twice before she looks up, and neither pass is for the counter.')),
+    h(D.StoryEntry,{kind:'npc',speaker:'Mara',epithet:'keeps the cider stall',onIdentify:function(){}},h('p',null,'\u201CIf Oren sent you, you can tell him the answer hasn\u2019t changed.\u201D')),
+    h(D.StoryEntry,{kind:'npc',speaker:'Stranger',epithet:'grey coat, by the well',onIdentify:function(){}},h('p',null,'\u201CShe says that every week.\u201D')),
+    h(D.StoryEntry,{kind:'rowan'},h('p',null,'You haven\u2019t heard anyone say how much Mara owes \u2014 only that Oren has been asking.')),
+    h(D.StoryEntry,{kind:'clarification'},h('p',null,'Do you want to ask Mara about the debt in general, or discuss a specific arrangement?')),
+    h(D.StoryEntry,{kind:'failure'},h('p',null,'Rowan lost the connection before anything happened. Nothing changed in the world \u2014 your message is still in the composer.'))));
+</script>
+</body>
+</html>

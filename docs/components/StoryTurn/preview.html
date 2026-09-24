@@ -1,0 +1,39 @@
+<!-- @dsCard group="Transcript" height=960 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>StoryTurn — preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var D = window.Dmud, h = React.createElement;
+  function Demo() {
+    var s = React.useState(false), open = s[0], setOpen = s[1];
+    var r = React.useState(false), roll = r[0], setRoll = r[1];
+    return h('div', {style:{position:'relative',padding:'28px 20px',minHeight:'900px',background:'var(--canvas)'}}, h(D.NotebookPage, {label:'Story'},
+      h(D.SceneHeading, {title:'Mill Lane, at dusk'}),
+      h(D.StoryTurn, null,
+        h(D.PlayerIntention, {characterName:'James', status:'resolved', text:'I ask Oren for another week on the payment. I\u2019ll offer to help at the mill.'}),
+        h(D.StoryEntry, {kind:'narration', dropCap:true}, h('p', null, 'Oren doesn\u2019t stop counting. The coins go into the box in stacks of ten, and he waits until the last stack is square before he looks at you.')),
+        h(D.StoryEntry, {kind:'npc', speaker:'Oren', epithet:'moneylender', onIdentify:function(){setOpen(true);},
+          mechanic: h(D.MechanicalResult, {skill:'Persuasion', roll:'14 + 3 = 17 vs 15', result:'success', onDetails:function(){setRoll(true);}})},
+          h('p', null, '\u201CA week. Not a day more, and not because I like you.\u201D')),
+        h(D.StoryEntry, {kind:'narration'}, h('p', null, 'He writes something in the ledger and turns it so you can read it.')),
+        h(D.StoryEntry, {kind:'npc', speaker:'Oren', epithet:'moneylender', onIdentify:function(){setOpen(true);}},
+          h('p', null, '\u201CTwo days at the mill. If the wheel\u2019s still sticking when you leave, it\u2019s three.\u201D')),
+        h(D.StoryEntry, {kind:'npc', speaker:'Oren', epithet:'moneylender', continued:true},
+          h('p', null, '\u201CSign there.\u201D'))),
+      h(D.StoryTurn, null,
+        h(D.PlayerIntention, {characterName:'James', status:'resolved', text:'What do I know about Mara\u2019s debt?'}),
+        h(D.StoryEntry, {kind:'rowan'}, h('p', null, 'You haven\u2019t heard anyone say how much Mara owes \u2014 only that Oren has been asking. That took no time.')))),
+      h(D.ReferenceOverlay, {open:open, contained:true, title:'What you know about Oren', onClose:function(){setOpen(false);}},
+        h(D.KnownCharacter, {epithet:'Moneylender, Market Square', characterName:'James', lastSeen:'Mill Lane, Day 3 at dusk', facts:[
+      {text:'Lends money to half the stalls in Market Square.',source:'Tessa told you, Day 2'},
+      {text:'Mara owes him. You don\u2019t know how much.',source:'Overheard at the well, Day 2'},
+      {text:'Agreed to a week\u2019s extension if you work two days at the mill.',source:'Your conversation, Day 3'}]})),
+      h(D.ReferenceOverlay, {open:roll, contained:true, title:'Roll details', onClose:function(){setRoll(false);}},
+        h('p', {className:'dm-interface',style:{margin:0}}, 'Die 14 + Presence 3 = 17 against difficulty 15. Success.')));
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(h(Demo));
+</script>
+</body>
+</html>
