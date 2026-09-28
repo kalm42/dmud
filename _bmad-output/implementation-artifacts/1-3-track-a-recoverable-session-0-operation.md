@@ -1,6 +1,10 @@
+---
+baseline_commit: fab1c2ab8e8136a05d06fdeec987ff900b9f99c2
+---
+
 # Story 1.3: Track a Recoverable Session 0 Operation
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -21,35 +25,35 @@ The criteria above preserve the governing backlog. Cooperative cancellation, str
 
 ## Tasks / Subtasks
 
-- [ ] Initialize durable application data safely (AC: 1, 5)
-  - [ ] Extend backend-only validated settings with an explicit application-data directory and inject the resolved configuration from `create_app`. Keep SQLite version validation ahead of directory creation and database access.
-  - [ ] Add an ordered, transactional first SQL migration and typed SQLite adapters for draft state, operations, ordered operation events, request results, minimal immutable draft-commit evidence, and migration bookkeeping. Do not create campaign, branch, save, world, NPC, or future-stage tables.
-  - [ ] Initialize/migrate/reconcile during FastAPI lifespan; shut down the supervised worker and close resources safely. Importing the app or exporting OpenAPI must not open a database, run migrations, or start work.
-  - [ ] Give integration tests and Playwright explicit isolated temporary data directories; update lifecycle-aware tests to enter `TestClient` as a context manager. Document the data directory and restart behavior in README.
-- [ ] Define and persist the shared operation contract (AC: 2, 3, 5, 6)
-  - [ ] Implement a versioned minimal `SessionZeroDraft`, `CreateSessionZeroDraft`, and `GetSessionZeroDraft` in `session_zero/`, with stable ID, draft revision, collecting lifecycle, schema version, and active-operation reference. Establish empty draft material without fabricated answers, attributes, reflection, or content compatibility evidence.
-  - [ ] Add strict Pydantic request/resource/result/event/problem models with camelCase wire fields, typed subject identity, commit boundary, committed revision, last event ID, and explicit safe recovery capability. Creation has no expected prior draft revision; commands against an existing draft require `expectedDraftRevision`.
-  - [ ] Add pure legal lifecycle transitions plus separate read/write persistence paths in `operations/`. Enforce a unique logical request identity, canonical payload digest, and a single executing mutation for a draft subject. Duplicate acceptance must be resolved transactionally, including simultaneous requests.
-  - [ ] Persist acceptance before exposing its ID; supervise a real in-process draft-create command. Commit the draft, its revision, immutable audit evidence, request result, and committed operation/event together. Complete delivery afterward without a second draft mutation.
-  - [ ] Implement startup reconciliation against request results before any resumption; uncommitted nonterminal work becomes interrupted and committed work exposes the original result. Retry must check that same result again inside its transaction.
-- [ ] Expose strict creation, status, streaming, and recovery boundaries (AC: 2–6)
-  - [ ] Register `POST /api/session-zero-drafts`, `GET /api/session-zero-drafts/{draftId}`, `GET /api/operations/{operationId}`, `GET /api/operations/{operationId}/events`, and `POST /api/operations/{operationId}/cancel` through thin handlers.
-  - [ ] Implement `POST /api/operations/{operationId}/retry` without changing the original operation/request/subject identity. Cancel/retry envelopes carry a separate recovery-command `requestId` and `expectedLastEventId`; persist their idempotent outcome so repeats cannot launch concurrent attempts. This retry route is a selected story extension, not a previously specified architecture endpoint.
-  - [ ] Return `202 Accepted` with operation/status/events references after durable acceptance. Identical original submissions retrieve existing status/result; changed payloads return a typed conflict. Use RFC 9457 problems for conflicts, invalid input, unknown IDs, and unavailable/corrupt reads.
-  - [ ] Persist typed versioned SSE events with monotonic IDs, replay strictly after `Last-Event-ID`, and provide polling independently of streaming. Validate cursor input and document recovery for invalid/out-of-range cursors; never invent missing history or rerun work to rebuild it.
-  - [ ] Implement cooperative cancellation before commit. If commit wins the race, return the authoritative committed result and stop only delivery work. A disconnected browser or SSE consumer must not cancel the operation.
-  - [ ] Export OpenAPI and regenerate the committed client, types, Zod schemas, and Query bindings using the existing scripts. Document event payload schemas in OpenAPI so event parsing uses generated schemas too.
-- [ ] Connect New Game to truthful operation recovery (AC: 2–6)
-  - [ ] Replace the local placeholder-only handoff with one user-triggered creation request. Acknowledge immediately, retain its request ID before sending, and prevent repeat activation while its outcome is unknown. Avoid mutation-on-mount, including React StrictMode duplicate effects.
-  - [ ] Preserve a validated non-authoritative refresh locator using the smallest existing-app-compatible mechanism, such as URL state. It may identify the request/operation/draft and event cursor, but may contain no authoritative draft content. Before the operation ID is received, preserve enough request identity to recover a lost acceptance response safely.
-  - [ ] Use generated SDK adapters, strict runtime validation, identity-scoped Query keys, and polling fallback. Recover the original operation on refresh; stale events or query responses for a different subject cannot replace the active view. Never let a failed read look like a failed authoritative mutation or known-empty draft.
-  - [ ] Show accepted/running, complete, failed, interrupted, and unknown/unavailable status in text with the commit boundary and supported recovery controls. Keep status and controls keyboard accessible, preserve focus through retry, and announce changes politely without repeated announcements on every poll.
-  - [ ] Preserve Title New Game independence from save discovery, empty Continue semantics, and Session 0 heading focus. Use current runtime UI primitives/theme; no composer, Rowan question, answer editing, review, or campaign entry in this story.
-- [ ] Verify real persistence and recovery behavior (AC: 1–6)
-  - [ ] Add real FastAPI/isolated SQLite integration tests for migration, acceptance/idempotency, typed reads, SSE replay, cancellation/retry, rollback, concurrent requests, and restart before/after commit.
-  - [ ] Extend Playwright against real Vite/FastAPI for New Game, response-loss/refresh recovery, SSE loss with polling, and accessible failure/retry. Use deterministic scheduling barriers, not sleeps, to observe intermediate states of the fast local operation.
-  - [ ] Preserve Title save retry/focus, secret-canary, Chromium/Mobile Safari, and existing parser coverage. Map each AC to observable tests and record commands/results without claiming future Session 0 or P0 completion.
-  - [ ] Run the independent existing format, lint, strict typing, backend/frontend tests, build, browser, and contract drift gates listed below.
+- [x] Initialize durable application data safely (AC: 1, 5)
+  - [x] Extend backend-only validated settings with an explicit application-data directory and inject the resolved configuration from `create_app`. Keep SQLite version validation ahead of directory creation and database access.
+  - [x] Add an ordered, transactional first SQL migration and typed SQLite adapters for draft state, operations, ordered operation events, request results, minimal immutable draft-commit evidence, and migration bookkeeping. Do not create campaign, branch, save, world, NPC, or future-stage tables.
+  - [x] Initialize/migrate/reconcile during FastAPI lifespan; shut down the supervised worker and close resources safely. Importing the app or exporting OpenAPI must not open a database, run migrations, or start work.
+  - [x] Give integration tests and Playwright explicit isolated temporary data directories; update lifecycle-aware tests to enter `TestClient` as a context manager. Document the data directory and restart behavior in README.
+- [x] Define and persist the shared operation contract (AC: 2, 3, 5, 6)
+  - [x] Implement a versioned minimal `SessionZeroDraft`, `CreateSessionZeroDraft`, and `GetSessionZeroDraft` in `session_zero/`, with stable ID, draft revision, collecting lifecycle, schema version, and active-operation reference. Establish empty draft material without fabricated answers, attributes, reflection, or content compatibility evidence.
+  - [x] Add strict Pydantic request/resource/result/event/problem models with camelCase wire fields, typed subject identity, commit boundary, committed revision, last event ID, and explicit safe recovery capability. Creation has no expected prior draft revision; commands against an existing draft require `expectedDraftRevision`.
+  - [x] Add pure legal lifecycle transitions plus separate read/write persistence paths in `operations/`. Enforce a unique logical request identity, canonical payload digest, and a single executing mutation for a draft subject. Duplicate acceptance must be resolved transactionally, including simultaneous requests.
+  - [x] Persist acceptance before exposing its ID; supervise a real in-process draft-create command. Commit the draft, its revision, immutable audit evidence, request result, and committed operation/event together. Complete delivery afterward without a second draft mutation.
+  - [x] Implement startup reconciliation against request results before any resumption; uncommitted nonterminal work becomes interrupted and committed work exposes the original result. Retry must check that same result again inside its transaction.
+- [x] Expose strict creation, status, streaming, and recovery boundaries (AC: 2–6)
+  - [x] Register `POST /api/session-zero-drafts`, `GET /api/session-zero-drafts/{draftId}`, `GET /api/operations/{operationId}`, `GET /api/operations/{operationId}/events`, and `POST /api/operations/{operationId}/cancel` through thin handlers.
+  - [x] Implement `POST /api/operations/{operationId}/retry` without changing the original operation/request/subject identity. Cancel/retry envelopes carry a separate recovery-command `requestId` and `expectedLastEventId`; persist their idempotent outcome so repeats cannot launch concurrent attempts. This retry route is a selected story extension, not a previously specified architecture endpoint.
+  - [x] Return `202 Accepted` with operation/status/events references after durable acceptance. Identical original submissions retrieve existing status/result; changed payloads return a typed conflict. Use RFC 9457 problems for conflicts, invalid input, unknown IDs, and unavailable/corrupt reads.
+  - [x] Persist typed versioned SSE events with monotonic IDs, replay strictly after `Last-Event-ID`, and provide polling independently of streaming. Validate cursor input and document recovery for invalid/out-of-range cursors; never invent missing history or rerun work to rebuild it.
+  - [x] Implement cooperative cancellation before commit. If commit wins the race, return the authoritative committed result and stop only delivery work. A disconnected browser or SSE consumer must not cancel the operation.
+  - [x] Export OpenAPI and regenerate the committed client, types, Zod schemas, and Query bindings using the existing scripts. Document event payload schemas in OpenAPI so event parsing uses generated schemas too.
+- [x] Connect New Game to truthful operation recovery (AC: 2–6)
+  - [x] Replace the local placeholder-only handoff with one user-triggered creation request. Acknowledge immediately, retain its request ID before sending, and prevent repeat activation while its outcome is unknown. Avoid mutation-on-mount, including React StrictMode duplicate effects.
+  - [x] Preserve a validated non-authoritative refresh locator using the smallest existing-app-compatible mechanism, such as URL state. It may identify the request/operation/draft and event cursor, but may contain no authoritative draft content. Before the operation ID is received, preserve enough request identity to recover a lost acceptance response safely.
+  - [x] Use generated SDK adapters, strict runtime validation, identity-scoped Query keys, and polling fallback. Recover the original operation on refresh; stale events or query responses for a different subject cannot replace the active view. Never let a failed read look like a failed authoritative mutation or known-empty draft.
+  - [x] Show accepted/running, complete, failed, interrupted, and unknown/unavailable status in text with the commit boundary and supported recovery controls. Keep status and controls keyboard accessible, preserve focus through retry, and announce changes politely without repeated announcements on every poll.
+  - [x] Preserve Title New Game independence from save discovery, empty Continue semantics, and Session 0 heading focus. Use current runtime UI primitives/theme; no composer, Rowan question, answer editing, review, or campaign entry in this story.
+- [x] Verify real persistence and recovery behavior (AC: 1–6)
+  - [x] Add real FastAPI/isolated SQLite integration tests for migration, acceptance/idempotency, typed reads, SSE replay, cancellation/retry, rollback, concurrent requests, and restart before/after commit.
+  - [x] Extend Playwright against real Vite/FastAPI for New Game, response-loss/refresh recovery, SSE loss with polling, and accessible failure/retry. Use deterministic scheduling barriers, not sleeps, to observe intermediate states of the fast local operation.
+  - [x] Preserve Title save retry/focus, secret-canary, Chromium/Mobile Safari, and existing parser coverage. Map each AC to observable tests and record commands/results without claiming future Session 0 or P0 completion.
+  - [x] Run the independent existing format, lint, strict typing, backend/frontend tests, build, browser, and contract drift gates listed below.
 
 ## Dev Notes
 
@@ -190,16 +194,108 @@ GPT-6 Codex (story context creation).
 - Workflow customization resolved: no prepend/append steps, persistent facts, or terminal completion instruction.
 - Research covered governing Story 1.3 and Epic 1 handoffs, canonical architecture, GDD/UX context, project rules, Story 1.2 reviews, actual source, recent commits, and official SQLite/FastAPI/Query documentation.
 
+- Implementation used GPT-6 Codex and the resolved gds-dev-story workflow; no custom activation or completion steps were present.
+- Red phases observed: storage tests rejected the missing settings/lifespan seam; durable-operation tests could not import the absent operation slice; API tests received 404 for absent routes; frontend operation parser tests rejected the absent adapter. Each foundation was implemented before proceeding.
+- Implementation plan: isolated lifespan migrations → shared durable acceptance/commit/reconciliation → strict HTTP/SSE/recovery routes and generated contracts → explicit New Game intent with URL locator, validated Query cache, monotonic SSE/polling → real database and browser recovery evidence.
+- Controlled fault injection only: injected SQLite abort trigger verified complete transaction rollback; composition-injected asyncio barriers observed pre/postcommit states and cancellation; browser-test composition barriers and an injected infrastructure failure observed retry. Browser routes dropped actual responses or streams; no fabricated first-party responses, provider mocks, or release test routes were added.
+- Final independent gates passed: frontend `npm run format:check`, `npm run lint`, `npm run typecheck`, `npm run build`, `npm test` (16 passed); backend `uv run ruff format --check src tests scripts`, `uv run ruff check src tests scripts`, `uv run pyright` (0 errors), `uv run pytest` (35 passed); root `python3 scripts/check_contract.py` (no drift), `git diff --check`; frontend `npm run test:e2e` (40 passed, 6 existing desktop-only skips across Chromium/Mobile Safari).
+- Early sandbox failures accessing uv's cache were rerun with the authorized escalation. Installed pins and lockfiles remain unchanged. Existing httpx/TestClient deprecation and Pyright update notices were observed; they did not fail gates.
+
 ### Completion Notes List
 
-- Ultimate context engine analysis completed - comprehensive developer guide created.
-- Story preparation only; implementation tasks are unchecked and no application-test execution is claimed.
+- Implemented ordered transactional SQLite STRICT storage, short typed adapters, version guarding, lifespan initialization, supervised worker shutdown and startup reconciliation. Imports/OpenAPI export remain storage-free; test and browser data directories are isolated.
+- Creation reserves one operation/request/draft subject before acknowledgement. Canonical replay and concurrent acceptance preserve identity; changed accepted payloads return typed conflicts. Initial authoritative collecting revision is 1, without answers, campaign material, or fictional time.
+- Atomic draft commit includes draft state, immutable commit evidence, request result, operation boundary/revision and ordered event. Transaction rollback leaves no partial authoritative artifacts. Transactional claims and attempt event checks prevent duplicate execution or an old cancelled attempt from committing a retry.
+- Added creation/draft/status/SSE/cancel/retry boundaries, strict camelCase models, RFC 9457 problems with typed classifications and safe correlation context, cursor validation/replay, cooperative precommit cancellation and same-identity idempotent recovery. Polling is independent of streaming.
+- New Game now retains its original request ID before sending, acknowledges immediately, and cannot start twice while unknown. URL recovery pointers contain identifiers/cursor only. Explicit recovery handles lost acceptance/retry responses; validated identity-scoped Query state, generated SSE schemas, monotonic snapshots, polite status and focus-stable controls preserve truthful outcomes on refresh or failed reads.
+- AC1 evidence: `test_application_data.py` checks unopened construction/export, only scoped STRICT tables, repeat startup, rollback and unsupported/newer schema behavior. AC2: `test_durable_operations.py` and `test_operation_routes.py` check durable acceptance, concurrency, canonical replay/conflicts and initial revision. AC3: route/recovery tests plus frontend parser tests validate authoritative boundaries, failed/interrupted/committed/complete states, strict errors and malformed data rejection. AC4: route replay and `operations.spec.ts` cover lost acceptance, refresh, SSE loss/polling and stale/duplicate snapshot rejection. AC5: real app restarts and transaction evidence preserve pre/postcommit truth. AC6: cancellation/retry integration and browser tests preserve the original subject/request/operation and prevent repeat execution.
+- Existing Title/save focus, empty Continue, current theme, heading focus, keyboard accessibility, canary and browser coverage remain green. This is the durable Session 0 foundation only; later character content, campaign confirmation and the P0 promotion gate remain outside this story.
+- Enhanced definition-of-done checklist passed. All tasks/subtasks are complete; story and sprint status are `review`. Suggested next step: independent `gds-code-review`.
 
 ### File List
 
+- `.gitignore`
+- `README.md`
 - `_bmad-output/implementation-artifacts/1-3-track-a-recoverable-session-0-operation.md`
 - `_bmad-output/implementation-artifacts/sprint-status.yaml`
+- `backend/src/dmud/main.py`
+- `backend/src/dmud/operations/accept_operation.py`
+- `backend/src/dmud/operations/claim_operation.py`
+- `backend/src/dmud/operations/commit_draft.py`
+- `backend/src/dmud/operations/event_cursor.py`
+- `backend/src/dmud/operations/execution_hooks.py`
+- `backend/src/dmud/operations/get_events.py`
+- `backend/src/dmud/operations/get_operation.py`
+- `backend/src/dmud/operations/get_request_operation.py`
+- `backend/src/dmud/operations/invalid_request.py`
+- `backend/src/dmud/operations/legal_transition.py`
+- `backend/src/dmud/operations/list_nonterminal.py`
+- `backend/src/dmud/operations/models.py`
+- `backend/src/dmud/operations/payload_digest.py`
+- `backend/src/dmud/operations/post_cancel.py`
+- `backend/src/dmud/operations/post_draft.py`
+- `backend/src/dmud/operations/post_retry.py`
+- `backend/src/dmud/operations/problem_response.py`
+- `backend/src/dmud/operations/read_events.py`
+- `backend/src/dmud/operations/read_operation.py`
+- `backend/src/dmud/operations/read_status.py`
+- `backend/src/dmud/operations/reconcile_operations.py`
+- `backend/src/dmud/operations/recover_operation.py`
+- `backend/src/dmud/operations/register_operation_routes.py`
+- `backend/src/dmud/operations/render_problem.py`
+- `backend/src/dmud/operations/run_worker.py`
+- `backend/src/dmud/operations/stream_events.py`
+- `backend/src/dmud/operations/transition_operation.py`
+- `backend/src/dmud/operations/write_event.py`
+- `backend/src/dmud/platform/application_lifespan.py`
+- `backend/src/dmud/platform/settings.py`
+- `backend/src/dmud/platform/sqlite/connect_database.py`
+- `backend/src/dmud/platform/sqlite/initialize_database.py`
+- `backend/src/dmud/platform/sqlite/migrations/0001_initial_schema.sql`
+- `backend/src/dmud/session_zero/create_session_zero_draft.py`
+- `backend/src/dmud/session_zero/get_session_zero_draft.py`
+- `backend/src/dmud/session_zero/models.py`
+- `backend/src/dmud/session_zero/read_draft.py`
+- `backend/tests/browser_app.py`
+- `backend/tests/conftest.py`
+- `backend/tests/integration/test_application_data.py`
+- `backend/tests/integration/test_durable_operations.py`
+- `backend/tests/integration/test_operation_recovery.py`
+- `backend/tests/integration/test_operation_routes.py`
+- `backend/tests/integration/test_save_slots.py`
+- `backend/tests/integration/test_status.py`
+- `contracts/openapi.json`
+- `frontend/e2e/holdDraftCommit.ts`
+- `frontend/e2e/operations.spec.ts`
+- `frontend/playwright.config.ts`
+- `frontend/src/api/generated/@tanstack/react-query.gen.ts`
+- `frontend/src/api/generated/index.ts`
+- `frontend/src/api/generated/sdk.gen.ts`
+- `frontend/src/api/generated/types.gen.ts`
+- `frontend/src/api/generated/zod.gen.ts`
+- `frontend/src/api/operationSchema.ts`
+- `frontend/src/api/parseOperation.test.ts`
+- `frontend/src/api/parseOperation.ts`
+- `frontend/src/api/parseOperationEvent.ts`
+- `frontend/src/api/parseProblem.ts`
+- `frontend/src/api/readOperation.ts`
+- `frontend/src/api/recoverOperation.ts`
+- `frontend/src/api/submitDraft.ts`
+- `frontend/src/app/App.tsx`
+- `frontend/src/features/operation-progress/OperationProgress.tsx`
+- `frontend/src/features/operation-progress/locatorSchema.ts`
+- `frontend/src/features/operation-progress/operationKey.ts`
+- `frontend/src/features/operation-progress/operationStatusText.ts`
+- `frontend/src/features/operation-progress/readLocator.ts`
+- `frontend/src/features/operation-progress/selectOperationSnapshot.test.ts`
+- `frontend/src/features/operation-progress/selectOperationSnapshot.ts`
+- `frontend/src/features/operation-progress/useDraftOperation.ts`
+- `frontend/src/features/operation-progress/useOperationEvents.ts`
+- `frontend/src/features/operation-progress/writeLocator.ts`
+- `frontend/src/features/session-zero/SessionZero.tsx`
 
 ### Change Log
 
 - 2026-09-28: Created the ready-for-dev Story 1.3 context and scoped the durable Session 0 foundation with recovery, atomicity, current-source guardrails, and test evidence requirements.
+
+- 2026-09-28: Implemented and verified the durable Session 0 operation foundation, generated transport contract, accessible refresh/retry recovery and isolated persistence/restart evidence; moved Story 1.3 to review.
