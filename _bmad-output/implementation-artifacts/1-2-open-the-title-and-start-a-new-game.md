@@ -4,7 +4,7 @@ baseline_commit: 3694c57
 
 # Story 1.2: Open the Title and Start a New Game
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -22,17 +22,17 @@ so that I can enter Session 0 even if save discovery fails.
 
 ## Tasks / Subtasks
 
-- [ ] Provide a read-only save-index boundary (AC: 1–3)
-  - [ ] Add a typed `GET /api/save-slots` route returning exactly three numbered, explicitly empty slots for the current foundation; reading this resource must not create, select, or load a branch. Define only the response states this story can truthfully supply, leaving persisted occupied-slot handling to Story 1.31.
-  - [ ] Export OpenAPI and regenerate the committed client, Zod schema, and TanStack Query options through the existing scripts. Add a small API adapter that passes the abort signal, validates `unknown` response data strictly, and reports transport/schema errors as errors, never as `[]` or empty slots.
-- [ ] Replace the startup shell with the Title and Session 0 entry surface (AC: 1–5)
-  - [ ] Put Title behavior and presentation in `frontend/src/features/title/`; keep `App.tsx` as the composition point. Show both actions on first render. Derive Continue availability from a validated compatible occupied slot only; loading, empty, and error states each need an explicit accessible reason. A failed read offers Retry using the same query, with New Game independent of query success.
-  - [ ] Make New Game enter a distinct Session 0 surface using the smallest local navigation state appropriate to the current app. Since Story 1.3 owns durable draft creation and Story 1.5 owns Rowan's first answer UI, the entry surface must not claim that a draft, character, campaign, or first question is saved. Do not add a persistence write or advance a game clock in this story.
-  - [ ] Apply the approved paper/ink/forest Title direction, semantic landmarks, visible focus, logical reading order, text reflow, reduced-motion behavior, and accessible button targets. Keep the reason for disabled Continue readable and programmatically available; native disabled controls alone cannot receive focus.
-- [ ] Verify the real boundary and player journey (AC: 1–5)
-  - [ ] Add backend ASGI integration coverage for the three-slot response and read-only behavior, plus strict frontend parsing coverage for malformed data.
-  - [ ] Extend the real Playwright startup journey to cover initial loading, empty slots, API failure and retry, and New Game entry; keep first-party API routes real. Add keyboard and narrow/zoom checks where they observe Title behavior. Preserve the Story 1.1 status/proxy and secret-canary assertions where still applicable.
-  - [ ] Run separate format, lint, strict typecheck, build, backend tests, frontend tests, browser tests, and generated-contract drift checks using the commands documented in `README.md` and the repository CI.
+- [x] Provide a read-only save-index boundary (AC: 1–3)
+  - [x] Add a typed `GET /api/save-slots` route returning exactly three numbered, explicitly empty slots for the current foundation; reading this resource must not create, select, or load a branch. Define only the response states this story can truthfully supply, leaving persisted occupied-slot handling to Story 1.31.
+  - [x] Export OpenAPI and regenerate the committed client, Zod schema, and TanStack Query options through the existing scripts. Add a small API adapter that passes the abort signal, validates `unknown` response data strictly, and reports transport/schema errors as errors, never as `[]` or empty slots.
+- [x] Replace the startup shell with the Title and Session 0 entry surface (AC: 1–5)
+  - [x] Put Title behavior and presentation in `frontend/src/features/title/`; keep `App.tsx` as the composition point. Show both actions on first render. Derive Continue availability from a validated compatible occupied slot only; loading, empty, and error states each need an explicit accessible reason. A failed read offers Retry using the same query, with New Game independent of query success.
+  - [x] Make New Game enter a distinct Session 0 surface using the smallest local navigation state appropriate to the current app. Since Story 1.3 owns durable draft creation and Story 1.5 owns Rowan's first answer UI, the entry surface must not claim that a draft, character, campaign, or first question is saved. Do not add a persistence write or advance a game clock in this story.
+  - [x] Apply the approved paper/ink/forest Title direction, semantic landmarks, visible focus, logical reading order, text reflow, reduced-motion behavior, and accessible button targets. Keep the reason for disabled Continue readable and programmatically available; native disabled controls alone cannot receive focus.
+- [x] Verify the real boundary and player journey (AC: 1–5)
+  - [x] Add backend ASGI integration coverage for the three-slot response and read-only behavior, plus strict frontend parsing coverage for malformed data.
+  - [x] Extend the real Playwright startup journey to cover initial loading, empty slots, API failure and retry, and New Game entry; keep first-party API routes real. Add keyboard and narrow/zoom checks where they observe Title behavior. Preserve the Story 1.1 status/proxy and secret-canary assertions where still applicable.
+  - [x] Run separate format, lint, strict typecheck, build, backend tests, frontend tests, browser tests, and generated-contract drift checks using the commands documented in `README.md` and the repository CI.
 
 ## Dev Notes
 
@@ -78,12 +78,86 @@ so that I can enter Session 0 even if save discovery fails.
 
 ### Agent Model Used
 
-To be filled by implementation agent.
+GPT-6 Codex
+
+### Implementation Plan
+
+1. Add a read-only FastAPI save-index query and contract tests, then regenerate OpenAPI and the frontend client.
+2. Validate the complete generated response at the browser boundary and present its loading, empty, and error states on Title.
+3. Enter a local Session 0 surface with no persistence or game-clock action; verify the journey with real API browser tests and all quality gates.
 
 ### Debug Log References
+
+- Red phase: backend save-index test failed with 404; frontend parser suite failed because the parser did not exist.
+- Sandbox uv cache access blocked the first browser run. The approved external browser test run passed. Direct `./.venv/bin/pyright` did not resolve its environment, so `uv run pyright` was used and passed.
+- 2026-09-24: frontend format, lint, typecheck, build, Vitest (6 tests), backend Ruff format/lint, Pyright strict, pytest (5 tests), Playwright (5 tests), generated-contract drift, and `git diff --check` passed.
+- 2026-09-24 follow-up: initially relocated browser tests to `frontend/tests/e2e/`; that setup was superseded by the fresh Playwright install under `frontend/e2e/`.
+- 2026-09-24 follow-up: removed the config-side `@playwright/test` path mapping, then restored the three-server Playwright fixture in the new TypeScript config. The app browser journey passed in Chromium and Mobile Safari (10 tests).
+- 2026-09-24 design-system follow-up: frontend format, lint, typecheck, build, Vitest (6 tests), Playwright (17 passed, 5 desktop-only tests skipped on Mobile Safari), and `git diff --check` passed.
 
 ### Completion Notes List
 
 - Ultimate context engine analysis completed - comprehensive developer guide created.
+- Added a read-only three-slot API; it never opens or writes a branch. Generated artifacts and a strict parser preserve read failures as errors.
+- Replaced the startup panel with accessible Title states and a local, zero-time Session 0 handoff. Continue remains unavailable because this foundation has no compatible occupied slots.
+- Covered the real proxy, loading, empty slots, failed reads and retry, keyboard entry, narrow layout with enlarged text, reduced motion, and secret-canary exclusion.
+- The final browser test location is `frontend/e2e/`; the current config preserves the Chromium and Mobile Safari projects and starts all three local servers for the app journey.
+- New Game browser coverage now checks that the current empty save index is unchanged; TODOs record the occupied-slot and fictional-time assertions that require future observable state.
+- Paired the four player-flow browser checks with desktop keyboard-only tests and Axe scans, including enlarged text, narrow reflow, and reduced motion. Mobile Safari keeps the normal touch-flow coverage.
+- Moved Title and Session 0 paragraph presentation into a typed CVA component styled with Tailwind 4; the roles and accessible descriptions remain on the rendered paragraphs.
+- Applied the `docs/` campaign-book palette, typography, page framing, button treatment, and automatic dark theme to the existing Title and Session 0 surfaces.
 
 ### File List
+
+- `_bmad-output/implementation-artifacts/1-2-open-the-title-and-start-a-new-game.md`
+- `_bmad-output/implementation-artifacts/sprint-status.yaml`
+- `_bmad-output/project-context.md`
+- `backend/src/dmud/main.py`
+- `backend/src/dmud/saves/__init__.py`
+- `backend/src/dmud/saves/get_save_slots.py`
+- `backend/src/dmud/saves/save_slots.py`
+- `backend/tests/integration/test_save_slots.py`
+- `contracts/openapi.json`
+- `frontend/src/api/generated/@tanstack/react-query.gen.ts`
+- `frontend/src/api/generated/index.ts`
+- `frontend/src/api/generated/sdk.gen.ts`
+- `frontend/src/api/generated/types.gen.ts`
+- `frontend/src/api/generated/zod.gen.ts`
+- `frontend/src/api/parseSaveSlots.test.ts`
+- `frontend/src/api/parseSaveSlots.ts`
+- `frontend/src/api/useSaveSlots.ts`
+- `frontend/src/app/App.tsx`
+- `frontend/src/app/app.css`
+- `frontend/public/fonts/Lora-Regular.woff2`
+- `frontend/public/fonts/Lora-Italic.woff2`
+- `frontend/public/fonts/Lora-SemiBold.woff2`
+- `frontend/public/fonts/Cinzel-SemiBold.woff2`
+- `frontend/public/fonts/Cinzel-Bold.woff2`
+- `frontend/public/fonts/LICENSES.txt`
+- `frontend/src/components/ui/paragraph.tsx`
+- `frontend/src/features/session-zero/SessionZero.tsx`
+- `frontend/src/features/title/Title.tsx`
+- `frontend/package.json`
+- `frontend/package-lock.json`
+- `frontend/.prettierrc.json`
+- `frontend/eslint.config.js`
+- `frontend/playwright.config.cjs` (replaced by TypeScript config)
+- `frontend/playwright.config.ts`
+- `frontend/e2e/app.spec.ts`
+- `frontend/e2e/expectAccessiblePage.ts`
+- `frontend/tsconfig.e2e.json`
+- `frontend/tsconfig.json`
+- `frontend/tsconfig.node.json`
+- `frontend/vite.config.ts`
+- `tests/e2e/app.spec.ts` (moved)
+
+### Change Log
+
+- 2026-09-24: Implemented Story 1.2 Title entry, read-only save discovery, strict browser validation, and real-boundary tests.
+- 2026-09-24: Moved Playwright tests into the frontend package and updated paths, scripts, and project guidance.
+- 2026-09-24: Connected the restored app browser suite to the API and Vite servers; verified both configured browser projects.
+- 2026-09-24: Extended New Game browser coverage for the current save-index boundary and documented future occupied-slot and clock checks.
+- 2026-09-24: Added keyboard accessibility counterparts and pinned `@axe-core/playwright` for automated page scans.
+- 2026-09-24: Added Tailwind 4, CVA paragraph variants, and Tailwind-aware Prettier sorting; preserved Title and Session 0 semantics.
+- 2026-09-24: Replaced Title's nested ternary with explicit branches and scoped Vitest to `src` after Playwright tests moved under `frontend/e2e/`.
+- 2026-09-24: Updated the existing frontend surfaces to the new campaign-book design system and verified both color themes in Playwright.
