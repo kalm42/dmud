@@ -8,7 +8,7 @@ The current application is a local startup shell. Campaign creation and saves ar
 - Python 3.14.7
 - uv 0.12.0
 - SQLite 3.37.0 or newer, available to Python
-- Playwright Chromium for the browser check
+- Playwright Chromium and WebKit for the browser checks
 
 The initial architecture selected TypeScript 7.0.2. The pinned `typescript-eslint@8.69.0` declares TypeScript `<6.1`, so this story pins TypeScript 6.0.3 until that tool supports 7.x. The lockfile records the resolved dependency tree.
 The `@hey-api/openapi-ts` dependency tree resolves a vulnerable `js-yaml` 4.3.1; an npm override pins patched 4.3.2 without changing the selected generator.
@@ -16,7 +16,7 @@ The `@hey-api/openapi-ts` dependency tree resolves a vulnerable `js-yaml` 4.3.1;
 ## Clean install
 
 ```sh
-cd frontend && npm ci && npx playwright install chromium
+cd frontend && npm ci && npx playwright install chromium webkit
 cd ../backend && uv sync --locked
 ```
 

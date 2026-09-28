@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { expectAccessiblePage } from "./expectAccessiblePage.js";
+import { holdSaveCheck } from "./holdSaveCheck.js";
 
 /**
  * Proves [1.2.1, and 1.2.2](_bmad-output/implementation-artifacts/1-2-open-the-title-and-start-a-new-game.md)
@@ -37,7 +38,9 @@ test("App explains empty saves to keyboard users at enlarged narrow layout", asy
   isMobile,
 }) => {
   test.skip(isMobile, "Keyboard traversal is checked in the desktop project");
+  await page.setViewportSize({ width: 320, height: 640 });
   await page.goto("http://127.0.0.1:5173");
+  await page.addStyleTag({ content: "html { font-size: 200%; }" });
   await expect(page.getByRole("status")).toHaveText(
     "No saved campaign exists.",
   );
@@ -65,7 +68,12 @@ test("App reports a failed save check with Retry while New Game stays available"
   await expect(page.getByRole("alert")).toContainText(
     "Saved campaigns could not be checked",
   );
+  const release = await holdSaveCheck({ page });
   await page.getByRole("button", { name: "Retry save check" }).click();
+  await expect(page.getByRole("status")).toHaveText(
+    "Checking for saved campaigns…",
+  );
+  release();
   await expect(page.getByRole("alert")).toContainText(
     "Saved campaigns could not be checked",
   );
@@ -87,22 +95,32 @@ test("App lets keyboard users retry a failed save check", async ({
   await expect(
     page.getByRole("button", { name: "Retry save check" }),
   ).toBeFocused();
+  const release = await holdSaveCheck({ page });
   await page.keyboard.press("Enter");
 
+  await expect(page.getByRole("status")).toHaveText(
+    "Checking for saved campaigns…",
+  );
+  await expect(
+    page.getByRole("button", { name: "Retry save check" }),
+  ).toBeFocused();
+  await expect(
+    page.getByRole("button", { name: "Retry save check" }),
+  ).toHaveAttribute("aria-busy", "true");
+  release();
   await expect(page.getByRole("alert")).toContainText(
     "Saved campaigns could not be checked",
   );
+  await expect(
+    page.getByRole("button", { name: "Retry save check" }),
+  ).toBeFocused();
   await expectAccessiblePage(page);
 });
 
 test("App shows Title actions while the real save index is loading", async ({
   page,
 }) => {
-  await page.route("**/api/save-slots", async (route) => {
-    const response = await route.fetch();
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    await route.fulfill({ response });
-  });
+  const release = await holdSaveCheck({ page });
 
   await page.goto("http://127.0.0.1:5173");
 
@@ -111,6 +129,7 @@ test("App shows Title actions while the real save index is loading", async ({
   await expect(page.getByRole("status")).toHaveText(
     "Checking for saved campaigns…",
   );
+  release();
   await expect(page.getByRole("status")).toHaveText(
     "No saved campaign exists.",
   );
@@ -121,11 +140,7 @@ test("App keeps New Game keyboard reachable while saves load", async ({
   isMobile,
 }) => {
   test.skip(isMobile, "Keyboard traversal is checked in the desktop project");
-  await page.route("**/api/save-slots", async (route) => {
-    const response = await route.fetch();
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    await route.fulfill({ response });
-  });
+  const release = await holdSaveCheck({ page });
   await page.goto("http://127.0.0.1:5173");
   await expect(page.getByRole("status")).toHaveText(
     "Checking for saved campaigns…",
@@ -135,6 +150,7 @@ test("App keeps New Game keyboard reachable while saves load", async ({
 
   await expect(page.getByRole("button", { name: "New Game" })).toBeFocused();
   await expect(page.getByRole("button", { name: "Continue" })).toBeDisabled();
+  release();
   await expect(page.getByRole("status")).toHaveText(
     "No saved campaign exists.",
   );
@@ -175,6 +191,7 @@ test("App lets keyboard users start a new game", async ({ page, isMobile }) => {
   await page.keyboard.press("Enter");
 
   await expect(page.getByRole("heading", { name: "Session 0" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Session 0" })).toBeFocused();
   await expectAccessiblePage(page);
 
   // TODO: When occupied saves exist, verify New Game neither selects nor deletes one.

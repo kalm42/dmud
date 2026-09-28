@@ -34,6 +34,24 @@ so that I can enter Session 0 even if save discovery fails.
   - [x] Extend the real Playwright startup journey to cover initial loading, empty slots, API failure and retry, and New Game entry; keep first-party API routes real. Add keyboard and narrow/zoom checks where they observe Title behavior. Preserve the Story 1.1 status/proxy and secret-canary assertions where still applicable.
   - [x] Run separate format, lint, strict typecheck, build, backend tests, frontend tests, browser tests, and generated-contract drift checks using the commands documented in `README.md` and the repository CI.
 
+### Review Findings
+
+Review date: 2026-09-28. Scope: application, API, tests, and their build/test configuration on `feat/story-1-2` against `main` (`3694c57`). Design documentation, preview bundles, tokens, and asset review remain for a separate pass. Blind Hunter, Edge Case Hunter, and Acceptance Auditor completed; duplicate findings merged and seven unsupported or out-of-scope concerns dismissed. No decision-needed or deferred findings.
+
+- [x] [Review][Patch] P1 — Install WebKit for the new Mobile Safari browser project [frontend/playwright.config.ts:53]. The default browser gate now runs WebKit, but `.github/workflows/quality.yml` and the README clean-install command install Chromium only. Fresh CI and documented installs therefore lack the engine. Install both Chromium and WebKit and the required CI dependencies.
+- [x] [Review][Patch] P2 — Move focus to Session 0 after New Game [frontend/src/app/App.tsx:15]. Keyboard activation unmounts the focused Title button; a real Chromium check observed `document.activeElement` become `BODY`. The new surface has neither focused content nor a navigation announcement. Focus an appropriate Session 0 heading on entry and assert the resulting focus in the keyboard journey (AC5).
+- [x] [Review][Patch] P2 — Preserve Retry focus during discovery and after failure [frontend/src/features/title/Title.tsx:45]. The initial-error refetch changes the query to pending, unmounting the focused Retry button. A real Chromium check observed no Retry button during pending and body focus both during the request and after its second failure. Keep the retry control stable during refetch, expose progress, and verify focus through the retry lifecycle (AC3, AC5).
+- [x] [Review][Patch] P2 — Restore the Story 1.1 credential-canary regression test [frontend/e2e/app.spec.ts:7]. Moving the suite deleted the original response/DOM/storage canary assertion, while the config still seeds the backend credential. Restore the test against current browser-visible surfaces and the renamed TypeScript config; preservation is an explicit story task.
+- [x] [Review][Patch] P2 — Make Retry tests observe a new request or recovery [frontend/e2e/app.spec.ts:68]. Both pointer and keyboard tests assert the same error already visible before activation, so deleting the Retry handler would still pass. Observe a completed real refetch or a controlled real-boundary failure-to-success transition, with pending and resulting state assertions (AC3).
+- [x] [Review][Patch] P2 — Complete the specified accessibility behavior checks [frontend/e2e/app.spec.ts:35]. The test named enlarged/narrow never changes viewport or text size; the separate 320px/200%-text test only checks overflow and visibility. No test enables reduced motion, checks visible focus or target dimensions, or operates Retry in the enlarged narrow layout. Add the specified observable checks and correct the completion report's unsupported reduced-motion claim (AC5).
+- [x] [Review][Patch] P3 — Restore the exact Playwright dependency pin [frontend/package.json:35]. Changing `1.63.0` to `^1.63.0` contradicts the story's explicit no-floating-dependencies constraint. Restore `1.63.0` and synchronize the lockfile metadata.
+
+Verification: frontend format, lint, strict TypeScript, build, and Vitest (6 tests) passed; backend Ruff format/lint, Pyright strict, and pytest (5 tests) passed; the existing local Playwright suite passed 17 tests with 5 skips. Two temporary real-browser investigations outside the repository confirmed the New Game and Retry focus failures. The local browser pass uses already installed engines and does not validate the fresh-CI install. No application code was changed during the initial review.
+
+Review resolution (2026-09-28): All seven patches applied. Session 0 focuses its heading on entry. Retry stays mounted after the first failure, preserves focus during refetch and subsequent outcomes, announces checking state, and blocks duplicate activation while busy. Real-boundary browser coverage now observes pending, repeated failure, and successful recovery; loading responses use explicit release gates rather than timed delays. The canary response/DOM/storage assertion is restored, with one shared credential value across Playwright workers. CI and clean-install instructions include WebKit; the exact Playwright pin is restored in both manifests. Enlarged 320px keyboard interaction, reduced-motion operation, focus outlines, and minimum target dimensions are verified. The Acceptance Auditor and Edge Case Hunter rechecked the fixes and reported no unresolved findings.
+
+Patch verification: Three keyboard regression tests failed before the application fixes. Afterward, frontend format, lint, strict TypeScript, build, and Vitest (6 tests), backend pytest (5 tests), generated-contract drift, and the browser suite (22 passed, 6 desktop-only checks skipped on Mobile Safari) passed. Backend Ruff format/lint and Pyright passed during the review; backend source was unchanged by the patches. No first-party response was fabricated: recovery forwards the request to the available real API and delays delivery of its actual response. Story and sprint tracking are marked done for this completed application/API/tests review; design documentation, previews, tokens, and assets remain outside this pass.
+
 ## Dev Notes
 
 ### Scope and handoffs
@@ -100,7 +118,7 @@ GPT-6 Codex
 - Ultimate context engine analysis completed - comprehensive developer guide created.
 - Added a read-only three-slot API; it never opens or writes a branch. Generated artifacts and a strict parser preserve read failures as errors.
 - Replaced the startup panel with accessible Title states and a local, zero-time Session 0 handoff. Continue remains unavailable because this foundation has no compatible occupied slots.
-- Covered the real proxy, loading, empty slots, failed reads and retry, keyboard entry, narrow layout with enlarged text, reduced motion, and secret-canary exclusion.
+- Covered the real proxy, loading, empty slots, failed reads and retry, keyboard entry, and narrow layout with enlarged text. The 2026-09-28 review follow-up restores secret-canary exclusion and adds explicit reduced-motion operation coverage.
 - The final browser test location is `frontend/e2e/`; the current config preserves the Chromium and Mobile Safari projects and starts all three local servers for the app journey.
 - New Game browser coverage now checks that the current empty save index is unchanged; TODOs record the occupied-slot and fictional-time assertions that require future observable state.
 - Paired the four player-flow browser checks with desktop keyboard-only tests and Axe scans, including enlarged text, narrow reflow, and reduced motion. Mobile Safari keeps the normal touch-flow coverage.
@@ -145,6 +163,11 @@ GPT-6 Codex
 - `frontend/playwright.config.ts`
 - `frontend/e2e/app.spec.ts`
 - `frontend/e2e/expectAccessiblePage.ts`
+- `frontend/e2e/holdSaveCheck.ts`
+- `frontend/e2e/recovery.spec.ts`
+- `frontend/e2e/security.spec.ts`
+- `.github/workflows/quality.yml`
+- `README.md`
 - `frontend/tsconfig.e2e.json`
 - `frontend/tsconfig.json`
 - `frontend/tsconfig.node.json`
@@ -161,3 +184,5 @@ GPT-6 Codex
 - 2026-09-24: Added Tailwind 4, CVA paragraph variants, and Tailwind-aware Prettier sorting; preserved Title and Session 0 semantics.
 - 2026-09-24: Replaced Title's nested ternary with explicit branches and scoped Vitest to `src` after Playwright tests moved under `frontend/e2e/`.
 - 2026-09-24: Updated the existing frontend surfaces to the new campaign-book design system and verified both color themes in Playwright.
+
+- 2026-09-28: Applied all seven application/API/tests review patches, verified the real-browser regressions and quality gates, and marked Story 1.2 done. Design/assets review remains a separate pass.

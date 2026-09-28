@@ -14,7 +14,7 @@ function Title(props: TitleProps) {
   const saves = useSaveSlots();
 
   let reason: string;
-  if (saves.isPending) {
+  if (saves.isPending || saves.isFetching) {
     reason = "Checking for saved campaigns…";
   } else if (saves.isError) {
     reason = "Saved campaigns could not be checked. Try again.";
@@ -37,13 +37,23 @@ function Title(props: TitleProps) {
       </div>
       <Paragraph
         id="continue-reason"
-        role={saves.isError ? "alert" : "status"}
-        variant={saves.isError ? "alert" : "status"}
+        role={saves.isError && !saves.isFetching ? "alert" : "status"}
+        variant={saves.isError && !saves.isFetching ? "alert" : "status"}
       >
         {reason}
       </Paragraph>
-      {saves.isError && (
-        <Button onClick={() => void saves.refetch()} variant="quiet">
+      {saves.errorUpdateCount > 0 && (
+        <Button
+          aria-describedby="continue-reason"
+          aria-busy={saves.isFetching}
+          aria-disabled={saves.isFetching}
+          onClick={() => {
+            if (!saves.isFetching) {
+              void saves.refetch();
+            }
+          }}
+          variant="quiet"
+        >
           Retry save check
         </Button>
       )}

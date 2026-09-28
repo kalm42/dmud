@@ -1,7 +1,9 @@
 import { defineConfig, devices } from "@playwright/test";
 import { randomBytes } from "node:crypto";
 
-const canary = `canary-private-credential-${randomBytes(16).toString("hex")}`;
+const canary =
+  process.env.DMUD_TEST_CANARY ??
+  `canary-private-credential-${randomBytes(16).toString("hex")}`;
 process.env.DMUD_TEST_CANARY = canary;
 
 /**

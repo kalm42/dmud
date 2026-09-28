@@ -82,7 +82,7 @@ jobs:
         working-directory: frontend
       - run: uv sync --locked
         working-directory: backend
-      - run: npx playwright install --with-deps chromium
+      - run: npx playwright install --with-deps chromium webkit
         working-directory: frontend
       - run: npm run test:e2e
         working-directory: frontend
