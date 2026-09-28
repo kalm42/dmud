@@ -4,7 +4,7 @@ baseline_commit: 3694c57
 
 # Story 1.2: Open the Title and Start a New Game
 
-Status: review
+Status: done
 
 ## Story
 
@@ -51,6 +51,22 @@ Verification: frontend format, lint, strict TypeScript, build, and Vitest (6 tes
 Review resolution (2026-09-28): All seven patches applied. Session 0 focuses its heading on entry. Retry stays mounted after the first failure, preserves focus during refetch and subsequent outcomes, announces checking state, and blocks duplicate activation while busy. Real-boundary browser coverage now observes pending, repeated failure, and successful recovery; loading responses use explicit release gates rather than timed delays. The canary response/DOM/storage assertion is restored, with one shared credential value across Playwright workers. CI and clean-install instructions include WebKit; the exact Playwright pin is restored in both manifests. Enlarged 320px keyboard interaction, reduced-motion operation, focus outlines, and minimum target dimensions are verified. The Acceptance Auditor and Edge Case Hunter rechecked the fixes and reported no unresolved findings.
 
 Patch verification: Three keyboard regression tests failed before the application fixes. Afterward, frontend format, lint, strict TypeScript, build, and Vitest (6 tests), backend pytest (5 tests), generated-contract drift, and the browser suite (22 passed, 6 desktop-only checks skipped on Mobile Safari) passed. Backend Ruff format/lint and Pyright passed during the review; backend source was unchanged by the patches. No first-party response was fabricated: recovery forwards the request to the available real API and delays delivery of its actual response. Story and sprint tracking are marked done for this completed application/API/tests review; design documentation, previews, tokens, and assets remain outside this pass.
+
+### Review Findings — Whole Branch Follow-up
+
+Review date: 2026-09-28. Scope: all 114 changed files on `feat/story-1-2` against `main` (`3694c57`). Blind Hunter, Edge Case Hunter, and Acceptance Auditor completed. The legacy adversarial/edge skill names referenced by the workflow are unavailable; reviewers used the adversarial instructions and installed edge-case lens. No unresolved Title/API acceptance-criteria defect was established; the previous seven application patches remain present.
+
+Final disposition: all seven additional findings dismissed after Kyle clarified the implementation scope and acceptance standard. There are no remaining patch, decision-needed, or deferred items from this review.
+
+- Finding 1 dismissed: the old theme is deprecated and must not guide implementation. Its missing token stylesheet is not a requirement for the current application.
+- Findings 2, 3, 5, and 6 dismissed: `docs/components/bundle.js` is unused by the application. Its button, modal, and allocation behavior does not affect the implemented player journey.
+- Finding 4 dismissed: the reproduction concerned the unused docs styles. Kyle accepts a decent mobile layout at normal 100% scale; extreme zoom on mobile may break and is not a review blocker. For this review, that explicit clarification supersedes older zoom/reflow requirements in the story and referenced guidance.
+- Finding 7 dismissed: the scene-alignment reproduction concerned the unused docs component package, not the implemented application.
+- Two earlier concerns also dismissed: missing submission handlers in a non-integrated composer preview and omitted imports in externally hosted preview HTML.
+
+Review correction: the initial follow-up incorrectly treated unused reference artifacts as adopted application components. The docs bundle and its CSS are not runtime implementation evidence. Inspect the active frontend components and current theme when reviewing player-visible behavior; do not require repairs to the deprecated theme or unused docs bundle for this story.
+
+Verification: strict frontend TypeScript passed; Vitest passed 6 tests; backend pytest passed 5 tests; the real Chromium/Mobile Safari suite passed 22 tests with 6 desktop-only skips. Temporary layout and interaction probes concerned unused reference code and do not establish application defects. No application, theme, or test source was changed during this review. Story and sprint tracking are marked done after the final dismissal.
 
 ## Dev Notes
 
