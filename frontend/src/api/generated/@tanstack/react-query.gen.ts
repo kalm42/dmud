@@ -3,8 +3,8 @@
 import { type DefaultError, queryOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import { getStatus, type Options } from '../sdk.gen';
-import type { GetStatusData, GetStatusResponse } from '../types.gen';
+import { getSaveSlots, getStatus, type Options } from '../sdk.gen';
+import type { GetSaveSlotsData, GetSaveSlotsResponse, GetStatusData, GetStatusResponse } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -57,4 +57,24 @@ export const getStatusOptions = (options?: Options<GetStatusData>) => queryOptio
         return data;
     },
     queryKey: getStatusQueryKey(options)
+});
+
+export const getSaveSlotsQueryKey = (options?: Options<GetSaveSlotsData>) => createQueryKey('getSaveSlots', options);
+
+/**
+ * Get Save Slots
+ *
+ * Read the foundation's empty index without opening branch state; for example, GET /api/save-slots.
+ */
+export const getSaveSlotsOptions = (options?: Options<GetSaveSlotsData>) => queryOptions<GetSaveSlotsResponse, DefaultError, GetSaveSlotsResponse, ReturnType<typeof getSaveSlotsQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await getSaveSlots({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getSaveSlotsQueryKey(options)
 });

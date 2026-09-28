@@ -5,6 +5,34 @@ export type ClientOptions = {
 };
 
 /**
+ * EmptySaveSlot
+ *
+ * An explicitly empty numbered slot; for example, EmptySaveSlot(number=1, status='empty').
+ */
+export type EmptySaveSlot = {
+    /**
+     * Number
+     */
+    number: 1 | 2 | 3;
+    /**
+     * Status
+     */
+    status: 'empty';
+};
+
+/**
+ * SaveSlotsResponse
+ *
+ * The current three-slot index; for example, SaveSlotsResponse(slots=[]).
+ */
+export type SaveSlotsResponse = {
+    /**
+     * Slots
+     */
+    slots: Array<EmptySaveSlot>;
+};
+
+/**
  * StatusResponse
  *
  * Describe the read-only application readiness response; for example, StatusResponse(status='ready').
@@ -31,3 +59,19 @@ export type GetStatusResponses = {
 };
 
 export type GetStatusResponse = GetStatusResponses[keyof GetStatusResponses];
+
+export type GetSaveSlotsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/save-slots';
+};
+
+export type GetSaveSlotsResponses = {
+    /**
+     * Successful Response
+     */
+    200: SaveSlotsResponse;
+};
+
+export type GetSaveSlotsResponse = GetSaveSlotsResponses[keyof GetSaveSlotsResponses];

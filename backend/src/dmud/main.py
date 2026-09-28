@@ -5,6 +5,8 @@ from fastapi import FastAPI
 from dmud.get_status import get_status
 from dmud.platform.require_sqlite import require_sqlite
 from dmud.platform.settings import Settings
+from dmud.saves.get_save_slots import get_save_slots
+from dmud.saves.save_slots import SaveSlotsResponse
 from dmud.status import StatusResponse
 
 
@@ -23,6 +25,13 @@ def create_app(sqlite_version: tuple[int, int, int] | None = None) -> FastAPI:
         methods=["GET"],
         response_model=StatusResponse,
         operation_id="getStatus",
+    )
+    app.add_api_route(
+        "/api/save-slots",
+        get_save_slots,
+        methods=["GET"],
+        response_model=SaveSlotsResponse,
+        operation_id="getSaveSlots",
     )
     return app
 

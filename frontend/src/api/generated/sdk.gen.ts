@@ -2,7 +2,7 @@
 
 import type { Client, ClientMeta, Options as Options2, RequestResult, TDataShape } from './client';
 import { client } from './client.gen';
-import type { GetStatusData, GetStatusResponses } from './types.gen';
+import type { GetSaveSlotsData, GetSaveSlotsResponses, GetStatusData, GetStatusResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -24,3 +24,10 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
  * Report readiness without configuration; for example, GET /api/status.
  */
 export const getStatus = <ThrowOnError extends boolean = false>(options?: Options<GetStatusData, ThrowOnError>): RequestResult<GetStatusResponses, unknown, ThrowOnError> => (options?.client ?? client).get<GetStatusResponses, unknown, ThrowOnError>({ url: '/api/status', ...options });
+
+/**
+ * Get Save Slots
+ *
+ * Read the foundation's empty index without opening branch state; for example, GET /api/save-slots.
+ */
+export const getSaveSlots = <ThrowOnError extends boolean = false>(options?: Options<GetSaveSlotsData, ThrowOnError>): RequestResult<GetSaveSlotsResponses, unknown, ThrowOnError> => (options?.client ?? client).get<GetSaveSlotsResponses, unknown, ThrowOnError>({ url: '/api/save-slots', ...options });
