@@ -6,7 +6,8 @@ export default tseslint.config(
     ignores: [
       "dist",
       "src/api/generated",
-      "playwright.config.cjs",
+      "playwright-report",
+      "test-results",
       "eslint.config.js",
     ],
   },
