@@ -23,10 +23,73 @@
           }
         }
       }
+    },
+    "/api/save-slots": {
+      "get": {
+        "summary": "Get Save Slots",
+        "description": "Read the foundation's empty index without opening branch state; for example, GET /api/save-slots.",
+        "operationId": "getSaveSlots",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SaveSlotsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "EmptySaveSlot": {
+        "properties": {
+          "number": {
+            "type": "integer",
+            "enum": [
+              1,
+              2,
+              3
+            ],
+            "title": "Number"
+          },
+          "status": {
+            "type": "string",
+            "const": "empty",
+            "title": "Status"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "number",
+          "status"
+        ],
+        "title": "EmptySaveSlot",
+        "description": "An explicitly empty numbered slot; for example, EmptySaveSlot(number=1, status='empty')."
+      },
+      "SaveSlotsResponse": {
+        "properties": {
+          "slots": {
+            "items": {
+              "$ref": "#/components/schemas/EmptySaveSlot"
+            },
+            "type": "array",
+            "title": "Slots"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "slots"
+        ],
+        "title": "SaveSlotsResponse",
+        "description": "The current three-slot index; for example, SaveSlotsResponse(slots=[])."
+      },
       "StatusResponse": {
         "properties": {
           "status": {

@@ -1,0 +1,15 @@
+<!-- @dsCard group="Page" height=300 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>NotebookPage — preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var D = window.Dmud, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div',{style:{background:'var(--canvas)',padding:'28px 24px'}},
+    h(D.NotebookPage,{label:'Story'},
+      h(D.SceneHeading,{title:'Mill Lane, at dusk'}),
+      h(D.StoryEntry,{kind:'narration',dropCap:true},h('p',null,'Oren doesn\u2019t stop counting. The coins go into the box in stacks of ten, and he waits until the last stack is square before he looks at you.')))));
+</script>
+</body>
+</html>

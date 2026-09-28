@@ -1,0 +1,16 @@
+<!-- @dsCard group="Reference" height=420 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>ReferenceOverlay — preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var D = window.Dmud, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div',{style:{position:'relative',height:'420px'}},
+  h(D.ReferenceOverlay,{open:true,contained:true,autoFocus:false,title:'Roll details',onClose:function(){}},
+    h('p',{className:'dm-interface',style:{margin:0}},h('b',null,'Persuasion \u00B7 rolled'),' \u2014 asking Oren for a payment extension.'),
+    h('p',{className:'dm-interface',style:{margin:0}},'Die 14 + Presence 3 = 17 against difficulty 15. Success.'),
+    h('p',{className:'dm-interface',style:{margin:0}},'Stakes: Oren could refuse and tell the guild. Cost: none. XP awarded once: 10.'))));
+</script>
+</body>
+</html>

@@ -20,8 +20,9 @@ _This file contains critical rules and patterns that AI agents must follow when 
 - Custom text-game stack; do not introduce Unity, Unreal, Godot, or graphics-engine abstractions.
 - Node.js 24.20.0 LTS with npm.
 - React 19.2.8 and React DOM 19.2.8.
-- TypeScript 7.0.2 in strict mode.
+- TypeScript 6.0.3 in strict mode (the version pinned by the frontend lockfile).
 - Vite 8.2.2 with `@vitejs/plugin-react` 6.1.1.
+- Tailwind CSS 4.3.3 with `@tailwindcss/vite` 4.3.3 for frontend utility styles; `class-variance-authority` 0.7.1 for typed UI variants and `prettier-plugin-tailwindcss` 0.8.1 for class ordering.
 - Python 3.14.7 managed with uv 0.12.0.
 - FastAPI 0.141.1 with Pydantic 2.13.5 and Pydantic Settings 2.15.0.
 - SQLite 3.37.0 or newer; reject older runtimes at startup.
@@ -72,8 +73,9 @@ _This file contains critical rules and patterns that AI agents must follow when 
 
 ### Code Organization Rules
 
-- Use one monorepo with `frontend/`, `backend/`, `content/`, `contracts/`, and `tests/e2e/`.
+- Use one monorepo with `frontend/` (including `frontend/tests/e2e/`), `backend/`, `content/`, and `contracts/`.
 - Organize the frontend by player-facing feature under `frontend/src/features/`; organize the backend by game-system slice under `backend/src/dmud/`.
+- Keep reusable, presentation-only UI primitives in `frontend/src/components/ui/`; define their Tailwind variants with CVA.
 - Keep code that changes together in the same vertical slice. Avoid generic `services`, `managers`, `helpers`, or catch-all repositories.
 - Dependencies point inward: domain code must not import FastAPI, SQLite, provider SDKs, environment access, or frontend code.
 - Keep HTTP handlers thin; they validate transport data and invoke application commands or queries.
@@ -86,6 +88,7 @@ _This file contains critical rules and patterns that AI agents must follow when 
 - Do not create conditional P1/P2 feature directories or abstractions before their scope gates pass.
 - Each application source file defines one named function or React component. Move every additional named helper, formatter, factory, handler, or component into its own coherently named file.
 - Functions must have one concern and be pure by default. Domain calculations, validation, transitions, and projections must be pure.
+- Never nest ternary expressions; use explicit branches for multi-state decisions.
 - Functions at explicit I/O boundaries may be effectful, but each must coordinate only one boundary concern and delegate calculations to pure functions.
 - Refactor a function when it develops multiple responsibilities, substantial branching or nesting, mixed read/write behavior, multiple unrelated effects, or tests that require complex setup or excessive mocking.
 - Colocate only types and constants exclusively owned by the file’s single function; move reusable or independently meaningful definitions into their own modules.

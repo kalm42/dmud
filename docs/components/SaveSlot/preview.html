@@ -1,0 +1,15 @@
+<!-- @dsCard group="Reference" height=340 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>SaveSlot — preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var D = window.Dmud, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div',{className:'dm-demo',style:{maxWidth:'28rem',gap:'8px'}},
+  h(D.SaveSlot,{slot:1,selected:true,campaign:'Brackenford',place:'Mara\u2019s Stall',worldTime:'Day 3, dusk',savedAt:'12 Sep, 9:41 pm'}),
+  h(D.SaveSlot,{slot:2,campaign:'Brackenford',place:'Market Square',worldTime:'Day 1, morning',savedAt:'8 Sep, 7:02 pm'}),
+  h(D.SaveSlot,{slot:3,empty:true})));
+</script>
+</body>
+</html>

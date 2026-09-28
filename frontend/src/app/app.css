@@ -1,57 +1,77 @@
-:root {
-  font-family: Georgia, "Times New Roman", serif;
-  color: #242b25;
-  background: #e9e4d6;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
+@layer theme, base, components, utilities;
+@import "./theme.css" layer(theme);
+@import "./preflight.css" layer(base);
+@import "./utilities.css" layer(utilities);
+
+@font-face {
+  font-family: Lora;
+  src: url("/fonts/Lora-Regular.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
 }
 
-body {
-  margin: 0;
+@font-face {
+  font-family: Lora;
+  src: url("/fonts/Lora-Italic.woff2") format("woff2");
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
 }
+
+@font-face {
+  font-family: Lora;
+  src: url("/fonts/Lora-SemiBold.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Cinzel;
+  src: url("/fonts/Cinzel-SemiBold.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Cinzel;
+  src: url("/fonts/Cinzel-Bold.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Lora;
+  src: url("/fonts/Lora-SemiBoldItalic.woff2") format("woff2");
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Lora;
+  src: url("/fonts/Lora-Bold.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Cinzel Decorative";
+  src: url("/fonts/CinzelDecorative-Bold.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
 .shell {
   min-height: 100vh;
-  padding: clamp(1rem, 5vw, 4rem);
-  box-sizing: border-box;
-}
-.masthead {
-  color: #254e37;
-  font-size: 1.3rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-}
-.panel {
-  max-width: 42rem;
-  margin: clamp(3rem, 10vh, 8rem) auto 0;
-  padding: clamp(1.5rem, 5vw, 3rem);
-  background: #f7f3e9;
-  border: 1px solid #b9b09e;
-  box-shadow: 0 1rem 3rem #4a453a1c;
-}
-.eyebrow {
-  font-family: system-ui, sans-serif;
-  font-size: 0.8rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #47664c;
-}
-h1 {
-  font-size: clamp(2rem, 6vw, 3.5rem);
-  line-height: 1.12;
-  margin: 0.5rem 0 1.5rem;
-}
-p {
-  font-size: 1rem;
-  line-height: 1.6;
-}
-[role="status"],
-[role="alert"] {
-  font-family: system-ui, sans-serif;
-  border-left: 0.25rem solid #47664c;
-  padding: 0.6rem 1rem;
-  background: #e8ecdf;
-}
-[role="alert"] {
-  border-color: #9a4338;
-  background: #f4e4de;
+  min-height: 100dvh;
+  padding: clamp(1rem, 5vw, 3rem);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  place-items: center;
 }

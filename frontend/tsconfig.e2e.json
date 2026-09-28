@@ -7,8 +7,7 @@
     "types": ["node"],
     "strict": true,
     "noEmit": true,
-    "skipLibCheck": true,
-    "paths": { "@playwright/test": ["./node_modules/@playwright/test"] }
+    "skipLibCheck": true
   },
-  "include": ["../tests/e2e/*.ts"]
+  "include": ["e2e/*.ts"]
 }

@@ -3,6 +3,29 @@
 import * as z from 'zod';
 
 /**
+ * EmptySaveSlot
+ *
+ * An explicitly empty numbered slot; for example, EmptySaveSlot(number=1, status='empty').
+ */
+export const zEmptySaveSlot = z.object({
+    number: z.union([
+        z.literal(1),
+        z.literal(2),
+        z.literal(3)
+    ]),
+    status: z.literal('empty')
+});
+
+/**
+ * SaveSlotsResponse
+ *
+ * The current three-slot index; for example, SaveSlotsResponse(slots=[]).
+ */
+export const zSaveSlotsResponse = z.object({
+    slots: z.array(zEmptySaveSlot)
+});
+
+/**
  * StatusResponse
  *
  * Describe the read-only application readiness response; for example, StatusResponse(status='ready').
@@ -15,3 +38,8 @@ export const zStatusResponse = z.object({
  * Successful Response
  */
 export const zGetStatusResponse = zStatusResponse;
+
+/**
+ * Successful Response
+ */
+export const zGetSaveSlotsResponse = zSaveSlotsResponse;

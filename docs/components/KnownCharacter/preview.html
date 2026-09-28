@@ -1,0 +1,17 @@
+<!-- @dsCard group="Reference" height=520 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>KnownCharacter — preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var D = window.Dmud, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div',{style:{position:'relative',height:"520px"}},
+    h(D.ReferenceOverlay,{open:true,contained:true,autoFocus:false,title:'What you know about Oren',onClose:function(){}},
+      h(D.KnownCharacter,{epithet:'Moneylender, Market Square',characterName:'James',lastSeen:'Mill Lane, Day 3 at dusk',facts:[
+      {text:'Lends money to half the stalls in Market Square.',source:'Tessa told you, Day 2'},
+      {text:'Mara owes him. You don\u2019t know how much.',source:'Overheard at the well, Day 2'},
+      {text:'Agreed to a week\u2019s extension if you work two days at the mill.',source:'Your conversation, Day 3'}]}))));
+</script>
+</body>
+</html>
