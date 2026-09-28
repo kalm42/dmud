@@ -1,4 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
+import { mkdtempSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { randomBytes } from "node:crypto";
 
 const canary =
@@ -70,8 +73,14 @@ export default defineConfig({
   webServer: [
     {
       command:
-        "cd ../backend && uv run uvicorn dmud.main:app --host 127.0.0.1 --port 8000",
-      env: { DMUD_LLM_API_KEY: canary, PYTHONPATH: "src" },
+        "cd ../backend && uv run uvicorn browser_app:app --host 127.0.0.1 --port 8000",
+      env: {
+        DMUD_LLM_API_KEY: canary,
+        PYTHONPATH: "src:tests",
+        DMUD_APPLICATION_DATA_DIRECTORY: mkdtempSync(
+          join(tmpdir(), "dmud-e2e-"),
+        ),
+      },
       url: "http://127.0.0.1:8000/api/status",
       reuseExistingServer: false,
     },

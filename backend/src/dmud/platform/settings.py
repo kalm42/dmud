@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from pydantic import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -7,3 +9,4 @@ class Settings(BaseSettings):
 
     model_config = SettingsConfigDict(env_prefix="DMUD_", extra="ignore")
     llm_api_key: SecretStr | None = None
+    application_data_directory: Path = Path.home() / ".dmud"

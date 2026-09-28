@@ -5,6 +5,39 @@ export type ClientOptions = {
 };
 
 /**
+ * CreateSessionZeroDraft
+ */
+export type CreateSessionZeroDraft = {
+    /**
+     * Schemaversion
+     */
+    schemaVersion?: 1;
+    /**
+     * Requestid
+     */
+    requestId: string;
+    /**
+     * Command
+     */
+    command?: 'create_session_zero_draft';
+};
+
+/**
+ * DraftResult
+ */
+export type DraftResult = {
+    subject: Subject;
+    /**
+     * Commitboundary
+     */
+    commitBoundary?: 'draft';
+    /**
+     * Committedrevision
+     */
+    committedRevision: number;
+};
+
+/**
  * EmptySaveSlot
  *
  * An explicitly empty numbered slot; for example, EmptySaveSlot(number=1, status='empty').
@@ -21,6 +54,137 @@ export type EmptySaveSlot = {
 };
 
 /**
+ * Operation
+ */
+export type Operation = {
+    /**
+     * Schemaversion
+     */
+    schemaVersion?: 1;
+    /**
+     * Operationid
+     */
+    operationId: string;
+    /**
+     * Requestid
+     */
+    requestId: string;
+    subject: Subject;
+    /**
+     * Status
+     */
+    status: 'accepted' | 'validating' | 'committed' | 'complete' | 'failed' | 'interrupted';
+    /**
+     * Commitboundary
+     */
+    commitBoundary: 'none' | 'draft';
+    /**
+     * Committedrevision
+     */
+    committedRevision: number | null;
+    /**
+     * Lasteventid
+     */
+    lastEventId: number;
+    recovery: RecoveryCapability;
+    result: DraftResult | null;
+    /**
+     * Statusurl
+     */
+    statusUrl: string;
+    /**
+     * Eventsurl
+     */
+    eventsUrl: string;
+};
+
+/**
+ * OperationEvent
+ */
+export type OperationEvent = {
+    /**
+     * Schemaversion
+     */
+    schemaVersion?: 1;
+    /**
+     * Eventid
+     */
+    eventId: number;
+    operation: Operation;
+};
+
+/**
+ * Problem
+ */
+export type Problem = {
+    /**
+     * Type
+     */
+    type: string;
+    /**
+     * Title
+     */
+    title: string;
+    /**
+     * Status
+     */
+    status: 404 | 409 | 422 | 503;
+    /**
+     * Detail
+     */
+    detail: string;
+    /**
+     * Code
+     */
+    code: 'invalid_request' | 'request_conflict' | 'operation_not_found' | 'operation_unavailable' | 'draft_not_committed' | 'draft_not_found' | 'draft_unavailable' | 'draft_already_committed' | 'event_history_unavailable' | 'invalid_event_cursor' | 'stale_event' | 'recovery_not_supported' | 'application_data_busy';
+    /**
+     * Classification
+     */
+    classification: 'conflict' | 'invalid_input' | 'not_found' | 'unavailable';
+    /**
+     * Instance
+     */
+    instance: string;
+    /**
+     * Correlationid
+     */
+    correlationId: string;
+    operation?: Operation | null;
+};
+
+/**
+ * RecoveryCapability
+ */
+export type RecoveryCapability = {
+    /**
+     * Retry
+     */
+    retry: boolean;
+    /**
+     * Cancel
+     */
+    cancel: boolean;
+};
+
+/**
+ * RecoveryCommand
+ */
+export type RecoveryCommand = {
+    /**
+     * Schemaversion
+     */
+    schemaVersion?: 1;
+    /**
+     * Requestid
+     */
+    requestId: string;
+    /**
+     * Expectedlasteventid
+     */
+    expectedLastEventId: number;
+};
+
+/**
  * SaveSlotsResponse
  *
  * The current three-slot index; for example, SaveSlotsResponse(slots=[]).
@@ -33,6 +197,32 @@ export type SaveSlotsResponse = {
 };
 
 /**
+ * SessionZeroDraft
+ */
+export type SessionZeroDraft = {
+    /**
+     * Schemaversion
+     */
+    schemaVersion?: 1;
+    /**
+     * Draftid
+     */
+    draftId: string;
+    /**
+     * Draftrevision
+     */
+    draftRevision: number;
+    /**
+     * Lifecycle
+     */
+    lifecycle?: 'collecting';
+    /**
+     * Activeoperationid
+     */
+    activeOperationId: string;
+};
+
+/**
  * StatusResponse
  *
  * Describe the read-only application readiness response; for example, StatusResponse(status='ready').
@@ -42,6 +232,20 @@ export type StatusResponse = {
      * Status
      */
     status: 'ready';
+};
+
+/**
+ * Subject
+ */
+export type Subject = {
+    /**
+     * Kind
+     */
+    kind?: 'session_zero_draft';
+    /**
+     * Draftid
+     */
+    draftId: string;
 };
 
 export type GetStatusData = {
@@ -75,3 +279,256 @@ export type GetSaveSlotsResponses = {
 };
 
 export type GetSaveSlotsResponse = GetSaveSlotsResponses[keyof GetSaveSlotsResponses];
+
+export type CreateSessionZeroDraftData = {
+    body: CreateSessionZeroDraft;
+    path?: never;
+    query?: never;
+    url: '/api/session-zero-drafts';
+};
+
+export type CreateSessionZeroDraftErrors = {
+    /**
+     * Not Found
+     */
+    404: Problem;
+    /**
+     * Conflict
+     */
+    409: Problem;
+    /**
+     * Unprocessable Content
+     */
+    422: Problem;
+    /**
+     * Service Unavailable
+     */
+    503: Problem;
+};
+
+export type CreateSessionZeroDraftError = CreateSessionZeroDraftErrors[keyof CreateSessionZeroDraftErrors];
+
+export type CreateSessionZeroDraftResponses = {
+    /**
+     * Successful Response
+     */
+    202: Operation;
+};
+
+export type CreateSessionZeroDraftResponse = CreateSessionZeroDraftResponses[keyof CreateSessionZeroDraftResponses];
+
+export type GetSessionZeroDraftData = {
+    body?: never;
+    path: {
+        /**
+         * Draftid
+         */
+        draftId: string;
+    };
+    query?: never;
+    url: '/api/session-zero-drafts/{draftId}';
+};
+
+export type GetSessionZeroDraftErrors = {
+    /**
+     * Not Found
+     */
+    404: Problem;
+    /**
+     * Conflict
+     */
+    409: Problem;
+    /**
+     * Unprocessable Content
+     */
+    422: Problem;
+    /**
+     * Service Unavailable
+     */
+    503: Problem;
+};
+
+export type GetSessionZeroDraftError = GetSessionZeroDraftErrors[keyof GetSessionZeroDraftErrors];
+
+export type GetSessionZeroDraftResponses = {
+    /**
+     * Successful Response
+     */
+    200: SessionZeroDraft;
+};
+
+export type GetSessionZeroDraftResponse = GetSessionZeroDraftResponses[keyof GetSessionZeroDraftResponses];
+
+export type GetOperationData = {
+    body?: never;
+    path: {
+        /**
+         * Operationid
+         */
+        operationId: string;
+    };
+    query?: never;
+    url: '/api/operations/{operationId}';
+};
+
+export type GetOperationErrors = {
+    /**
+     * Not Found
+     */
+    404: Problem;
+    /**
+     * Conflict
+     */
+    409: Problem;
+    /**
+     * Unprocessable Content
+     */
+    422: Problem;
+    /**
+     * Service Unavailable
+     */
+    503: Problem;
+};
+
+export type GetOperationError = GetOperationErrors[keyof GetOperationErrors];
+
+export type GetOperationResponses = {
+    /**
+     * Successful Response
+     */
+    200: Operation;
+};
+
+export type GetOperationResponse = GetOperationResponses[keyof GetOperationResponses];
+
+export type GetOperationEventsData = {
+    body?: never;
+    headers?: {
+        /**
+         * Last-Event-Id
+         */
+        'last-event-id'?: string | null;
+    };
+    path: {
+        /**
+         * Operationid
+         */
+        operationId: string;
+    };
+    query?: never;
+    url: '/api/operations/{operationId}/events';
+};
+
+export type GetOperationEventsErrors = {
+    /**
+     * Not Found
+     */
+    404: Problem;
+    /**
+     * Conflict
+     */
+    409: Problem;
+    /**
+     * Unprocessable Content
+     */
+    422: Problem;
+    /**
+     * Service Unavailable
+     */
+    503: Problem;
+};
+
+export type GetOperationEventsError = GetOperationEventsErrors[keyof GetOperationEventsErrors];
+
+export type GetOperationEventsResponses = {
+    /**
+     * Ordered versioned operation events. Resume strictly after Last-Event-ID. Invalid or future cursors return a problem; query status before reconnecting with a valid cursor.
+     */
+    200: OperationEvent;
+};
+
+export type GetOperationEventsResponse = GetOperationEventsResponses[keyof GetOperationEventsResponses];
+
+export type CancelOperationData = {
+    body: RecoveryCommand;
+    path: {
+        /**
+         * Operationid
+         */
+        operationId: string;
+    };
+    query?: never;
+    url: '/api/operations/{operationId}/cancel';
+};
+
+export type CancelOperationErrors = {
+    /**
+     * Not Found
+     */
+    404: Problem;
+    /**
+     * Conflict
+     */
+    409: Problem;
+    /**
+     * Unprocessable Content
+     */
+    422: Problem;
+    /**
+     * Service Unavailable
+     */
+    503: Problem;
+};
+
+export type CancelOperationError = CancelOperationErrors[keyof CancelOperationErrors];
+
+export type CancelOperationResponses = {
+    /**
+     * Successful Response
+     */
+    200: Operation;
+};
+
+export type CancelOperationResponse = CancelOperationResponses[keyof CancelOperationResponses];
+
+export type RetryOperationData = {
+    body: RecoveryCommand;
+    path: {
+        /**
+         * Operationid
+         */
+        operationId: string;
+    };
+    query?: never;
+    url: '/api/operations/{operationId}/retry';
+};
+
+export type RetryOperationErrors = {
+    /**
+     * Not Found
+     */
+    404: Problem;
+    /**
+     * Conflict
+     */
+    409: Problem;
+    /**
+     * Unprocessable Content
+     */
+    422: Problem;
+    /**
+     * Service Unavailable
+     */
+    503: Problem;
+};
+
+export type RetryOperationError = RetryOperationErrors[keyof RetryOperationErrors];
+
+export type RetryOperationResponses = {
+    /**
+     * Successful Response
+     */
+    202: Operation;
+};
+
+export type RetryOperationResponse = RetryOperationResponses[keyof RetryOperationResponses];

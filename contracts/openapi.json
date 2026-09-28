@@ -42,10 +42,655 @@
           }
         }
       }
+    },
+    "/api/session-zero-drafts": {
+      "post": {
+        "summary": "Post Draft",
+        "description": "Accept before waking the supervised command worker; e.g. POST /api/session-zero-drafts.",
+        "operationId": "createSessionZeroDraft",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSessionZeroDraft"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Operation"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/session-zero-drafts/{draftId}": {
+      "get": {
+        "summary": "Read Draft",
+        "description": "Expose only committed draft material; e.g. GET /api/session-zero-drafts/{id}.",
+        "operationId": "getSessionZeroDraft",
+        "parameters": [
+          {
+            "name": "draftId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Draftid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionZeroDraft"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Unprocessable Content"
+          },
+          "503": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/api/operations/{operationId}": {
+      "get": {
+        "summary": "Read Status",
+        "description": "Return authoritative status independently of streaming; e.g. GET /api/operations/{id}.",
+        "operationId": "getOperation",
+        "parameters": [
+          {
+            "name": "operationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Operationid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Operation"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Unprocessable Content"
+          },
+          "503": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/api/operations/{operationId}/events": {
+      "get": {
+        "summary": "Read Events",
+        "description": "Stream validated history after a preflight dependency; e.g. GET operation/events.",
+        "operationId": "getOperationEvents",
+        "parameters": [
+          {
+            "name": "operationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Operationid"
+            }
+          },
+          {
+            "name": "last-event-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Last-Event-Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ordered versioned operation events. Resume strictly after Last-Event-ID. Invalid or future cursors return a problem; query status before reconnecting with a valid cursor.",
+            "content": {
+              "text/event-stream": {
+                "itemSchema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "string"
+                    },
+                    "event": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "string"
+                    },
+                    "retry": {
+                      "type": "integer",
+                      "minimum": 0
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/OperationEvent"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              },
+              "text/event-stream": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              },
+              "text/event-stream": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              },
+              "text/event-stream": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Unprocessable Content"
+          },
+          "503": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              },
+              "text/event-stream": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/api/operations/{operationId}/cancel": {
+      "post": {
+        "summary": "Post Cancel",
+        "description": "Request cooperative cancellation at the commit boundary; e.g. POST operation/cancel.",
+        "operationId": "cancelOperation",
+        "parameters": [
+          {
+            "name": "operationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Operationid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecoveryCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Operation"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Unprocessable Content"
+          },
+          "503": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/api/operations/{operationId}/retry": {
+      "post": {
+        "summary": "Post Retry",
+        "description": "Retry supported uncommitted work under its original subject; e.g. POST operation/retry.",
+        "operationId": "retryOperation",
+        "parameters": [
+          {
+            "name": "operationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Operationid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecoveryCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Operation"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Unprocessable Content"
+          },
+          "503": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "CreateSessionZeroDraft": {
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1,
+            "title": "Schemaversion",
+            "default": 1
+          },
+          "requestId": {
+            "type": "string",
+            "pattern": "^req_[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "title": "Requestid"
+          },
+          "command": {
+            "type": "string",
+            "const": "create_session_zero_draft",
+            "title": "Command",
+            "default": "create_session_zero_draft"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "requestId"
+        ],
+        "title": "CreateSessionZeroDraft"
+      },
+      "DraftResult": {
+        "properties": {
+          "subject": {
+            "$ref": "#/components/schemas/Subject"
+          },
+          "commitBoundary": {
+            "type": "string",
+            "const": "draft",
+            "title": "Commitboundary",
+            "default": "draft"
+          },
+          "committedRevision": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Committedrevision"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "subject",
+          "committedRevision"
+        ],
+        "title": "DraftResult"
+      },
       "EmptySaveSlot": {
         "properties": {
           "number": {
@@ -72,6 +717,260 @@
         "title": "EmptySaveSlot",
         "description": "An explicitly empty numbered slot; for example, EmptySaveSlot(number=1, status='empty')."
       },
+      "Operation": {
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1,
+            "title": "Schemaversion",
+            "default": 1
+          },
+          "operationId": {
+            "type": "string",
+            "pattern": "^op_[0-9a-f-]{36}$",
+            "title": "Operationid"
+          },
+          "requestId": {
+            "type": "string",
+            "pattern": "^req_[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "title": "Requestid"
+          },
+          "subject": {
+            "$ref": "#/components/schemas/Subject"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "accepted",
+              "validating",
+              "committed",
+              "complete",
+              "failed",
+              "interrupted"
+            ],
+            "title": "Status"
+          },
+          "commitBoundary": {
+            "type": "string",
+            "enum": [
+              "none",
+              "draft"
+            ],
+            "title": "Commitboundary"
+          },
+          "committedRevision": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Committedrevision"
+          },
+          "lastEventId": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Lasteventid"
+          },
+          "recovery": {
+            "$ref": "#/components/schemas/RecoveryCapability"
+          },
+          "result": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DraftResult"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "statusUrl": {
+            "type": "string",
+            "title": "Statusurl"
+          },
+          "eventsUrl": {
+            "type": "string",
+            "title": "Eventsurl"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "operationId",
+          "requestId",
+          "subject",
+          "status",
+          "commitBoundary",
+          "committedRevision",
+          "lastEventId",
+          "recovery",
+          "result",
+          "statusUrl",
+          "eventsUrl"
+        ],
+        "title": "Operation"
+      },
+      "OperationEvent": {
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1,
+            "title": "Schemaversion",
+            "default": 1
+          },
+          "eventId": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Eventid"
+          },
+          "operation": {
+            "$ref": "#/components/schemas/Operation"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "eventId",
+          "operation"
+        ],
+        "title": "OperationEvent"
+      },
+      "Problem": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "title": "Type"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "status": {
+            "type": "integer",
+            "enum": [
+              404,
+              409,
+              422,
+              503
+            ],
+            "title": "Status"
+          },
+          "detail": {
+            "type": "string",
+            "title": "Detail"
+          },
+          "code": {
+            "type": "string",
+            "enum": [
+              "invalid_request",
+              "request_conflict",
+              "operation_not_found",
+              "operation_unavailable",
+              "draft_not_committed",
+              "draft_not_found",
+              "draft_unavailable",
+              "draft_already_committed",
+              "event_history_unavailable",
+              "invalid_event_cursor",
+              "stale_event",
+              "recovery_not_supported",
+              "application_data_busy"
+            ],
+            "title": "Code"
+          },
+          "classification": {
+            "type": "string",
+            "enum": [
+              "conflict",
+              "invalid_input",
+              "not_found",
+              "unavailable"
+            ],
+            "title": "Classification"
+          },
+          "instance": {
+            "type": "string",
+            "title": "Instance"
+          },
+          "correlationId": {
+            "type": "string",
+            "title": "Correlationid"
+          },
+          "operation": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Operation"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "type",
+          "title",
+          "status",
+          "detail",
+          "code",
+          "classification",
+          "instance",
+          "correlationId"
+        ],
+        "title": "Problem"
+      },
+      "RecoveryCapability": {
+        "properties": {
+          "retry": {
+            "type": "boolean",
+            "title": "Retry"
+          },
+          "cancel": {
+            "type": "boolean",
+            "title": "Cancel"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "retry",
+          "cancel"
+        ],
+        "title": "RecoveryCapability"
+      },
+      "RecoveryCommand": {
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1,
+            "title": "Schemaversion",
+            "default": 1
+          },
+          "requestId": {
+            "type": "string",
+            "pattern": "^req_[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "title": "Requestid"
+          },
+          "expectedLastEventId": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Expectedlasteventid"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "requestId",
+          "expectedLastEventId"
+        ],
+        "title": "RecoveryCommand"
+      },
       "SaveSlotsResponse": {
         "properties": {
           "slots": {
@@ -90,6 +989,44 @@
         "title": "SaveSlotsResponse",
         "description": "The current three-slot index; for example, SaveSlotsResponse(slots=[])."
       },
+      "SessionZeroDraft": {
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1,
+            "title": "Schemaversion",
+            "default": 1
+          },
+          "draftId": {
+            "type": "string",
+            "pattern": "^draft_[0-9a-f-]{36}$",
+            "title": "Draftid"
+          },
+          "draftRevision": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Draftrevision"
+          },
+          "lifecycle": {
+            "type": "string",
+            "const": "collecting",
+            "title": "Lifecycle",
+            "default": "collecting"
+          },
+          "activeOperationId": {
+            "type": "string",
+            "title": "Activeoperationid"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "draftId",
+          "draftRevision",
+          "activeOperationId"
+        ],
+        "title": "SessionZeroDraft"
+      },
       "StatusResponse": {
         "properties": {
           "status": {
@@ -105,6 +1042,27 @@
         ],
         "title": "StatusResponse",
         "description": "Describe the read-only application readiness response; for example, StatusResponse(status='ready')."
+      },
+      "Subject": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "session_zero_draft",
+            "title": "Kind",
+            "default": "session_zero_draft"
+          },
+          "draftId": {
+            "type": "string",
+            "pattern": "^draft_[0-9a-f-]{36}$",
+            "title": "Draftid"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "draftId"
+        ],
+        "title": "Subject"
       }
     }
   }
