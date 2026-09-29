@@ -4,7 +4,7 @@ baseline_commit: fab1c2ab8e8136a05d06fdeec987ff900b9f99c2
 
 # Story 1.3: Track a Recoverable Session 0 Operation
 
-Status: review
+Status: done
 
 ## Story
 
@@ -54,6 +54,42 @@ The criteria above preserve the governing backlog. Cooperative cancellation, str
   - [x] Extend Playwright against real Vite/FastAPI for New Game, response-loss/refresh recovery, SSE loss with polling, and accessible failure/retry. Use deterministic scheduling barriers, not sleeps, to observe intermediate states of the fast local operation.
   - [x] Preserve Title save retry/focus, secret-canary, Chromium/Mobile Safari, and existing parser coverage. Map each AC to observable tests and record commands/results without claiming future Session 0 or P0 completion.
   - [x] Run the independent existing format, lint, strict typing, backend/frontend tests, build, browser, and contract drift gates listed below.
+
+### Review Findings
+
+Reviewed 2026-09-29: `feat/story-1-3` at `8575b79` against `main` at `3c1d121`, using `main...HEAD`. Full scope: 79 files, 4,880 insertions and 48 deletions. Blind Hunter, Edge Case Hunter, and Acceptance Auditor completed independently; the installed adversarial and edge-case review lenses supplied the legacy named reviewers' instructions. Triage: **0 decision needed, 9 patch, 0 defer, 3 dismissed**. Kyle authorized Apply every patch; all nine findings were resolved on 2026-09-29. The original finding descriptions below refer to the reviewed baseline.
+
+- [x] [Review][Patch] **R1 — P1: Keep the worker alive when scanning or failure persistence fails** [`backend/src/dmud/operations/run_worker.py:16`]. `list_nonterminal()` runs outside the exception boundary, and the exception handler's `transition_operation(..., "failed")` can itself raise. Either path terminates the sole task while HTTP handlers continue returning durable acceptance and signaling an abandoned wake event. A real temporary SQLite probe confirmed that an invalid nonterminal record kills the worker and leaves a subsequently accepted unrelated operation unprocessed. Protect enumeration and failure recording, isolate damaged records, and supervise/reschedule transient failures without requiring restart. Covers AC3/AC6 and the supervised-worker requirement.
+
+- [x] [Review][Patch] **R2 — P1: Bound stalled mutation transport and unlock same-request recovery by 30 seconds** [`frontend/src/features/operation-progress/useDraftOperation.ts:20`]. Neither creation nor recovery submission supplies a transport deadline. If an accepted response stalls instead of rejecting, `mutation.isPending` and `busy.current` remain true indefinitely, disabling Recover request while no operation ID is known. A browser probe withheld the real accepted response and advanced the clock 31 seconds; the surface still said Awaiting durable acceptance with recovery disabled. Add a bounded deadline, preserve the original locator, and transition to an explicit unknown/recoverable outcome without claiming server cancellation or generating another request ID. Covers AC3/AC4 and the specified 30-second recovery threshold.
+
+- [x] [Review][Patch] **R3 — P2: Reschedule delivery after a postcommit exception** [`backend/src/dmud/operations/run_worker.py:31`]. A delivery-stage exception falls through to a `failed` transition even when the draft result already committed. `committed → failed` is illegal, so a successful failure-handler call leaves the record at `committed`; the wake was cleared and the worker waits indefinitely rather than finishing delivery. A real SQLite probe with a controlled postcommit I/O failure confirmed this state with a live, sleeping worker. Recheck authoritative result evidence and schedule completion only, preserving the original draft/result and avoiding any repeated mutation. Covers AC3/AC5 and independent postcommit delivery recovery.
+
+- [x] [Review][Patch] **R4 — P2: Move synchronous database adapters off the asynchronous event loop** [`backend/src/dmud/operations/post_draft.py:13`]. Async creation/recovery/status handlers, the SSE generator, and the worker call blocking SQLite adapters directly. Under contention from another connection, `connect_database()` permits a five-second lock wait on the same event loop that serves status, cancellation, and streams. Dispatch each complete adapter call through a thread boundary, keeping connection ownership and each transaction within that call. Verify contention with a real second SQLite connection and an independent responsiveness check. Covers the requirement that reads remain available during work and bounded local operation responsiveness.
+
+- [x] [Review][Patch] **R5 — P2: Read operation evidence and history within one SQLite snapshot** [`backend/src/dmud/operations/get_operation.py:11`]. SELECT-only `with db:` blocks do not begin a transaction; resource, result, audit, and event queries can observe different commits when another connection writes concurrently. Deterministic interleaving of a real second-connection draft commit caused `get_operation()` to report `operation_unavailable`, and `get_events()` to report `event_history_unavailable`, although subsequent reads were valid. Establish explicit short read transactions around complete reads in `get_operation`, `get_events`, `get_request_operation`, `list_nonterminal`, and `get_session_zero_draft`; write paths already begin transactions. Covers AC3/AC4 and authoritative, concurrency-safe reads.
+
+- [x] [Review][Patch] **R6 — P2: Resolve a lost recovery-response error when fresh authoritative evidence arrives** [`frontend/src/features/operation-progress/useDraftOperation.ts:83`]. `unavailable` remains true for the lifetime of `mutation.isError`, even after successful polling or SSE resolves the operation's current outcome. A browser probe dropped the real cancellation response; polling obtained `interrupted`, but the status still said unavailable and Retry draft remained disabled until manual error reset/replay. Track unresolved recovery transport separately and clear its availability error when validated matching evidence establishes the outcome; genuine failed reads must still remain unknown. Covers AC3/AC4/AC6 and truthful accessible recovery.
+
+- [x] [Review][Patch] **R7 — P2: Retire definitively rejected recovery commands instead of persisting a stale replay** [`frontend/src/api/recoverOperation.ts:21`]. A real `409 stale_event` can occur if the worker advances between the displayed cursor and cancel submission. The adapter discards the typed problem's current operation, and the hook leaves the rejected command's original `expectedLastEventId` in the URL. Recover request repeats that rejected cursor, including after refresh; Check status resets the mutation error but does not remove the stale recovery command. Preserve typed problem context, validate its identity before updating the cache, and remove a definitively rejected recovery locator so eligible controls use current evidence. Keep unknown transport failures replayable under their original recovery-command identity. Covers AC4/AC6 and the strict recovery/problem contract.
+
+- [x] [Review][Patch] **R8 — P2: Validate semantic event evidence and envelope cursors on backend reads** [`backend/src/dmud/operations/get_events.py:24`]. Historical replay validates fields but omits original `requestId` and lifecycle/result/commit-boundary consistency; latest-event validation in `read_operation.py:52` compares only the nested operation and ignores the envelope `eventId`. A real SQLite probe changed historical event 1 to another valid request ID and `complete` with boundary `none`; replay still returned it. Validate historical operation semantics and identity, each envelope cursor against its row/nested snapshot, and the latest envelope against `lastEventId`, returning typed unavailable problems for contradictory persisted evidence. Frontend rejection is useful but does not satisfy the authoritative backend contract. Covers AC3/AC4 and strict success/event validation.
+
+- [x] [Review][Patch] **R9 — P2: Reject a recovery locator without its operation and draft identity** [`frontend/src/features/operation-progress/locatorSchema.ts:20`]. The locator refinement allows both subject IDs to be absent even when `recovery` is present. A browser probe loaded this URL: it passed validation and hid Title, but every Recover request failed with No recovery identity and no creation path was available. Require operation/draft identity whenever recovery coordinates exist and discard invalid external locators at ingress. Covers AC4 and validated, non-authoritative refresh recovery.
+
+**Review-time verification (before fixes):** Existing backend tests: 35 passed. Existing frontend tests: 16 passed. Existing browser suite: 40 passed, 6 existing skips across Chromium and Mobile Safari. Frontend/backend formatting, lint, strict typing, frontend build, API contract drift, and `git diff --check` passed independently. Three temporary Chromium probes against real Vite/FastAPI reproduced R2, R6, and R9; these probes asserted the current defects, not repaired behavior. Real temporary SQLite probes established R1, R3, R5, and R8; R4 and R7 follow directly from the blocking call and error/locator paths. Controlled scheduling and fault injection did not fabricate first-party responses. Temporary probes live outside the repository; no regression tests or application patches were added. An initial retry-response-loss probe did not observe automatic polling because its prior terminal state stopped polling; the final R6 probe used cancellation response loss while polling was active.
+
+**Dismissed:** Requiring UUIDv7 syntax at every recovery pointer adds little beyond unknown-ID handling and does not establish a separate behavior defect; simultaneous application startup on one data directory is outside the current single-process scope; stale-attempt failure after cancellation/retry requires the current test-only awaited hook and has no corresponding production await in this story. These were not promoted into future-scope implementation work.
+
+#### Patch Resolution and Validation
+
+- R1/R3: Separated claimed attempt execution from supervision and failure settlement. Corrupt records are isolated; storage scan and failure-recording failures remain supervised and retryable. Committed delivery is completed from the original result, and a failed older attempt cannot change a newer retry.
+- R4/R5: Offloaded complete database adapters at HTTP, streaming, worker, and lifespan boundaries. Repeated cancellation drains the adapter before propagating, and creation/retry always notify the worker after draining. Explicit read transactions preserve one evidence/history snapshot. These introduced asynchronous boundaries made attempt fencing necessary, so the initially dismissed stale-attempt scenario now has a supported guard and real regression coverage.
+- R2/R6/R7/R9: Creation and recovery transport have a 30-second deadline. Validated current evidence resolves lost recovery responses; typed definitive conflicts retire stale commands. Unknown delivery retains its recovery-command identity across refresh and status checks, and both controls and the hook prevent replacing it with another command. Locators without required operation/draft coordinates are rejected at ingress.
+- R8: Shared pure snapshot validation checks lifecycle, recovery capabilities, subject/result, commit boundary, revision, and URLs. Replay validates request identity, row/envelope cursors, immutable committed results, lifecycle ordering, and the transition from the resume cursor; only newer events are returned.
+- Final independent gates passed: backend `uv run pytest` (**51 passed**), Ruff format/check, Pyright strict (**0 errors**); frontend `npm test` (**18 passed**), format/check, ESLint, TypeScript, and production build; root contract regeneration/drift and `git diff --check`; Playwright (**50 passed, 6 existing skips**) across Chromium and Mobile Safari.
+- New persisted regressions exercise real SQLite corruption, concurrent snapshot reads, lock contention, failure-persistence recovery, postcommit delivery recovery, attempt fencing, and real ASGI requests cancelled twice during a database lock. Five new browser journeys cover deadlines, lost cancellation delivery, stale conflict recovery, malformed locators, and unresolved recovery identity after refresh. First-party services and persistence were not mocked; connector tracing and concrete SQLite triggers provided scheduling/fault injection only.
+- Follow-up frontend and backend review checks were performed independently. No schema migration, API contract change, dependency upgrade, later-story functionality, or commit was required.
 
 ## Dev Notes
 
@@ -191,6 +227,8 @@ GPT-6 Codex (story context creation).
 
 ### Debug Log References
 
+- 2026-09-29 review fixes: recorded the original failing worker/event regression phase (6 failures, 1 pass), implemented the nine authorized patches, and added real concurrency/cancellation and browser recovery regressions. Independent follow-up reviews exposed cancellation wake/drain and unresolved-command edges, which were fixed before final validation.
+
 - Workflow customization resolved: no prepend/append steps, persistent facts, or terminal completion instruction.
 - Research covered governing Story 1.3 and Epic 1 handoffs, canonical architecture, GDD/UX context, project rules, Story 1.2 reviews, actual source, recent commits, and official SQLite/FastAPI/Query documentation.
 
@@ -203,6 +241,8 @@ GPT-6 Codex (story context creation).
 
 ### Completion Notes List
 
+- 2026-09-29: Resolved all nine code review patch findings, added the regression evidence listed under Patch Resolution and Validation, and completed the independent quality gates. Story 1.3 is done; no review action items remain.
+
 - Implemented ordered transactional SQLite STRICT storage, short typed adapters, version guarding, lifespan initialization, supervised worker shutdown and startup reconciliation. Imports/OpenAPI export remain storage-free; test and browser data directories are isolated.
 - Creation reserves one operation/request/draft subject before acknowledgement. Canonical replay and concurrent acceptance preserve identity; changed accepted payloads return typed conflicts. Initial authoritative collecting revision is 1, without answers, campaign material, or fictional time.
 - Atomic draft commit includes draft state, immutable commit evidence, request result, operation boundary/revision and ordered event. Transaction rollback leaves no partial authoritative artifacts. Transactional claims and attempt event checks prevent duplicate execution or an old cancelled attempt from committing a retry.
@@ -213,6 +253,23 @@ GPT-6 Codex (story context creation).
 - Enhanced definition-of-done checklist passed. All tasks/subtasks are complete; story and sprint status are `review`. Suggested next step: independent `gds-code-review`.
 
 ### File List
+
+- `backend/src/dmud/operations/execute_operation.py`
+- `backend/src/dmud/operations/execution_failure.py`
+- `backend/src/dmud/operations/settle_execution_failure.py`
+- `backend/src/dmud/operations/validate_operation_snapshot.py`
+- `backend/src/dmud/platform/sqlite/run_database.py`
+- `backend/tests/integration/test_cancelled_transport.py`
+- `backend/tests/integration/test_database_concurrency.py`
+- `backend/tests/integration/test_event_evidence.py`
+- `backend/tests/integration/test_worker_supervision.py`
+- `frontend/e2e/operationRecovery.spec.ts`
+- `frontend/src/api/operationDeadline.ts`
+- `frontend/src/api/operationProblem.ts`
+- `frontend/src/features/operation-progress/locatorSchema.test.ts`
+- `frontend/src/features/operation-progress/operationLocator.ts`
+- `frontend/src/features/operation-progress/recoveryOutcomeKnown.ts`
+- `frontend/src/features/operation-progress/rejectedRecoveryProblem.ts`
 
 - `.gitignore`
 - `README.md`
@@ -295,6 +352,8 @@ GPT-6 Codex (story context creation).
 - `frontend/src/features/session-zero/SessionZero.tsx`
 
 ### Change Log
+
+- 2026-09-29: Applied all nine authorized review fixes, verified durable recovery and cancellation/concurrency boundaries, added backend/frontend/browser regressions, and marked Story 1.3 done.
 
 - 2026-09-28: Created the ready-for-dev Story 1.3 context and scoped the durable Session 0 foundation with recovery, atomicity, current-source guardrails, and test evidence requirements.
 

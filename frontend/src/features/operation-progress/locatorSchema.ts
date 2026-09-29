@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { zOperation, zRecoveryCommand } from "../../api/generated/zod.gen";
+import { zOperation, zRecoveryCommand } from "../../api/generated/zod.gen.js";
 
 export const locatorSchema = z
   .object({
@@ -20,5 +20,6 @@ export const locatorSchema = z
   .refine(
     (locator) =>
       (locator.operationId === undefined) === (locator.draftId === undefined),
-  );
+  )
+  .refine((locator) => !locator.recovery || locator.operationId !== undefined);
 export type OperationLocator = z.infer<typeof locatorSchema>;

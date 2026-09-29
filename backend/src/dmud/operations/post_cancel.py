@@ -4,6 +4,7 @@ from fastapi import Request
 
 from dmud.operations.models import Operation, RecoveryCommand
 from dmud.operations.recover_operation import recover_operation
+from dmud.platform.sqlite.run_database import run_database
 
 
 async def post_cancel(
@@ -11,4 +12,4 @@ async def post_cancel(
 ) -> Operation:
     """Request cooperative cancellation at the commit boundary; e.g. POST operation/cancel."""
     path: Path = request.app.state.database_path
-    return recover_operation(path, operationId, payload, "cancel")
+    return await run_database(recover_operation, path, operationId, payload, "cancel")

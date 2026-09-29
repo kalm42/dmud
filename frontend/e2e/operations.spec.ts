@@ -196,9 +196,10 @@ test("SessionZero recovers a lost retry response without a second attempt", asyn
     { times: 1 },
   );
   await page.getByRole("button", { name: "Retry draft" }).click();
-  await expect(page.getByRole("status")).toContainText("Status unavailable");
+  await expect(page.getByRole("status")).toContainText(
+    "draft saved at revision 1",
+  );
   await page.reload();
-  await page.getByRole("button", { name: "Recover request" }).click();
   await expect(page.getByRole("status")).toContainText(
     "draft saved at revision 1",
   );

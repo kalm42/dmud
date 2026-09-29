@@ -9,4 +9,5 @@ from dmud.platform.sqlite.connect_database import connect_database
 def get_operation(path: Path, operation_id: str) -> Operation:
     """Read status without scheduling work; e.g. get_operation(path, operation_id)."""
     with closing(connect_database(path)) as db, db:
+        db.execute("BEGIN")
         return read_operation(db, operation_id)

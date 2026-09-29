@@ -8,6 +8,7 @@ from starlette.responses import JSONResponse
 from dmud.operations.get_request_operation import get_request_operation
 from dmud.operations.models import OperationError, RequestId
 from dmud.operations.render_problem import render_problem
+from dmud.platform.sqlite.run_database import run_database
 
 
 class CreationIdentity(BaseModel):
@@ -29,7 +30,9 @@ async def invalid_request(request: Request, error: Exception) -> JSONResponse:
             identity = None
         if identity is not None:
             path: Path = request.app.state.database_path
-            operation = get_request_operation(path, identity.request_id)
+            operation = await run_database(
+                get_request_operation, path, identity.request_id
+            )
             if operation is not None:
                 problem = OperationError(
                     "request_conflict", operation=operation

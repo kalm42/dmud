@@ -52,11 +52,19 @@ function OperationProgress(props: OperationProgressProps) {
             <Button
               variant="quiet"
               aria-disabled={
-                pending || unavailable || !operation?.recovery.retry
+                pending ||
+                unavailable ||
+                !!locator.recovery ||
+                !operation?.recovery.retry
               }
               aria-busy={pending}
               onClick={() => {
-                if (!pending && !unavailable && operation?.recovery.retry)
+                if (
+                  !pending &&
+                  !unavailable &&
+                  !locator.recovery &&
+                  operation?.recovery.retry
+                )
                   tracking.recover("retry");
               }}
             >
@@ -65,10 +73,18 @@ function OperationProgress(props: OperationProgressProps) {
             <Button
               variant="quiet"
               aria-disabled={
-                pending || unavailable || !operation?.recovery.cancel
+                pending ||
+                unavailable ||
+                !!locator.recovery ||
+                !operation?.recovery.cancel
               }
               onClick={() => {
-                if (!pending && !unavailable && operation?.recovery.cancel)
+                if (
+                  !pending &&
+                  !unavailable &&
+                  !locator.recovery &&
+                  operation?.recovery.cancel
+                )
                   tracking.recover("cancel");
               }}
             >

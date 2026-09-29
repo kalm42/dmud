@@ -5,6 +5,7 @@ from fastapi import Header, Request
 
 from dmud.operations.get_events import get_events
 from dmud.operations.models import OperationError
+from dmud.platform.sqlite.run_database import run_database
 
 
 async def event_cursor(
@@ -21,5 +22,5 @@ async def event_cursor(
     ):
         raise OperationError("invalid_event_cursor", 409)
     cursor = int(last_event_id or "0")
-    get_events(path, operationId, cursor)
+    await run_database(get_events, path, operationId, cursor)
     return cursor

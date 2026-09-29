@@ -1,16 +1,27 @@
 import { createSessionZeroDraft } from "./generated/sdk.gen";
 import { parseOperation } from "./parseOperation";
 import { parseProblem } from "./parseProblem";
+import { operationDeadline } from "./operationDeadline";
 
 /** Send or explicitly recover the original creation identity; for example, submitDraft(requestId). */
 export async function submitDraft(requestId: string) {
-  const response = await createSessionZeroDraft({
-    body: { schemaVersion: 1, requestId, command: "create_session_zero_draft" },
-  });
-  if (response.error !== undefined)
-    throw new Error(parseProblem(response.error).code);
-  const operation = parseOperation(response.data);
-  if (operation.requestId !== requestId)
-    throw new Error("Mismatched creation identity");
-  return operation;
+  const deadline = operationDeadline();
+  try {
+    const response = await createSessionZeroDraft({
+      signal: deadline.signal,
+      body: {
+        schemaVersion: 1,
+        requestId,
+        command: "create_session_zero_draft",
+      },
+    });
+    if (response.error !== undefined)
+      throw new Error(parseProblem(response.error).code);
+    const operation = parseOperation(response.data);
+    if (operation.requestId !== requestId)
+      throw new Error("Mismatched creation identity");
+    return operation;
+  } finally {
+    deadline.clear();
+  }
 }

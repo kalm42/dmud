@@ -11,6 +11,9 @@ import { writeLocator } from "./writeLocator";
 import { operationKey } from "./operationKey";
 import { useOperationEvents } from "./useOperationEvents";
 import type { OperationLocator } from "./locatorSchema";
+import { operationLocator } from "./operationLocator";
+import { recoveryOutcomeKnown } from "./recoveryOutcomeKnown";
+import { rejectedRecoveryProblem } from "./rejectedRecoveryProblem";
 
 /** Own explicit creation/recovery intent and query authoritative status; for example, useDraftOperation(). */
 export function useDraftOperation() {
@@ -24,17 +27,26 @@ export function useDraftOperation() {
         ? recoverOperation(intent)
         : submitDraft(intent.requestId),
     onSuccess: (operation) => {
-      const updated: OperationLocator = {
-        requestId: operation.requestId,
-        operationId: operation.operationId,
-        draftId: operation.subject.draftId,
-        cursor: operation.lastEventId,
-      };
+      const prior = client.getQueryData<Operation>(
+        operationKey(operationLocator(operation)),
+      );
+      const selected = selectOperationSnapshot(prior, operation);
+      const updated = operationLocator(selected);
       writeLocator(updated);
       setLocator(updated);
-      client.setQueryData<Operation>(operationKey(updated), (prior) =>
-        selectOperationSnapshot(prior, operation),
+      client.setQueryData<Operation>(operationKey(updated), selected);
+    },
+    onError: (error, intent) => {
+      const problem = rejectedRecoveryProblem(error);
+      if (!intent.recovery || !problem?.operation) return;
+      const selected = selectOperationSnapshot(
+        client.getQueryData<Operation>(operationKey(intent)),
+        problem.operation,
       );
+      const updated = operationLocator(selected);
+      client.setQueryData<Operation>(operationKey(updated), selected);
+      writeLocator(updated);
+      setLocator(updated);
     },
     onSettled: () => {
       busy.current = false;
@@ -55,6 +67,7 @@ export function useDraftOperation() {
       });
     },
     refetchInterval: (state) => {
+      if (locator?.recovery) return 500;
       if (state.state.error) return 1000;
       const status = state.state.data?.status;
       return status === "complete" ||
@@ -69,18 +82,27 @@ export function useDraftOperation() {
         parseOperation(newData),
       ),
   });
+  const { isPending, reset } = mutation;
   useEffect(() => {
-    if (!locator || !query.data || query.data.lastEventId <= locator.cursor)
-      return;
-    const updated = { ...locator, cursor: query.data.lastEventId };
+    if (!locator || !query.data) return;
+    const resolved = !isPending && recoveryOutcomeKnown(locator, query.data);
+    if (!resolved && query.data.lastEventId <= locator.cursor) return;
+    const updated = resolved
+      ? operationLocator(query.data)
+      : { ...locator, cursor: query.data.lastEventId };
     writeLocator(updated);
     setLocator(updated);
-  }, [locator, query.data]);
+    if (resolved) reset();
+  }, [locator, query.data, isPending, reset]);
   useOperationEvents(locator);
   return {
     locator,
     operation: query.data,
-    unavailable: query.isError || mutation.isError,
+    unavailable:
+      query.isError ||
+      (mutation.isError &&
+        !rejectedRecoveryProblem(mutation.error) &&
+        !(locator && query.data && recoveryOutcomeKnown(locator, query.data))),
     pending: mutation.isPending,
     start: () => {
       if (busy.current || locator) return;
@@ -103,7 +125,7 @@ export function useDraftOperation() {
       void query.refetch();
     },
     recover: (action: "retry" | "cancel") => {
-      if (busy.current || !locator || !query.data) return;
+      if (busy.current || !locator || locator.recovery || !query.data) return;
       busy.current = true;
       const intent: OperationLocator = {
         ...locator,

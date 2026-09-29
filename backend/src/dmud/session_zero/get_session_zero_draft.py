@@ -10,6 +10,7 @@ from dmud.session_zero.models import SessionZeroDraft
 def get_session_zero_draft(path: Path, draft_id: str) -> SessionZeroDraft:
     """Read committed content only; e.g. get_session_zero_draft(path, draft_id)."""
     with closing(connect_database(path)) as db, db:
+        db.execute("BEGIN")
         row = db.execute(
             "SELECT resource, revision, operation_id FROM session_zero_drafts WHERE draft_id = ?",
             (draft_id,),
