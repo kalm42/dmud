@@ -11,14 +11,13 @@ def test_status_returns_ready_without_exposing_secret(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     monkeypatch.setenv("DMUD_LLM_API_KEY", "canary-private-credential-123")
-    client = TestClient(create_app())
+    with TestClient(create_app()) as client:
+        response = client.get("/api/status")
 
-    response = client.get("/api/status")
-
-    assert response.status_code == 200
-    assert response.json() == {"status": "ready"}
-    assert "canary-private-credential-123" not in response.text
-    assert "canary-private-credential-123" not in str(capsys.readouterr())
+        assert response.status_code == 200
+        assert response.json() == {"status": "ready"}
+        assert "canary-private-credential-123" not in response.text
+        assert "canary-private-credential-123" not in str(capsys.readouterr())
 
 
 def test_startup_rejects_unsupported_sqlite() -> None:
@@ -27,6 +26,5 @@ def test_startup_rejects_unsupported_sqlite() -> None:
 
 
 def test_startup_accepts_installed_sqlite() -> None:
-    client = TestClient(create_app(sqlite_version=sqlite3.sqlite_version_info))
-
-    assert client.get("/api/status").status_code == 200
+    with TestClient(create_app(sqlite_version=sqlite3.sqlite_version_info)) as client:
+        assert client.get("/api/status").status_code == 200

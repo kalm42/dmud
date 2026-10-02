@@ -1,10 +1,17 @@
 import { useEffect, useRef } from "react";
+import OperationProgress from "../operation-progress/OperationProgress";
+import type { useDraftOperation } from "../operation-progress/useDraftOperation";
 import Container from "../../components/ui/container";
 import Heading from "../../components/ui/heading";
 import Paragraph from "../../components/ui/paragraph";
 
+interface SessionZeroProps {
+  tracking: ReturnType<typeof useDraftOperation>;
+}
+
 /** Introduce Session 0 without claiming any campaign data exists; for example, <SessionZero />. */
-function SessionZero() {
+function SessionZero(props: SessionZeroProps) {
+  const { tracking } = props;
   const heading = useRef<HTMLHeadingElement>(null);
   useEffect(() => {
     heading.current?.focus();
@@ -22,9 +29,7 @@ function SessionZero() {
       >
         Session 0
       </Heading>
-      <Paragraph>
-        Your journey begins here. Character creation is coming next.
-      </Paragraph>
+      <OperationProgress tracking={tracking} />
     </Container>
   );
 }

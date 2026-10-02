@@ -21,3 +21,5 @@ backend/.venv/
 !.env.example
 *.save
 .DS_Store
+
+*.sqlite3-*

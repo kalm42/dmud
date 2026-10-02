@@ -3,6 +3,15 @@
 import * as z from 'zod';
 
 /**
+ * CreateSessionZeroDraft
+ */
+export const zCreateSessionZeroDraft = z.object({
+    schemaVersion: z.literal(1).optional().default(1),
+    requestId: z.string().regex(/^req_[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/),
+    command: z.literal('create_session_zero_draft').optional().default('create_session_zero_draft')
+});
+
+/**
  * EmptySaveSlot
  *
  * An explicitly empty numbered slot; for example, EmptySaveSlot(number=1, status='empty').
@@ -17,12 +26,40 @@ export const zEmptySaveSlot = z.object({
 });
 
 /**
+ * RecoveryCapability
+ */
+export const zRecoveryCapability = z.object({
+    retry: z.boolean(),
+    cancel: z.boolean()
+});
+
+/**
+ * RecoveryCommand
+ */
+export const zRecoveryCommand = z.object({
+    schemaVersion: z.literal(1).optional().default(1),
+    requestId: z.string().regex(/^req_[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/),
+    expectedLastEventId: z.int().gt(0)
+});
+
+/**
  * SaveSlotsResponse
  *
  * The current three-slot index; for example, SaveSlotsResponse(slots=[]).
  */
 export const zSaveSlotsResponse = z.object({
     slots: z.array(zEmptySaveSlot)
+});
+
+/**
+ * SessionZeroDraft
+ */
+export const zSessionZeroDraft = z.object({
+    schemaVersion: z.literal(1).optional().default(1),
+    draftId: z.string().regex(/^draft_[0-9a-f-]{36}$/),
+    draftRevision: z.int().gt(0),
+    lifecycle: z.literal('collecting').optional().default('collecting'),
+    activeOperationId: z.string()
 });
 
 /**
@@ -35,6 +72,96 @@ export const zStatusResponse = z.object({
 });
 
 /**
+ * Subject
+ */
+export const zSubject = z.object({
+    kind: z.literal('session_zero_draft').optional().default('session_zero_draft'),
+    draftId: z.string().regex(/^draft_[0-9a-f-]{36}$/)
+});
+
+/**
+ * DraftResult
+ */
+export const zDraftResult = z.object({
+    subject: zSubject,
+    commitBoundary: z.literal('draft').optional().default('draft'),
+    committedRevision: z.int().gt(0)
+});
+
+/**
+ * Operation
+ */
+export const zOperation = z.object({
+    schemaVersion: z.literal(1).optional().default(1),
+    operationId: z.string().regex(/^op_[0-9a-f-]{36}$/),
+    requestId: z.string().regex(/^req_[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/),
+    subject: zSubject,
+    status: z.enum([
+        'accepted',
+        'validating',
+        'committed',
+        'complete',
+        'failed',
+        'interrupted'
+    ]),
+    commitBoundary: z.enum(['none', 'draft']),
+    committedRevision: z.int().gt(0).nullable(),
+    lastEventId: z.int().gt(0),
+    recovery: zRecoveryCapability,
+    result: zDraftResult.nullable(),
+    statusUrl: z.string(),
+    eventsUrl: z.string()
+});
+
+/**
+ * OperationEvent
+ */
+export const zOperationEvent = z.object({
+    schemaVersion: z.literal(1).optional().default(1),
+    eventId: z.int().gt(0),
+    operation: zOperation
+});
+
+/**
+ * Problem
+ */
+export const zProblem = z.object({
+    type: z.string(),
+    title: z.string(),
+    status: z.union([
+        z.literal(404),
+        z.literal(409),
+        z.literal(422),
+        z.literal(503)
+    ]),
+    detail: z.string(),
+    code: z.enum([
+        'invalid_request',
+        'request_conflict',
+        'operation_not_found',
+        'operation_unavailable',
+        'draft_not_committed',
+        'draft_not_found',
+        'draft_unavailable',
+        'draft_already_committed',
+        'event_history_unavailable',
+        'invalid_event_cursor',
+        'stale_event',
+        'recovery_not_supported',
+        'application_data_busy'
+    ]),
+    classification: z.enum([
+        'conflict',
+        'invalid_input',
+        'not_found',
+        'unavailable'
+    ]),
+    instance: z.string(),
+    correlationId: z.string(),
+    operation: zOperation.nullish()
+});
+
+/**
  * Successful Response
  */
 export const zGetStatusResponse = zStatusResponse;
@@ -43,3 +170,63 @@ export const zGetStatusResponse = zStatusResponse;
  * Successful Response
  */
 export const zGetSaveSlotsResponse = zSaveSlotsResponse;
+
+export const zCreateSessionZeroDraftBody = zCreateSessionZeroDraft;
+
+/**
+ * Successful Response
+ */
+export const zCreateSessionZeroDraftResponse = zOperation;
+
+export const zGetSessionZeroDraftPath = z.object({
+    draftId: z.string()
+});
+
+/**
+ * Successful Response
+ */
+export const zGetSessionZeroDraftResponse = zSessionZeroDraft;
+
+export const zGetOperationPath = z.object({
+    operationId: z.string()
+});
+
+/**
+ * Successful Response
+ */
+export const zGetOperationResponse = zOperation;
+
+export const zGetOperationEventsHeaders = z.object({
+    'last-event-id': z.string().nullish()
+});
+
+export const zGetOperationEventsPath = z.object({
+    operationId: z.string()
+});
+
+/**
+ * Ordered versioned operation events. Resume strictly after Last-Event-ID. Invalid or future cursors return a problem; query status before reconnecting with a valid cursor.
+ */
+export const zGetOperationEventsResponse = zOperationEvent;
+
+export const zCancelOperationBody = zRecoveryCommand;
+
+export const zCancelOperationPath = z.object({
+    operationId: z.string()
+});
+
+/**
+ * Successful Response
+ */
+export const zCancelOperationResponse = zOperation;
+
+export const zRetryOperationBody = zRecoveryCommand;
+
+export const zRetryOperationPath = z.object({
+    operationId: z.string()
+});
+
+/**
+ * Successful Response
+ */
+export const zRetryOperationResponse = zOperation;
