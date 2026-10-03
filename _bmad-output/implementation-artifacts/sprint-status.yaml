@@ -1,5 +1,5 @@
 # generated: 2026-09-23T09:28:43-07:00
-# last_updated: 2026-09-29
+# last_updated: 2026-10-02
 # project: dmud
 # project_key: NOKEY
 # tracking_system: file-system
@@ -35,7 +35,7 @@
 # - Dev moves story to review, then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-09-23T09:28:43-07:00
-last_updated: 2026-09-29
+last_updated: 2026-10-02
 project: dmud
 project_key: NOKEY
 tracking_system: file-system
@@ -46,7 +46,7 @@ development_status:
   1-1-run-the-local-dmud-application-foundation: done
   1-2-open-the-title-and-start-a-new-game: done
   1-3-track-a-recoverable-session-0-operation: done
-  1-4-validate-the-authored-p0-starting-world: backlog
+  1-4-validate-the-authored-p0-starting-world: ready-for-dev
   1-5-create-a-correctable-session-0-draft: backlog
   1-6-resume-a-durable-session-0-draft: backlog
   1-7-assign-the-fixed-starting-attributes: backlog
