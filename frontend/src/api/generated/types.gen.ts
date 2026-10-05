@@ -136,7 +136,7 @@ export type Problem = {
     /**
      * Code
      */
-    code: 'invalid_request' | 'request_conflict' | 'operation_not_found' | 'operation_unavailable' | 'draft_not_committed' | 'draft_not_found' | 'draft_unavailable' | 'draft_already_committed' | 'event_history_unavailable' | 'invalid_event_cursor' | 'stale_event' | 'recovery_not_supported' | 'application_data_busy';
+    code: 'invalid_request' | 'request_conflict' | 'operation_not_found' | 'operation_unavailable' | 'draft_not_committed' | 'draft_not_found' | 'draft_unavailable' | 'draft_already_committed' | 'event_history_unavailable' | 'invalid_event_cursor' | 'stale_event' | 'recovery_not_supported' | 'application_data_busy' | 'content_unavailable';
     /**
      * Classification
      */

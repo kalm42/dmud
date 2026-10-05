@@ -1,5 +1,5 @@
 import { defineConfig, devices } from "@playwright/test";
-import { mkdtempSync } from "node:fs";
+import { mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { randomBytes } from "node:crypto";
@@ -8,6 +8,13 @@ const canary =
   process.env.DMUD_TEST_CANARY ??
   `canary-private-credential-${randomBytes(16).toString("hex")}`;
 process.env.DMUD_TEST_CANARY = canary;
+
+/* An isolated content package with an unsupported schema version, for content-unavailable journeys. */
+const brokenContent = mkdtempSync(join(tmpdir(), "dmud-broken-content-"));
+writeFileSync(
+  join(brokenContent, "manifest.yaml"),
+  'kind: manifest\ncontent_schema_version: 99\npackage_id: package:brackenford-p0\npackage_version: "1.0.0"\n',
+);
 
 /**
  * Read environment variables from file.
@@ -85,6 +92,20 @@ export default defineConfig({
       reuseExistingServer: false,
     },
     {
+      command:
+        "cd ../backend && uv run uvicorn browser_app:app --host 127.0.0.1 --port 8001",
+      env: {
+        DMUD_LLM_API_KEY: canary,
+        PYTHONPATH: "src:tests",
+        DMUD_APPLICATION_DATA_DIRECTORY: mkdtempSync(
+          join(tmpdir(), "dmud-e2e-broken-"),
+        ),
+        DMUD_CONTENT_DIRECTORY: brokenContent,
+      },
+      url: "http://127.0.0.1:8001/api/status",
+      reuseExistingServer: false,
+    },
+    {
       command: "npm run dev -- --host 127.0.0.1 --port 5173 --strictPort",
       url: "http://127.0.0.1:5173",
       reuseExistingServer: false,
@@ -93,6 +114,12 @@ export default defineConfig({
       command:
         "DMUD_API_PROXY_TARGET=http://127.0.0.1:8999 npm run dev -- --host 127.0.0.1 --port 5174 --strictPort",
       url: "http://127.0.0.1:5174",
+      reuseExistingServer: false,
+    },
+    {
+      command:
+        "DMUD_API_PROXY_TARGET=http://127.0.0.1:8001 npm run dev -- --host 127.0.0.1 --port 5175 --strictPort",
+      url: "http://127.0.0.1:5175",
       reuseExistingServer: false,
     },
   ],

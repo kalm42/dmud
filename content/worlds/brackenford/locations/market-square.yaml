@@ -1,0 +1,18 @@
+kind: location
+id: location:brackenford:market-square
+name: Market Square
+introduction: >-
+  Market Square is the cobbled heart of Brackenford, a broad open space ringed
+  by timber-fronted houses whose upper storeys lean toward one another. A stone
+  well with a worn oak cover stands near the centre, and the paving around it is
+  damp and scuffed by cart wheels. Canvas awnings and hand-painted signs crowd
+  the edges of the square, and the smells of bread, wet straw, and wood smoke
+  drift on the air. A short lane leads to Mara's Stall, and a longer street runs
+  downhill toward the Common Room.
+exits:
+  - route_id: route:brackenford:market-square-to-maras-stall
+    to_location_id: location:brackenford:maras-stall
+    label: A short lane to Mara's Stall
+  - route_id: route:brackenford:market-square-to-common-room
+    to_location_id: location:brackenford:common-room
+    label: A long street downhill to the Common Room

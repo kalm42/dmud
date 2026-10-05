@@ -36,6 +36,9 @@ export const getSaveSlots = <ThrowOnError extends boolean = false>(options?: Opt
  * Post Draft
  *
  * Accept before waking the supervised command worker; e.g. POST /api/session-zero-drafts.
+ *
+ * Without valid content, only an already accepted request may still be replayed; a
+ * new request is refused with content_unavailable before anything is created.
  */
 export const createSessionZeroDraft = <ThrowOnError extends boolean = false>(options: Options<CreateSessionZeroDraftData, ThrowOnError>): RequestResult<CreateSessionZeroDraftResponses, CreateSessionZeroDraftErrors, ThrowOnError> => (options.client ?? client).post<CreateSessionZeroDraftResponses, CreateSessionZeroDraftErrors, ThrowOnError>({
     url: '/api/session-zero-drafts',

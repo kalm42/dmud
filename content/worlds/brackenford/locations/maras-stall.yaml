@@ -1,0 +1,15 @@
+kind: location
+id: location:brackenford:maras-stall
+name: Mara's Stall
+introduction: >-
+  Mara's Stall stands a few strides off Market Square, a narrow wooden booth
+  under a patched green awning. Its counter is scarred with old knife marks and
+  ringed by the bases of countless cups. A row of stoppered clay bottles waits
+  on a shelf behind it, each chalked with a price of one gold. A neighbouring
+  trader's table stands close enough to share the awning's shade, so anything
+  said or handed across the counter happens in plain view of the next stall.
+  The lane back to the square is only a few steps away.
+exits:
+  - route_id: route:brackenford:market-square-to-maras-stall
+    to_location_id: location:brackenford:market-square
+    label: The short lane back to Market Square

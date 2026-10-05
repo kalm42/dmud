@@ -77,6 +77,7 @@ ProblemCode = Literal[
     "stale_event",
     "recovery_not_supported",
     "application_data_busy",
+    "content_unavailable",
 ]
 ProblemStatus = Literal[404, 409, 422, 503]
 
@@ -101,6 +102,7 @@ class OperationError(Exception):
         code: ProblemCode,
         status: ProblemStatus = 409,
         operation: Operation | None = None,
+        detail: str = "Query the original request or operation to recover its authoritative status.",
     ):
         classification: Literal[
             "conflict", "invalid_input", "not_found", "unavailable"
@@ -115,7 +117,7 @@ class OperationError(Exception):
             type=f"urn:dmud:problem:{code}",
             title=code.replace("_", " ").capitalize(),
             status=status,
-            detail="Query the original request or operation to recover its authoritative status.",
+            detail=detail,
             code=code,
             classification=classification,
             instance="urn:dmud:problem:pending",

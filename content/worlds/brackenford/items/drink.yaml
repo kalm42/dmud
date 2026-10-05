@@ -1,0 +1,5 @@
+kind: item
+id: item:brackenford:drink
+name: drink
+identity: fungible
+price_gold: 1

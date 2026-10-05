@@ -1,0 +1,16 @@
+# Brackenford geography. Market Square connects to each other location; routes
+# are bidirectional and their lengths are integer millimetres (G04).
+kind: world
+id: world:brackenford
+name: Brackenford
+routes:
+  - id: route:brackenford:market-square-to-maras-stall
+    endpoint_ids:
+      - location:brackenford:market-square
+      - location:brackenford:maras-stall
+    length_mm: 7000
+  - id: route:brackenford:market-square-to-common-room
+    endpoint_ids:
+      - location:brackenford:market-square
+      - location:brackenford:common-room
+    length_mm: 140000

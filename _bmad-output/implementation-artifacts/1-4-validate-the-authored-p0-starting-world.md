@@ -1,6 +1,10 @@
+---
+baseline_commit: 38024db04508f016954c4ecafa415604728a60a9
+---
+
 # Story 1.4: Validate the Authored P0 Starting World
 
-Status: ready-for-dev
+Status: done
 
 ## Story
 
@@ -17,35 +21,50 @@ so that I enter the same coherent Brackenford fixture every time.
 
 ## Tasks / Subtasks
 
-- [ ] Author the P0 content package (AC: 1–3)
-  - [ ] Create `content/manifest.yaml` (content schema version, package ID and version) and the YAML files listed under *Project Structure Notes*. Use stable namespaced IDs (`location:brackenford:market-square`); IDs never derive from file paths. Add nothing outside the approved P0 set: no P1–P9 content, no fifth NPC, no `progression.yaml`, no speech or transfer timing rules (those belong to Stories 1.21/1.22/1.25).
-  - [ ] Locations: Market Square, Mara's Stall, Common Room, each with an authored 60–120 word introduction (GDD G07) and readable exits. Market Square connects to both other locations; no other connections.
-  - [ ] Routes and movement rules (G04): Market Square↔Mara's Stall 7 m, Market Square↔Common Room 140 m; speeds walk 1.4, jog 2.8, sprint 5.6, crawl 0.5 m/s; per-segment travel time rounds **up** to a whole second. Store values exactly (see *Technical guardrails*); do not use binary floats.
-  - [ ] NPCs: Mara (stallholder), Oren (creditor), Tessa (neighboring trader), Ivo (courier, Tessa's friend). Identity, role, and starting location only. Needs, desires, plans, relationships, and knowledge are Story 2.1.
-  - [ ] Item and funds: one `drink` definition priced 1 gold; Mara's stock of exactly 5; the prepared-pouch definition holding exactly 10,000 gold.
-  - [ ] Social conflict (`maras-debt`) and the single `PaymentObligation` (debtor Mara, creditor Oren, 20 gold outstanding, due second 115,200).
-  - [ ] Controlled check content `payment-extension`: Presence-based, Persuasion-skill, difficulty 12; success adds 86,400 s to the obligation deadline (115,200 → 201,600), failure leaves it unchanged. It references the obligation by ID. It does **not** carry player attribute values (see guardrails).
-- [ ] Implement the strict loader and immutable registry in `backend/src/dmud/authored_content/` (AC: 1, 4)
-  - [ ] Load with `yaml.safe_load` through a loader subclass that rejects duplicate mapping keys (plain `safe_load` silently keeps the last one). Then validate with strict Pydantic models (`extra="forbid"`, `strict=True`).
-  - [ ] Validate in pure functions: exact P0 counts, unique IDs across all content kinds, every reference resolves, route endpoints exist, exits match routes, obligation parties are NPC IDs, check ↔ obligation linkage, extension arithmetic, introduction word counts, manifest schema/package version supported.
-  - [ ] Return a typed result (`ContentLoaded` with an immutable `ContentRegistry`, or `ContentUnavailable` with bounded issues). Expected validation failures are data, not exceptions. Issues carry a code, content-relative file path, and field path; never absolute paths, stack traces, or raw YAML.
-  - [ ] Do not read files at import time. The loader is the only I/O function; validation and registry construction are pure.
-- [ ] Build the deterministic pre-confirmation seed (AC: 2, 3)
-  - [ ] Add a pure factory that maps a loaded registry to a typed `P0StartingSeed`: locations, NPCs with starting locations, Mara's stock and funds, the pouch, the obligation, perception topology for the handover, content version, immutable fixture origin ID, and a digest of the canonical seed.
-  - [ ] The seed creates no campaign, branch, clock, SQLite row, player character, attributes, or inventory entry. Same registry in, byte-identical canonical seed out.
-  - [ ] Seed invariants: the only player gold is the single 10,000-gold pouch; every other gold holding is explicitly authored; the obligation ID, balance, and due second are fixed.
-- [ ] Wire load-once-at-startup and the content-unavailable state (AC: 1, 4)
-  - [ ] Add a validated `content_directory` setting (default: the repository `content/` directory) read only at the composition root. Load in `application_lifespan` off the event loop (`asyncio.to_thread`), store the result on `app.state`, and keep serving when content is invalid.
-  - [ ] Importing the app or exporting OpenAPI must still read no content and open no database.
-  - [ ] Gate New Game on availability: in `post_draft`, after the same-request duplicate lookup (so a previously accepted request is still recoverable) and before durable acceptance, return a typed RFC 9457 `content_unavailable` problem (`classification: "unavailable"`, factual detail, no operation or draft created). Add the code to the problem model, regenerate contracts.
-  - [ ] Expose a pure `require_content`-style accessor for Story 1.9 so confirmation can fail before any mutation. Do not add confirmation logic.
-- [ ] Surface the state in the frontend (AC: 4)
-  - [ ] Parse the new problem via the generated schema. In `submitDraft.ts` today any error becomes `Error(problem.code)`, which the hook treats as an unknown outcome and offers "Recover request". A definitive `content_unavailable` rejection is not an unknown outcome: show factual text (what could not load, that nothing was started, that fixing the content and restarting the application is the recovery), keep New Game focusable, move no focus, and announce politely once.
-  - [ ] Do not retain a recovery locator for a rejected creation (see Story 1.3 R7/R9 for locator rules). Do not store anything authoritative in browser storage.
-- [ ] Verify (AC: 1–4)
-  - [ ] Backend tests (see *Testing requirements*) against the real committed `content/` package plus deliberately broken copies in `tmp_path`.
-  - [ ] Frontend component/parser tests for the new problem and a Playwright journey with an isolated broken content directory.
-  - [ ] Run every gate listed under *Testing requirements* independently.
+- [x] Author the P0 content package (AC: 1–3)
+  - [x] Create `content/manifest.yaml` (content schema version, package ID and version) and the YAML files listed under *Project Structure Notes*. Use stable namespaced IDs (`location:brackenford:market-square`); IDs never derive from file paths. Add nothing outside the approved P0 set: no P1–P9 content, no fifth NPC, no `progression.yaml`, no speech or transfer timing rules (those belong to Stories 1.21/1.22/1.25).
+  - [x] Locations: Market Square, Mara's Stall, Common Room, each with an authored 60–120 word introduction (GDD G07) and readable exits. Market Square connects to both other locations; no other connections.
+  - [x] Routes and movement rules (G04): Market Square↔Mara's Stall 7 m, Market Square↔Common Room 140 m; speeds walk 1.4, jog 2.8, sprint 5.6, crawl 0.5 m/s; per-segment travel time rounds **up** to a whole second. Store values exactly (see *Technical guardrails*); do not use binary floats.
+  - [x] NPCs: Mara (stallholder), Oren (creditor), Tessa (neighboring trader), Ivo (courier, Tessa's friend). Identity, role, and starting location only. Needs, desires, plans, relationships, and knowledge are Story 2.1.
+  - [x] Item and funds: one `drink` definition priced 1 gold; Mara's stock of exactly 5; the prepared-pouch definition holding exactly 10,000 gold.
+  - [x] Social conflict (`maras-debt`) and the single `PaymentObligation` (debtor Mara, creditor Oren, 20 gold outstanding, due second 115,200).
+  - [x] Controlled check content `payment-extension`: Presence-based, Persuasion-skill, difficulty 12; success adds 86,400 s to the obligation deadline (115,200 → 201,600), failure leaves it unchanged. It references the obligation by ID. It does **not** carry player attribute values (see guardrails).
+- [x] Implement the strict loader and immutable registry in `backend/src/dmud/authored_content/` (AC: 1, 4)
+  - [x] Load with `yaml.safe_load` through a loader subclass that rejects duplicate mapping keys (plain `safe_load` silently keeps the last one). Then validate with strict Pydantic models (`extra="forbid"`, `strict=True`).
+  - [x] Validate in pure functions: exact P0 counts, unique IDs across all content kinds, every reference resolves, route endpoints exist, exits match routes, obligation parties are NPC IDs, check ↔ obligation linkage, extension arithmetic, introduction word counts, manifest schema/package version supported.
+  - [x] Return a typed result (`ContentLoaded` with an immutable `ContentRegistry`, or `ContentUnavailable` with bounded issues). Expected validation failures are data, not exceptions. Issues carry a code, content-relative file path, and field path; never absolute paths, stack traces, or raw YAML.
+  - [x] Do not read files at import time. The loader is the only I/O function; validation and registry construction are pure.
+- [x] Build the deterministic pre-confirmation seed (AC: 2, 3)
+  - [x] Add a pure factory that maps a loaded registry to a typed `P0StartingSeed`: locations, NPCs with starting locations, Mara's stock and funds, the pouch, the obligation, perception topology for the handover, content version, immutable fixture origin ID, and a digest of the canonical seed.
+  - [x] The seed creates no campaign, branch, clock, SQLite row, player character, attributes, or inventory entry. Same registry in, byte-identical canonical seed out.
+  - [x] Seed invariants: the only player gold is the single 10,000-gold pouch; every other gold holding is explicitly authored; the obligation ID, balance, and due second are fixed.
+- [x] Wire load-once-at-startup and the content-unavailable state (AC: 1, 4)
+  - [x] Add a validated `content_directory` setting (default: the repository `content/` directory) read only at the composition root. Load in `application_lifespan` off the event loop (`asyncio.to_thread`), store the result on `app.state`, and keep serving when content is invalid.
+  - [x] Importing the app or exporting OpenAPI must still read no content and open no database.
+  - [x] Gate New Game on availability: in `post_draft`, after the same-request duplicate lookup (so a previously accepted request is still recoverable) and before durable acceptance, return a typed RFC 9457 `content_unavailable` problem (`classification: "unavailable"`, factual detail, no operation or draft created). Add the code to the problem model, regenerate contracts.
+  - [x] Expose a pure `require_content`-style accessor for Story 1.9 so confirmation can fail before any mutation. Do not add confirmation logic.
+- [x] Surface the state in the frontend (AC: 4)
+  - [x] Parse the new problem via the generated schema. In `submitDraft.ts` today any error becomes `Error(problem.code)`, which the hook treats as an unknown outcome and offers "Recover request". A definitive `content_unavailable` rejection is not an unknown outcome: show factual text (what could not load, that nothing was started, that fixing the content and restarting the application is the recovery), keep New Game focusable, move no focus, and announce politely once.
+  - [x] Do not retain a recovery locator for a rejected creation (see Story 1.3 R7/R9 for locator rules). Do not store anything authoritative in browser storage.
+- [x] Verify (AC: 1–4)
+  - [x] Backend tests (see *Testing requirements*) against the real committed `content/` package plus deliberately broken copies in `tmp_path`.
+  - [x] Frontend component/parser tests for the new problem and a Playwright journey with an isolated broken content directory.
+  - [x] Run every gate listed under *Testing requirements* independently.
+
+### Review Findings
+
+Review date: 2026-10-03. Three review layers completed against baseline `38024db04508f016954c4ecafa415604728a60a9`, including untracked files. Verification: 74 authored-content/backend integration tests and 26 frontend tests passed; `git diff --check` passed. Additional in-memory malformed-content and semantic-mutation checks reproduced the backend findings below. The focus finding follows the actual component mount/unmount flow; the focus regression was subsequently verified in the Chromium browser journey. No application code was changed during the initial review; all eight fixes were authorized and applied on 2026-10-05.
+
+- [x] [Review][Patch][P1] Invalid YAML timestamps abort startup instead of returning content unavailable — `name: 2026-99-99` raises `ValueError` from SafeLoader, which the YAML-error-only handler does not catch; convert expected scalar-construction failures to bounded issues and test startup remains serving. [backend/src/dmud/authored_content/parse_yaml_document.py:14]
+- [x] [Review][Patch][P1] Recursive YAML aliases abort startup — `loop: &loop [*loop]` parses but raises `RecursionError` in sequence freezing; reject cyclic or excessive-depth structures before recursive traversal, returning typed issues. [backend/src/dmud/authored_content/freeze_sequences.py:12]
+- [x] [Review][Patch][P1] Oversized package-version components abort startup — a quoted major component with 4,301 digits passes the version regex and 64 KiB file limit but raises `ValueError` during integer conversion; bound or safely compare version components and reject unsupported versions through typed issues. [backend/src/dmud/authored_content/check_manifest.py:47]
+- [x] [Review][Patch][P2] Enforce the fixed obligation balance and deadline — changing 20 gold to 999 or due second 115,200 to 1 still returns `ContentLoaded`; require the AC3 seed invariants and add rejection coverage. [backend/src/dmud/authored_content/check_obligation.py:20]
+- [x] [Review][Patch][P2] Enforce the controlled check difficulty and extension — difficulty 1 and extension 1 second independently pass validation; require difficulty 12 and extension 86,400 seconds, with success due second 201,600. [backend/src/dmud/authored_content/check_obligation.py:44]
+- [x] [Review][Patch][P2] Enforce approved route distances and movement speeds — topology and mode IDs are checked but arbitrary positive lengths/speeds pass; require the 7 m/140 m routes and 1.4/2.8/5.6/0.5 m/s speed mapping, with mutation rejection tests. [backend/src/dmud/authored_content/check_routes_and_exits.py:19; backend/src/dmud/authored_content/check_approved_inventory.py:60]
+- [x] [Review][Patch][P2] Preserve keyboard focus throughout a content rejection — setting the locator immediately mounts SessionZero, whose effect focuses its heading; the rejection removes that focused heading and leaves focus on the document body. Keep the title control mounted/focused during rejected creation, preserve immediate pending feedback, and test focus without pressing Tab first. [frontend/src/features/operation-progress/useDraftOperation.ts:125]
+- [x] [Review][Patch][P3] Bound and sanitize diagnostic field paths — duplicated arbitrary YAML keys are copied verbatim into `ContentIssue.field`; a repeated `/private/secret` key reproduces an absolute path in the result, and long keys defeat the bounded-issue contract. Unknown-field validation locations have the same exposure; return bounded structural/schema field paths without raw key payloads. [backend/src/dmud/authored_content/parse_yaml_document.py:16; backend/src/dmud/authored_content/parse_content_document.py:48]
+
+Triage: 0 decisions needed, 8 patch items (all resolved on 2026-10-05), 0 deferred, 2 dismissed concerns (additional singleton-ID whitelist requirements and exact display-name enforcement are not sufficiently established as required rejection behavior for this review). Duplicate findings were merged.
 
 ## Dev Notes
 
@@ -163,9 +182,115 @@ Claude Sonnet 5.5 (story context creation).
 ### Debug Log References
 
 - Workflow customization resolved: no prepend/append steps, persistent facts, or completion instruction.
+- Implementation by Claude Opus 5.5 (dev-story), 2026-10-03, baseline `38024db`.
+- Local environment: uv 0.8.11 found only Python 3.14.8, not the pinned 3.14.7, so backend gates ran with `UV_PYTHON=3.14` (`.python-version`, `pyproject.toml`, and CI pins are unchanged). CI's uv 0.12.0 / 3.14.7 should be the confirming run.
+- Red phase verified: with the `post_draft` gate disabled, 4 of 8 `test_content_unavailable.py` tests failed; restored and green.
+- Gates run independently, all passing: frontend `format:check`, `lint`, `typecheck`, `build`, `npm test` (26 passed); backend `ruff format --check`, `ruff check`, `pyright` (0 errors), `pytest` (125 passed); `scripts/check_contract.py` (no drift); `npm run test:e2e` (59 passed, 7 skipped: the 6 existing mobile keyboard/resizing skips plus the new keyboard journey on Mobile Safari); `git diff --check` clean.
+
+### Review Fix Verification (2026-10-05)
+
+- Applied all eight review patches after Kyle selected "Apply every patch". YAML scalar errors become typed issues; iterative structure validation rejects cycles, excessive depth and alias expansion before freezing; version strings are bounded and compared without unbounded integer conversion. Diagnostics retain only bounded schema field names or `<unknown>` placeholders.
+- Added exact approved movement, route, debt and controlled-check value validation. Added filesystem regression cases and real ASGI startup/rejection tests for malformed content. The regression tests failed before the fixes.
+- New Game retains the mounted Title and its focused control during initial request delivery, shows immediate pending feedback, and opens Session 0 after acceptance (or the existing unknown-outcome recovery flow). The browser rejection test now asserts focus directly without pressing Tab after the failure.
+- Verification: backend full suite 146 passed; frontend 26 passed; Playwright 59 passed / 7 existing skips. Backend Ruff formatting/lint and Pyright strict (explicit local venv interpreter, zero errors), frontend formatting/lint/typecheck/build, API contract drift, and git whitespace gates passed independently. Used the installed Python 3.14.8 (`UV_PYTHON=3.14` for uv-driven checks); repository and CI pins remain 3.14.7.
+- Added `backend/src/dmud/authored_content/yaml_structure_valid.py`; also changed `frontend/src/features/title/Title.tsx`. No dependency changes or commits.
+
+### Implementation Plan
+
+- **Content** (`content/`): every document declares a `kind` (discriminated union) and explicit stable IDs. Lengths and speeds are integer millimetres and mm/s, so travel time is exact integer ceiling division (`travel_seconds`). Starting positions, stock, NPC gold, the pouch, and handover perception are in `start.yaml`. The obligation is nested in its conflict, and the check references it by ID.
+- **Loader**: `load_content` is the only filesystem function. It bounds file count and size, rejects paths that resolve outside the directory, and reports content-relative paths only. Everything after it is pure. `StrictYamlLoader` rejects duplicate keys. `freeze_sequences` converts YAML lists to tuples (strict Pydantic accepts only tuples for tuple fields), so scalar coercion stays off.
+- **Validation** (`validate_content`) runs in stages and stops at the first failing stage: parse and schema; manifest version, unique IDs across kinds (including nested route, mode, obligation, pouch, and fixture-origin IDs), and approved inventory; references; then routes and exits, introductions (60–120 words), obligation linkage, fixture funding, and handover perception. Issues are bounded data (`code`, `file`, `field`).
+- **Registry**: frozen dataclass of read-only `MappingProxyType` maps over frozen models.
+- **Seed**: `build_p0_seed` is pure and sorts by stable ID. `canonical_seed` produces sorted-key compact JSON, and the digest is `sha256:` over it. The seed has no clock, campaign, branch, attributes, or inventory fields.
+- **Startup and gate**: the lifespan loads content via `asyncio.to_thread` into `app.state.content` and logs only the issue count and codes at warning level. The app keeps serving when content is invalid. `post_draft` refuses a new request with `content_unavailable` (503, `unavailable`) only after an existing-request lookup, so accepted requests still replay. `require_content` is the accessor for Story 1.9.
+- **Frontend**: `submitDraft` now throws the typed `OperationProblem`. A creation rejected with `content_unavailable` clears the URL locator and returns to Title. A persistent polite live region (`ContentUnavailableNotice`, mounted in `App` across Title and Session 0) shows and announces the factual text once, without moving focus.
 
 ### Completion Notes List
 
 - Ultimate context engine analysis completed - comprehensive developer guide created.
+- AC1: the committed package validates into the registry. Rejections are tested for duplicate YAML key, duplicate ID across files, dangling reference, unknown top-level and nested fields, quoted number, unsupported schema version, incompatible package major version, missing manifest, extra location, fifth NPC, second check, missing NPC, exit/route mismatch, unapproved route, short and long introductions, Oren at the handover location, and a wrong pouch amount. Travel times on both routes for all four modes equal the exact integer ceiling (walk 5 s and 100 s).
+- AC2: the seed provides the three locations, four positioned NPCs, 5 one-gold drinks, Mara's explicit 0 gold, and one 10,000-gold `p0_test_fixture` pouch carrying `fixture:brackenford:p0-start`. Tessa witnesses the handover; Oren and Ivo are unaware. The canonical seed is byte-identical and the digest is stable. The seed is frozen, and copying it cannot affect the registry.
+- AC3: one obligation `obligation:brackenford:mara-owes-oren` (Mara to Oren, 20 gold, due 115,200). The check targets it; success gives 201,600 and failure leaves 115,200. The seed holds no other debt record.
+- AC4: against the real ASGI app with broken content, the app serves, New Game returns the typed problem, and every application table stays empty. An already-accepted request still replays. App construction and OpenAPI export load no content. Playwright covers the factual notice, New Game staying enabled and keyboard-reachable, no `session0` locator or "Recover request", exactly one polite live region and no alert, save slots unchanged, and an axe scan.
+- Open questions resolved with the story's defaults (Kyle to confirm): (1) Mara's transaction funds are an explicit 0 gold; (2) Mara and Tessa start at Mara's Stall, Oren and Ivo at the Common Room; (3) New Game is gated in `post_draft`.
+- Decisions to review: `OperationError` gained an optional `detail` argument (default unchanged) for the factual problem detail. Missing-content issues use an empty `file` because no file exists to name. `content_directory` defaults to the repository `content/`; packaging `content/` into the served build is Story 1.35. No new dependencies.
 
 ### File List
+
+- `content/manifest.yaml` (new)
+- `content/rules/movement.yaml` (new)
+- `content/worlds/brackenford/world.yaml` (new)
+- `content/worlds/brackenford/start.yaml` (new)
+- `content/worlds/brackenford/locations/market-square.yaml` (new)
+- `content/worlds/brackenford/locations/maras-stall.yaml` (new)
+- `content/worlds/brackenford/locations/common-room.yaml` (new)
+- `content/worlds/brackenford/npcs/mara.yaml` (new)
+- `content/worlds/brackenford/npcs/oren.yaml` (new)
+- `content/worlds/brackenford/npcs/tessa.yaml` (new)
+- `content/worlds/brackenford/npcs/ivo.yaml` (new)
+- `content/worlds/brackenford/items/drink.yaml` (new)
+- `content/worlds/brackenford/conflicts/maras-debt.yaml` (new)
+- `content/worlds/brackenford/checks/payment-extension.yaml` (new)
+- `backend/src/dmud/authored_content/approved_p0_content.py` (new)
+- `backend/src/dmud/authored_content/build_p0_seed.py` (new)
+- `backend/src/dmud/authored_content/build_registry.py` (new)
+- `backend/src/dmud/authored_content/canonical_seed.py` (new)
+- `backend/src/dmud/authored_content/check_approved_inventory.py` (new)
+- `backend/src/dmud/authored_content/check_fixture_funding.py` (new)
+- `backend/src/dmud/authored_content/check_handover_perception.py` (new)
+- `backend/src/dmud/authored_content/check_introductions.py` (new)
+- `backend/src/dmud/authored_content/check_manifest.py` (new)
+- `backend/src/dmud/authored_content/check_obligation.py` (new)
+- `backend/src/dmud/authored_content/check_references.py` (new)
+- `backend/src/dmud/authored_content/check_routes_and_exits.py` (new)
+- `backend/src/dmud/authored_content/check_unique_ids.py` (new)
+- `backend/src/dmud/authored_content/content_issue.py` (new)
+- `backend/src/dmud/authored_content/content_registry.py` (new)
+- `backend/src/dmud/authored_content/content_result.py` (new)
+- `backend/src/dmud/authored_content/content_unavailable.py` (new)
+- `backend/src/dmud/authored_content/declared_ids.py` (new)
+- `backend/src/dmud/authored_content/extended_due_second.py` (new)
+- `backend/src/dmud/authored_content/format_field_path.py` (new)
+- `backend/src/dmud/authored_content/freeze_sequences.py` (new)
+- `backend/src/dmud/authored_content/index_sources.py` (new)
+- `backend/src/dmud/authored_content/load_content.py` (new)
+- `backend/src/dmud/authored_content/models.py` (new)
+- `backend/src/dmud/authored_content/p0_starting_seed.py` (new)
+- `backend/src/dmud/authored_content/parse_content_document.py` (new)
+- `backend/src/dmud/authored_content/parse_yaml_document.py` (new)
+- `backend/src/dmud/authored_content/require_content.py` (new)
+- `backend/src/dmud/authored_content/strict_yaml_loader.py` (new)
+- `backend/src/dmud/authored_content/travel_seconds.py` (new)
+- `backend/src/dmud/authored_content/validate_content.py` (new)
+- `backend/src/dmud/operations/models.py` (modified)
+- `backend/src/dmud/operations/post_draft.py` (modified)
+- `backend/src/dmud/platform/application_lifespan.py` (modified)
+- `backend/src/dmud/platform/settings.py` (modified)
+- `backend/tests/conftest.py` (modified)
+- `backend/tests/integration/test_content_loading.py` (new)
+- `backend/tests/integration/test_content_unavailable.py` (new)
+- `backend/tests/integration/test_p0_seed.py` (new)
+- `backend/tests/integration/test_payment_obligation.py` (new)
+- `backend/tests/integration/test_travel_seconds.py` (new)
+- `contracts/openapi.json` (regenerated)
+- `frontend/src/api/generated/@tanstack/react-query.gen.ts` (regenerated)
+- `frontend/src/api/generated/sdk.gen.ts` (regenerated)
+- `frontend/src/api/generated/types.gen.ts` (regenerated)
+- `frontend/src/api/generated/zod.gen.ts` (regenerated)
+- `frontend/src/api/submitDraft.ts` (modified)
+- `frontend/src/app/App.tsx` (modified)
+- `frontend/src/features/operation-progress/useDraftOperation.ts` (modified)
+- `frontend/src/features/operation-progress/clearLocator.ts` (new)
+- `frontend/src/features/operation-progress/contentUnavailableProblem.ts` (new)
+- `frontend/src/features/operation-progress/contentUnavailableProblem.test.ts` (new)
+- `frontend/src/features/title/ContentUnavailableNotice.tsx` (new)
+- `frontend/src/features/title/ContentUnavailableNotice.test.tsx` (new)
+- `frontend/e2e/contentUnavailable.spec.ts` (new)
+- `frontend/playwright.config.ts` (modified)
+- `_bmad-output/implementation-artifacts/sprint-status.yaml` (modified)
+
+## Change Log
+
+- 2026-10-05: Resolved all eight code-review patch findings, added regression coverage, passed quality gates, and marked Story 1.4 done.
+
+- 2026-10-03: Implemented Story 1.4. Added the authored P0 content package, the strict YAML loader and immutable registry, the deterministic pre-confirmation seed with the Mara-to-Oren obligation, load-once startup, the `content_unavailable` New Game gate with regenerated contracts, and the frontend content-unavailable state. Status set to review.

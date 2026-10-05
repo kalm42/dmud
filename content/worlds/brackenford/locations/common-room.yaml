@@ -1,0 +1,15 @@
+kind: location
+id: location:brackenford:common-room
+name: Common Room
+introduction: >-
+  The Common Room is a low-beamed hall at the bottom of the street, where
+  travellers and locals share long trestle tables worn smooth by years of
+  elbows. A wide hearth at the far end keeps the room warm and faintly smoky,
+  and a slate by the door lists the day's bread and stew. Conversation carries
+  easily between the tables, though the clatter of cups and the crackle of the
+  fire leave the corners private enough for quiet talk. A single door opens onto
+  the street that climbs back to Market Square.
+exits:
+  - route_id: route:brackenford:market-square-to-common-room
+    to_location_id: location:brackenford:market-square
+    label: The long street uphill to Market Square

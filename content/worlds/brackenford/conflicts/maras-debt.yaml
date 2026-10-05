@@ -1,0 +1,16 @@
+# The single authoritative P0 debt. Story 1.24 extends this record's deadline and
+# Story 2.1 adds NPC motives around it; neither replaces it.
+kind: social_conflict
+id: conflict:brackenford:maras-debt
+name: Mara's debt
+summary: Mara owes Oren 20 gold, due on the morning of day 2.
+participant_npc_ids:
+  - npc:brackenford:mara
+  - npc:brackenford:oren
+obligation:
+  id: obligation:brackenford:mara-owes-oren
+  debtor_npc_id: npc:brackenford:mara
+  creditor_npc_id: npc:brackenford:oren
+  outstanding_gold: 20
+  # Day 2 at 08:00, counted in seconds from day 1 at 00:00.
+  due_second: 115200

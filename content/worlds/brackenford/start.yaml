@@ -1,0 +1,35 @@
+# Production pre-confirmation starting state. Story 1.9 instantiates it; this file
+# creates no campaign, clock, or player character.
+kind: starting_state
+id: start:brackenford:p0
+world_id: world:brackenford
+fixture_origin_id: fixture:brackenford:p0-start
+npc_positions:
+  - npc_id: npc:brackenford:mara
+    location_id: location:brackenford:maras-stall
+  - npc_id: npc:brackenford:tessa
+    location_id: location:brackenford:maras-stall
+  - npc_id: npc:brackenford:oren
+    location_id: location:brackenford:common-room
+  - npc_id: npc:brackenford:ivo
+    location_id: location:brackenford:common-room
+item_stock:
+  - holder_npc_id: npc:brackenford:mara
+    item_id: item:brackenford:drink
+    quantity: 5
+# Every gold holding is explicit. Mara's transaction funds start at zero.
+npc_gold:
+  - npc_id: npc:brackenford:mara
+    gold: 0
+# The player's only gold: P0 test-fixture funding, never an ordinary balance.
+prepared_pouch:
+  id: pouch:brackenford:p0-prepared-pouch
+  gold: 10000
+  funding_origin: p0_test_fixture
+# Authored perception at the handover location: Tessa witnesses; Oren and Ivo do not.
+handover:
+  location_id: location:brackenford:maras-stall
+  participant_npc_ids:
+    - npc:brackenford:mara
+  witness_npc_ids:
+    - npc:brackenford:tessa

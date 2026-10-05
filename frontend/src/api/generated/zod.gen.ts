@@ -148,7 +148,8 @@ export const zProblem = z.object({
         'invalid_event_cursor',
         'stale_event',
         'recovery_not_supported',
-        'application_data_busy'
+        'application_data_busy',
+        'content_unavailable'
     ]),
     classification: z.enum([
         'conflict',

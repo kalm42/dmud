@@ -14,10 +14,14 @@ import type { OperationLocator } from "./locatorSchema";
 import { operationLocator } from "./operationLocator";
 import { recoveryOutcomeKnown } from "./recoveryOutcomeKnown";
 import { rejectedRecoveryProblem } from "./rejectedRecoveryProblem";
+import { contentUnavailableProblem } from "./contentUnavailableProblem";
+import { clearLocator } from "./clearLocator";
 
 /** Own explicit creation/recovery intent and query authoritative status; for example, useDraftOperation(). */
 export function useDraftOperation() {
   const [locator, setLocator] = useState(readLocator);
+  const [contentUnavailable, setContentUnavailable] = useState(false);
+  const [starting, setStarting] = useState(false);
   const busy = useRef(false);
   const client = useQueryClient();
   const mutation = useMutation({
@@ -37,6 +41,12 @@ export function useDraftOperation() {
       client.setQueryData<Operation>(operationKey(updated), selected);
     },
     onError: (error, intent) => {
+      if (!intent.recovery && contentUnavailableProblem(error)) {
+        clearLocator();
+        setLocator(null);
+        setContentUnavailable(true);
+        return;
+      }
       const problem = rejectedRecoveryProblem(error);
       if (!intent.recovery || !problem?.operation) return;
       const selected = selectOperationSnapshot(
@@ -49,6 +59,7 @@ export function useDraftOperation() {
       setLocator(updated);
     },
     onSettled: () => {
+      setStarting(false);
       busy.current = false;
     },
   });
@@ -97,6 +108,8 @@ export function useDraftOperation() {
   useOperationEvents(locator);
   return {
     locator,
+    contentUnavailable,
+    starting,
     operation: query.data,
     unavailable:
       query.isError ||
@@ -107,6 +120,8 @@ export function useDraftOperation() {
     start: () => {
       if (busy.current || locator) return;
       busy.current = true;
+      setContentUnavailable(false);
+      setStarting(true);
       const intent: OperationLocator = {
         requestId: `req_${crypto.randomUUID()}`,
         cursor: 0,
