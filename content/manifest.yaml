@@ -1,0 +1,5 @@
+# P0 authored-content package. IDs are stable and never derive from file paths.
+kind: manifest
+content_schema_version: 1
+package_id: package:brackenford-p0
+package_version: "1.0.0"

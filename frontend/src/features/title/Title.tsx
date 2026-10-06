@@ -6,11 +6,12 @@ import Paragraph from "../../components/ui/paragraph";
 
 interface TitleProps {
   onNewGame: () => void;
+  starting?: boolean;
 }
 
 /** Show immediate campaign entry and truthful save discovery; for example, <Title onNewGame={start} />. */
 function Title(props: TitleProps) {
-  const { onNewGame } = props;
+  const { onNewGame, starting = false } = props;
   const saves = useSaveSlots();
 
   let reason: string;
@@ -30,11 +31,22 @@ function Title(props: TitleProps) {
       </Heading>
       <Paragraph variant="intro">A world awaits your first step.</Paragraph>
       <div className="mt-8 flex flex-wrap gap-3">
-        <Button onClick={onNewGame}>New Game</Button>
+        <Button
+          aria-busy={starting}
+          aria-disabled={starting}
+          onClick={() => {
+            if (!starting) onNewGame();
+          }}
+        >
+          New Game
+        </Button>
         <Button aria-describedby="continue-reason" disabled variant="quiet">
           Continue
         </Button>
       </div>
+      <Paragraph aria-live="polite" aria-atomic="true">
+        {starting ? "Starting a new game…" : ""}
+      </Paragraph>
       <Paragraph
         id="continue-reason"
         role={saves.isError && !saves.isFetching ? "alert" : "status"}

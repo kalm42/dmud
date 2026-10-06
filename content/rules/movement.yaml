@@ -1,0 +1,18 @@
+# G04 P0 fixture speeds on ordinary ground. Integer millimetres per second keep
+# travel arithmetic exact; each completed segment rounds up to a whole second.
+kind: movement_rules
+id: rules:movement
+travel_rounding: ceil_whole_second
+modes:
+  - id: movement:walk
+    name: walk
+    speed_mm_per_second: 1400
+  - id: movement:jog
+    name: jog
+    speed_mm_per_second: 2800
+  - id: movement:sprint
+    name: sprint
+    speed_mm_per_second: 5600
+  - id: movement:crawl
+    name: crawl
+    speed_mm_per_second: 500

@@ -1,0 +1,12 @@
+# Controlled payment-extension check content. Player attribute values and skill
+# bonuses are not content: Session 0 assigns them (Story 1.7).
+kind: check
+id: check:brackenford:payment-extension
+name: Payment extension
+attribute: presence
+skill: persuasion
+difficulty: 12
+obligation_id: obligation:brackenford:mara-owes-oren
+on_success:
+  extend_due_by_seconds: 86400
+on_failure: leave_unchanged

@@ -83,6 +83,9 @@ export const getSaveSlotsOptions = (options?: Options<GetSaveSlotsData>) => quer
  * Post Draft
  *
  * Accept before waking the supervised command worker; e.g. POST /api/session-zero-drafts.
+ *
+ * Without valid content, only an already accepted request may still be replayed; a
+ * new request is refused with content_unavailable before anything is created.
  */
 export const createSessionZeroDraftMutation = (options?: Partial<Options<CreateSessionZeroDraftData>>): UseMutationOptions<CreateSessionZeroDraftResponse, CreateSessionZeroDraftError, Options<CreateSessionZeroDraftData>> => {
     const mutationOptions: UseMutationOptions<CreateSessionZeroDraftResponse, CreateSessionZeroDraftError, Options<CreateSessionZeroDraftData>> = {

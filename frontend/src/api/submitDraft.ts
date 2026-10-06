@@ -1,6 +1,7 @@
 import { createSessionZeroDraft } from "./generated/sdk.gen";
 import { parseOperation } from "./parseOperation";
 import { parseProblem } from "./parseProblem";
+import { OperationProblem } from "./operationProblem";
 import { operationDeadline } from "./operationDeadline";
 
 /** Send or explicitly recover the original creation identity; for example, submitDraft(requestId). */
@@ -16,7 +17,7 @@ export async function submitDraft(requestId: string) {
       },
     });
     if (response.error !== undefined)
-      throw new Error(parseProblem(response.error).code);
+      throw new OperationProblem(parseProblem(response.error));
     const operation = parseOperation(response.data);
     if (operation.requestId !== requestId)
       throw new Error("Mismatched creation identity");

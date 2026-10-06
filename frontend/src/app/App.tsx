@@ -1,5 +1,6 @@
 import { useDraftOperation } from "../features/operation-progress/useDraftOperation";
 import SessionZero from "../features/session-zero/SessionZero";
+import ContentUnavailableNotice from "../features/title/ContentUnavailableNotice";
 import Title from "../features/title/Title";
 import "./app.css";
 
@@ -9,8 +10,9 @@ function App() {
 
   return (
     <main className="shell">
-      {!tracking.locator ? (
+      {!tracking.locator || tracking.starting ? (
         <Title
+          starting={tracking.starting}
           onNewGame={() => {
             tracking.start();
           }}
@@ -18,6 +20,7 @@ function App() {
       ) : (
         <SessionZero tracking={tracking} />
       )}
+      <ContentUnavailableNotice shown={tracking.contentUnavailable} />
     </main>
   );
 }

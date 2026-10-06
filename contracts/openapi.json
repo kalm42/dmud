@@ -46,7 +46,7 @@
     "/api/session-zero-drafts": {
       "post": {
         "summary": "Post Draft",
-        "description": "Accept before waking the supervised command worker; e.g. POST /api/session-zero-drafts.",
+        "description": "Accept before waking the supervised command worker; e.g. POST /api/session-zero-drafts.\n\nWithout valid content, only an already accepted request may still be replayed; a\nnew request is refused with content_unavailable before anything is created.",
         "operationId": "createSessionZeroDraft",
         "requestBody": {
           "content": {
@@ -878,7 +878,8 @@
               "invalid_event_cursor",
               "stale_event",
               "recovery_not_supported",
-              "application_data_busy"
+              "application_data_busy",
+              "content_unavailable"
             ],
             "title": "Code"
           },

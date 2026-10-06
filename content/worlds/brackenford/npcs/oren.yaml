@@ -1,0 +1,5 @@
+# Identity and role only; needs, plans, relationships, and knowledge are Story 2.1.
+kind: npc
+id: npc:brackenford:oren
+name: Oren
+role: creditor
