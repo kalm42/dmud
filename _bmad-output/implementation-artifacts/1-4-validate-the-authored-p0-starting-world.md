@@ -66,6 +66,22 @@ Review date: 2026-10-03. Three review layers completed against baseline `38024db
 
 Triage: 0 decisions needed, 8 patch items (all resolved on 2026-10-05), 0 deferred, 2 dismissed concerns (additional singleton-ID whitelist requirements and exact display-name enforcement are not sufficiently established as required rejection behavior for this review). Duplicate findings were merged.
 
+### Review Findings — Full Branch Review (2026-10-06)
+
+Reviewed `main...e2d34df` (74 files, +3,116/−14 lines) with independent Blind Hunter, Edge Case Hunter, and Acceptance Auditor layers. Two patch findings were identified and resolved on 2026-10-06; no decisions or deferred findings, five candidates dismissed. The Acceptance Auditor returned no findings; the other layers' retained findings were verified against the story constraints. Verification: backend 146 tests passed, frontend 26 tests passed, Ruff lint passed, Pyright strict reported zero errors, frontend TypeScript checks passed, and branch whitespace checks passed. Browser tests and contract regeneration were not rerun in this review. No application code was changed.
+
+- [x] [Review][Patch][P1] Handle malformed explicit YAML scalar tags as content unavailable — `name: !!int ""`, `name: !!bool "maybe"`, and `name: !!timestamp "bogus"` respectively escape parsing with `IndexError`, `KeyError`, and `AttributeError`. Real ASGI lifespan startup reproduces all three failures, preventing the factual recoverable state required by AC4. Normalize expected scalar-construction errors into bounded `invalid_yaml` issues and add startup/rejection regressions. [backend/src/dmud/authored_content/parse_yaml_document.py:20]
+- [x] [Review][Patch][P2] Reject whitespace-only exit labels — replacing Market Square exit labels with `label: "   "` still returns `ContentLoaded` and preserves blank-looking labels. `Name` checks raw string length only, violating the story task requiring readable exits. Require non-whitespace label text without coercing external input and add a broken-package rejection test. [backend/src/dmud/authored_content/models.py:28]
+
+Dismissed candidates: complete-directory enumeration before the file-count check, concurrent file-size and symlink replacement races, unspecified diagnostic filename length/sanitization, and hashing authored definitions outside the canonical seed. These did not establish additional actionable story violations in this review.
+
+### Full Branch Review Fix Verification (2026-10-06)
+
+- Resolved both findings: scalar-construction `IndexError`, `KeyError`, and `AttributeError` are converted to bounded `invalid_yaml` issues at the parser boundary; exit labels require at least one non-whitespace character without trimming or coercing authored text.
+- Added filesystem and real ASGI regressions for all three malformed explicit tags, rejection cases for empty/space/tab/nonbreaking-space labels, and preservation coverage for readable labels with authored spacing. The focused suite reproduced nine failures before implementation and passed afterward (71 tests).
+- Full backend verification: 157 tests passed; Ruff formatting and lint passed; Pyright strict reported zero errors; git whitespace checks passed. Used installed Python 3.14.8. Frontend and generated API artifacts were unchanged by these patches, so browser tests and contract regeneration were not repeated. Frontend 26 tests and TypeScript checks passed during the preceding review.
+- Story 1.4 remains `done`; sprint tracking was refreshed. Changes are uncommitted.
+
 ## Dev Notes
 
 ### Scope and handoffs

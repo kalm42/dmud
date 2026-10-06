@@ -299,6 +299,9 @@ class TestReviewRegressions:
         "text",
         [
             "kind: npc\nname: 2026-99-99\n",
+            'kind: npc\nname: !!int ""\n',
+            'kind: npc\nname: !!bool "maybe"\n',
+            'kind: npc\nname: !!timestamp "bogus"\n',
             "kind: npc\nloop: &loop [*loop]\n",
             "kind: npc\nloop: " + "[" * 100 + "0" + "]" * 100 + "\n",
         ],
@@ -311,6 +314,40 @@ class TestReviewRegressions:
         result = rejected(content_copy)
 
         assert ("invalid_yaml", MARA, "") in found(result)
+
+    @pytest.mark.parametrize("label", ["", "   ", "\\t", "\\u00a0"])
+    def test_blank_exit_label_is_rejected(self, content_copy: Path, label: str) -> None:
+        edit(
+            content_copy,
+            SQUARE,
+            "label: A short lane to Mara's Stall",
+            f'label: "{label}"',
+        )
+
+        result = rejected(content_copy)
+
+        assert ("invalid_value", SQUARE, "exits[0].label") in found(result)
+
+    def test_readable_exit_label_preserves_authored_spacing(
+        self, content_copy: Path
+    ) -> None:
+        label = "  A short lane to Mara's Stall  "
+        edit(
+            content_copy,
+            SQUARE,
+            "label: A short lane to Mara's Stall",
+            f'label: "{label}"',
+        )
+
+        result = load_content(content_copy)
+
+        assert isinstance(result, ContentLoaded)
+        assert (
+            result.registry.locations["location:brackenford:market-square"]
+            .exits[0]
+            .label
+            == label
+        )
 
     def test_oversized_package_version_is_rejected(self, content_copy: Path) -> None:
         edit(content_copy, "manifest.yaml", '"1.0.0"', '"' + "1" * 4301 + '.0.0"')

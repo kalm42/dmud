@@ -73,7 +73,7 @@ class World(ContentModel):
 class Exit(ContentModel):
     route_id: RouteId
     to_location_id: LocationId
-    label: Name
+    label: Annotated[Name, StringConstraints(pattern=r"\S")]
 
 
 class Location(ContentModel):

@@ -107,6 +107,9 @@ class TestContentLoading:
     "relative,text",
     [
         ("bad.yaml", "kind: npc\nname: 2026-99-99\n"),
+        ("bad.yaml", 'kind: npc\nname: !!int ""\n'),
+        ("bad.yaml", 'kind: npc\nname: !!bool "maybe"\n'),
+        ("bad.yaml", 'kind: npc\nname: !!timestamp "bogus"\n'),
         ("bad.yaml", "kind: npc\nloop: &loop [*loop]\n"),
         (
             "manifest.yaml",
